@@ -23,12 +23,15 @@ RoxygenNote: 7.3.2
 URL: https://github.com/PEDSnet/ndq
 BugReports: https://github.com/PEDSnet/ndq
 Imports: 
-    DBI,
-    dbplyr (>= 2.3.4),
+    cli,
     dplyr (>= 1.1.4),
     lubridate (>= 1.9.3),
     purrr (>= 1.0.2),
+    readr (>= 2.1.5),
+    rlang,
     stringr (>= 1.5.1),
     tidyr (>= 1.3.1)
 Remotes:
     PEDSnet/argos
+Depends: 
+    argos
