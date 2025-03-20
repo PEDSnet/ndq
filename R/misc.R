@@ -129,6 +129,11 @@ calc_days_between_dates <-
 #'
 #' @param data the data to output
 #' @param name the name of the table to output
+#' @param local description
+#' @param file blah
+#' @param db blah
+#' @param results_tag blah
+#' @param ... other arguments
 #'
 #' Parameters are the same as `output_tbl`
 #'

@@ -18,7 +18,17 @@ output_tbl_append(
 \arguments{
 \item{data}{the data to output}
 
-\item{name}{the name of the table to output
+\item{name}{the name of the table to output}
+
+\item{local}{description}
+
+\item{file}{blah}
+
+\item{db}{blah}
+
+\item{results_tag}{blah}
+
+\item{...}{other arguments
 
 Parameters are the same as \code{output_tbl}}
 }

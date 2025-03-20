@@ -7,13 +7,13 @@
 process_vc(vc_results, rslt_source = "remote", csv_rslt_path = NULL)
 }
 \arguments{
+\item{vc_results}{the output of check_vs}
+
 \item{rslt_source}{the location of the results. acceptable values are \code{local} (stored as a dataframe in the R environment),
 \code{csv} (stored as CSV files), or \code{remote} (stored on a remote DBMS); defaults to remote}
 
 \item{csv_rslt_path}{if the results have been stored as CSV files, the path to the location
 of these files. If the results are local or remote, leave NULL}
-
-\item{vs_results}{the output of check_vs}
 }
 \value{
 a list that contains two dataframes:

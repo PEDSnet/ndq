@@ -117,7 +117,7 @@ check_vc <- function(vc_tbl,
 #'
 #' Function to compute proportions of vocabulary values from vc check
 #'
-#' @param vs_results the output of check_vs
+#' @param vc_results the output of check_vs
 #' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
 #'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
 #' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
