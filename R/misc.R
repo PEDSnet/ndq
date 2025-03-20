@@ -15,7 +15,17 @@ pick_schema <- function(schema,
                                       schema_tag = scm,
                                       db = db)
 
-  return(tbl)
+  tbl_case_corrector <- function(tbl) {
+    if (any(colnames(tbl) != tolower(colnames(tbl)))) {
+      return(tbl %>% rename_all( ~ tolower(.)))
+    } else {
+      return(tbl)
+    }
+  }
+
+  tbl_corrected <- tbl_case_corrector(tbl)
+
+  return(tbl_corrected)
 
 }
 
