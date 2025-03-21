@@ -3,6 +3,7 @@
 export(check_bmc)
 export(check_dc)
 export(check_dcon)
+export(check_ecp)
 export(check_fot)
 export(check_mf_visitid)
 export(check_pf)
