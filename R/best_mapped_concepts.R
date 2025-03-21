@@ -48,7 +48,7 @@ check_bmc <- function(bmc_tbl,
         add_site() %>% filter(site == site_nm)
     }
 
-    if(grepl('geocode', fact_tbl_list_args[[i]]$table)){
+    if(grepl('fips', fact_tbl_list_args[[i]]$table)){
       xwalk <- tbl_use %>%
         rename(concept_type=!!sym(fact_tbl_list_args[[i]]$concept_field))
     }else{

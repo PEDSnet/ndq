@@ -14,6 +14,8 @@
 #' @return a table with the total patient count, the count of patients with a particular concept,
 #'         the proportion of total patients with the concept, and relevant metadata
 #'
+#' @export
+#'
 check_ecp <- function(ecp_tbl,
                       omop_or_pcornet = 'omop',
                       check_string = 'ecp'){
