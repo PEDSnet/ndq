@@ -38,8 +38,9 @@ check_vc <- function(vc_tbl,
     input_list <- list()
 
     values <- vocabvals[[i]]$acceptable_vocabularies %>%
-      # pull() %>%
-      str_split(', ') %>% unlist()
+      gsub(" ", "", .) %>%
+      # str_split(', ') %>%
+      str_split(',') %>% unlist()
 
     concept_id_fn <- vocabvals[[i]]$concept_field
 
