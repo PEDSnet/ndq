@@ -218,7 +218,7 @@ check_fot_loop <- function(fot_tbl,
 
     }
 
-    final_results[[paste0(check_string, '_', n)]] = purrr::reduce(.x=temp_results, .f=union)
+    final_results[[paste0(n)]] = purrr::reduce(.x=temp_results, .f=union)
   }
 
   final_results_red <- purrr::reduce(.x = final_results,
@@ -327,7 +327,7 @@ check_fot_group <- function(fot_tbl,
                domain = t)
     }
 
-    final_results[[paste0(check_string, '_', n)]] = visit_cts
+    final_results[[paste0(n)]] = visit_cts
 
   }
 
