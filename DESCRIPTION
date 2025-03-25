@@ -34,4 +34,6 @@ Imports:
 Remotes:
     PEDSnet/argos
 Depends: 
-    argos
+    argos,
+    R (>= 3.5)
+LazyData: true

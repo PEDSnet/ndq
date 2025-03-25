@@ -1,0 +1,6 @@
+check_id,cohort_definition,cohort_schema,cohort_table,schema,table,concept_field,conceptset_name,filter_logic
+hemoglobin,All patients in CDM person table,cdm,person,cdm,measurement,measurement_concept_id,hemoglobin,NA
+sodium,All patients in CDM person table,cdm,person,cdm,measurement,measurement_concept_id,sodium,NA
+flu,All patients in CDM person table,cdm,person,cdm,measurement,measurement_concept_id,influenza,NA
+height,All patients in CDM person table,cdm,person,cdm,measurement,measurement_concept_id,height,NA
+weight,All patients in CDM person table,cdm,person,cdm,measurement,measurement_concept_id,weight,NA

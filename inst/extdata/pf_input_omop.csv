@@ -1,0 +1,4 @@
+check_id,check_description,schema,table,filter_logic
+pr,procedures,cdm,procedure_occurrence,NA
+co,conditions,cdm,condition_occurrence,NA
+dr,drugs,cdm,drug_exposure,NA
