@@ -25,7 +25,7 @@ check_vc <- function(vc_tbl,
                      check_string='vc',
                      null_values = c(44814650L,0L,44814653L,44814649L)) {
 
-  site_nm <- config('site')
+  site_nm <- config('qry_site')
 
   vocabvals <- split(vc_tbl, seq(nrow(vc_tbl)))
 

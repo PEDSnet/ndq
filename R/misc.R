@@ -74,7 +74,7 @@ create_vc_vs_output <- function(tbl_list,
 add_meta <- function(tbl_meta,
                      check_lib,
                      version=config('current_version'),
-                     site_nm=config('site')) {
+                     site_nm=config('qry_site')) {
 
   tbl_meta %>%
     mutate(check_type = check_lib,

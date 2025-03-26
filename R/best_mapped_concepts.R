@@ -25,7 +25,7 @@ check_bmc <- function(bmc_tbl,
                       concept_tbl = vocabulary_tbl('concept'),
                       check_string='bmc') {
 
-  site_nm <- config('site')
+  site_nm <- config('qry_site')
 
   fact_tbl_list_args <- split(bmc_tbl, seq(nrow(bmc_tbl)))
 

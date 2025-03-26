@@ -22,7 +22,7 @@ check_mf_visitid <- function(mf_tbl,
                              visit_tbl = cdm_tbl('visit_occurrence'),
                              check_string='mf_visitid') {
 
-  site_nm <- config('site')
+  site_nm <- config('qry_site')
 
   check_visit_list <- split(mf_tbl, seq(nrow(mf_tbl)))
 

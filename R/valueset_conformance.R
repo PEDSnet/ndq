@@ -22,7 +22,7 @@ check_vs <- function(vs_tbl,
                      check_string = 'vs',
                      null_values = c(44814650L,0L,44814653L,44814649L)) {
 
-  site_nm <- config('site')
+  site_nm <- config('qry_site')
 
   valuesets <- split(vs_tbl, seq(nrow(vs_tbl)))
 
@@ -119,7 +119,8 @@ check_vs <- function(vs_tbl,
                                     check_string = check_string)
 
   final_vals_red <- purrr::reduce(.x = final_vals,
-                                  .f = dplyr::union)
+                                  .f = dplyr::union) %>%
+    add_meta(check_lib = check_string)
 
   return(final_vals_red)
 

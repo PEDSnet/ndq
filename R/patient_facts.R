@@ -25,7 +25,7 @@ check_pf <- function(pf_tbl,
                      visit_tbl=cdm_tbl('visit_occurrence'),
                      check_string='pf') {
 
-  site_nm <- config('site')
+  site_nm <- config('qry_site')
 
   if(tolower(omop_or_pcornet) == 'omop'){
     pt_col <- 'person_id'

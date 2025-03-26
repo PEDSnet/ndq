@@ -50,7 +50,7 @@ check_uc <- function(uc_tbl,
                                        check_string = check_string)
   }else{
 
-    site_nm <- config('site')
+    site_nm <- config('qry_site')
 
     concept_list <- split(uc_tbl, seq(nrow(uc_tbl)))
 
@@ -162,7 +162,7 @@ check_uc_by_year <- function(uc_tbl,
                                                  44814653L, 44814649L),
                              check_string = 'uc') {
 
-  site_nm <- config('site')
+  site_nm <- config('qry_site')
 
   concept_list <- split(uc_tbl, seq(nrow(uc_tbl)))
 
@@ -206,6 +206,8 @@ check_uc_by_year <- function(uc_tbl,
 
     if(class(config('db_src')) %in% c('PostgreSQLConnection', 'PqConnection', 'BigQueryConnection')){
       sql_string <- paste0("extract(year from ", date_col_final, ")")
+    }else if(class(config('db_src')) %in% c('SQLiteConnection')){
+      sql_string <- paste0("date(", date_col_final, ')')
     }else{
       sql_string <- paste0('YEAR(', date_col_final, ')')
     }
@@ -219,7 +221,6 @@ check_uc_by_year <- function(uc_tbl,
       ) %>% summarise(
         total_row_ct = n()
       )%>% collect()
-
 
     date_col_grpd <-
       date_cols_unmapped %>%

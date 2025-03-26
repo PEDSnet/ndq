@@ -42,7 +42,7 @@ check_dc <- function(dc_tbl,
                      prev_rslt_schema = config('results_schema'),
                      check_string = 'dc'){
 
-  site_nm <- config('site')
+  site_nm <- config('qry_site')
 
   if(tolower(omop_or_pcornet) == 'omop'){
     pt_col <- 'person_id'
@@ -75,7 +75,7 @@ check_dc <- function(dc_tbl,
         filter(!! rlang::parse_expr(dc_tbl[[i]]$filter_logic))
     }else{
       this_round_current <- tbl_current
-      }
+    }
 
     if(pid_check){
       this_round_current <- this_round_current %>%

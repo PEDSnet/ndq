@@ -109,7 +109,7 @@ check_fot_loop <- function(fot_tbl,
                            visits_only = FALSE,
                            distinct_visits = TRUE) {
 
-  site_nm <- config('site')
+  site_nm <- config('qry_site')
 
   time_tbls <- split(fot_tbl, seq(nrow(fot_tbl)))
 
@@ -254,7 +254,7 @@ check_fot_group <- function(fot_tbl,
                             visits_only = TRUE,
                             distinct_visits = TRUE) {
 
-  site_nm <- config('site')
+  site_nm <- config('qry_site')
 
   time_tbls <- split(fot_tbl, seq(nrow(fot_tbl)))
 

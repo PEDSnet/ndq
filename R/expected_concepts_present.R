@@ -20,7 +20,7 @@ check_ecp <- function(ecp_tbl,
                       omop_or_pcornet = 'omop',
                       check_string = 'ecp'){
 
-  site_nm <- config('site')
+  site_nm <- config('qry_site')
 
   ecp_list <- split(ecp_tbl, seq(nrow(ecp_tbl)))
 

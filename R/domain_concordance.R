@@ -21,7 +21,7 @@ check_dcon<- function(dcon_tbl,
                       omop_or_pcornet = 'omop',
                       check_string='dcon'){
 
-  site_nm <- config('site')
+  site_nm <- config('qry_site')
 
   conc_tbls <- dplyr::group_split(dcon_tbl %>% collect() %>% group_by(check_id))
 
