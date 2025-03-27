@@ -64,7 +64,7 @@ check_fot <- function(fot_tbl,
     #                             visits_only = visits_only,
     #                             distinct_visits = distinct_visits)
 
-    cli::cli_inform('`group` method still under development')
+    cli::cli_abort('`group` method still under development')
 
   }else if(tolower(compute_method) == 'loop'){
 
@@ -210,7 +210,7 @@ check_fot_loop <- function(fot_tbl,
         this_round <- visit_cts %>%
           mutate(month_end = lubridate::date(k) - 1,
                  month_start = baseline_start_date)
-      } else {this_round <- this_round_pre %>%
+      } else {this_round <- visit_cts %>%
         mutate(week_end = lubridate::date(k) - 1,
                week_start = baseline_start_date) }
 
@@ -246,94 +246,94 @@ check_fot_loop <- function(fot_tbl,
 #'
 #'  ** if `time_tbls` contains fields that are grouped, the output will contain the grouped variables
 #'
-check_fot_group <- function(fot_tbl,
-                            time_frame = time_span,
-                            lookback_weeks=0,
-                            lookback_months=1,
-                            check_string = 'fot',
-                            visits_only = TRUE,
-                            distinct_visits = TRUE) {
-
-  site_nm <- config('qry_site')
-
-  time_tbls <- split(fot_tbl, seq(nrow(fot_tbl)))
-
-  final_results <- list()
-
-  for(i in 1:length(time_tbls)) {
-
-    cli::cli_inform(paste0('Starting ',time_tbls[[i]]$check_description))
-
-    start_date <- as.Date(time_span[1]) - months(lookback_months)
-    end_int <- length(time_span)
-    end_date <- time_span[end_int]
-
-    date_cols <- time_tbls[[i]]$date_field
-
-    order_cols <- ncol(date_cols)
-
-    date_cols_unmapped <-
-      date_cols %>%
-      select(all_of(order_cols))
-
-    colname_string <- as.character(colnames(date_cols_unmapped)[1])
-
-    # visits_narrowed <-
-    #   time_tbls[[i]][[1]] %>%
-    #   filter(!! sym(colname_string) < as.Date(end_date) &
-    #            !! sym(colname_string) >= as.Date(start_date)) %>%
-    #   mutate(month_end = last_day_of_month(!!sym(colname_string)),
-    #          month_start = first_day_of_month(!!sym(colname_string)))
-
-    n <- names(time_tbls[i])
-    d <- time_tbls[[i]][[2]]
-    t <- time_tbls[[i]]$table
-
-    if(visits_only) {
-      visit_cts <-
-        visits_narrowed %>%
-        group_by(month_end) %>%
-        summarise(row_visits = n_distinct(visit_occurrence_id)) %>%
-        collect() %>%
-        ungroup()  %>%
-        add_meta(check_lib=check_string) %>%
-        mutate(check_name = n) %>%
-        mutate(check_desc = d,
-               domain = t)
-    } else if(distinct_visits & !visits_only) {
-      visit_cts <-
-        visits_narrowed %>%
-        group_by(month_end) %>%
-        summarise(row_cts = n(),
-                  row_visits = n_distinct(visit_occurrence_id),
-                  row_pts = n_distinct(person_id)) %>%
-        collect() %>%
-        ungroup()  %>%
-        add_meta(check_lib=check_string) %>%
-        mutate(check_name = n) %>%
-        mutate(check_desc = d,
-               domain = t)
-    } else if(!distinct_visits & !visits_only) {
-      visit_cts <-
-        visits_narrowed %>%
-        group_by(month_end) %>%
-        summarise(row_cts = n(),
-                  row_pts = n_distinct(person_id)) %>%
-        collect() %>%
-        ungroup()  %>%
-        add_meta(check_lib=check_string) %>%
-        mutate(check_name = n) %>%
-        mutate(check_desc = d,
-               domain = t)
-    }
-
-    final_results[[paste0(n)]] = visit_cts
-
-  }
-
-  final_results
-
-}
+# check_fot_group <- function(fot_tbl,
+#                             time_frame = time_span,
+#                             lookback_weeks=0,
+#                             lookback_months=1,
+#                             check_string = 'fot',
+#                             visits_only = TRUE,
+#                             distinct_visits = TRUE) {
+#
+#   site_nm <- config('qry_site')
+#
+#   time_tbls <- split(fot_tbl, seq(nrow(fot_tbl)))
+#
+#   final_results <- list()
+#
+#   for(i in 1:length(time_tbls)) {
+#
+#     cli::cli_inform(paste0('Starting ',time_tbls[[i]]$check_description))
+#
+#     start_date <- as.Date(time_span[1]) - months(lookback_months)
+#     end_int <- length(time_span)
+#     end_date <- time_span[end_int]
+#
+#     date_cols <- time_tbls[[i]]$date_field
+#
+#     order_cols <- ncol(date_cols)
+#
+#     date_cols_unmapped <-
+#       date_cols %>%
+#       select(all_of(order_cols))
+#
+#     colname_string <- as.character(colnames(date_cols_unmapped)[1])
+#
+#     # visits_narrowed <-
+#     #   time_tbls[[i]][[1]] %>%
+#     #   filter(!! sym(colname_string) < as.Date(end_date) &
+#     #            !! sym(colname_string) >= as.Date(start_date)) %>%
+#     #   mutate(month_end = last_day_of_month(!!sym(colname_string)),
+#     #          month_start = first_day_of_month(!!sym(colname_string)))
+#
+#     n <- names(time_tbls[i])
+#     d <- time_tbls[[i]][[2]]
+#     t <- time_tbls[[i]]$table
+#
+#     if(visits_only) {
+#       visit_cts <-
+#         visits_narrowed %>%
+#         group_by(month_end) %>%
+#         summarise(row_visits = n_distinct(visit_occurrence_id)) %>%
+#         collect() %>%
+#         ungroup()  %>%
+#         add_meta(check_lib=check_string) %>%
+#         mutate(check_name = n) %>%
+#         mutate(check_desc = d,
+#                domain = t)
+#     } else if(distinct_visits & !visits_only) {
+#       visit_cts <-
+#         visits_narrowed %>%
+#         group_by(month_end) %>%
+#         summarise(row_cts = n(),
+#                   row_visits = n_distinct(visit_occurrence_id),
+#                   row_pts = n_distinct(person_id)) %>%
+#         collect() %>%
+#         ungroup()  %>%
+#         add_meta(check_lib=check_string) %>%
+#         mutate(check_name = n) %>%
+#         mutate(check_desc = d,
+#                domain = t)
+#     } else if(!distinct_visits & !visits_only) {
+#       visit_cts <-
+#         visits_narrowed %>%
+#         group_by(month_end) %>%
+#         summarise(row_cts = n(),
+#                   row_pts = n_distinct(person_id)) %>%
+#         collect() %>%
+#         ungroup()  %>%
+#         add_meta(check_lib=check_string) %>%
+#         mutate(check_name = n) %>%
+#         mutate(check_desc = d,
+#                domain = t)
+#     }
+#
+#     final_results[[paste0(n)]] = visit_cts
+#
+#   }
+#
+#   final_results
+#
+# }
 
 
 
@@ -511,7 +511,7 @@ process_fot <- function(fot_results,
   if(add_ratios){
 
     fot_ratios <- add_fot_ratios(fot_lib_output = fot_int,
-                                 denom_mult = rate_mult)
+                                 denom_mult = ratio_mult)
 
     fot_list[[3]] <- fot_ratios
 

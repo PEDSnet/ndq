@@ -1,0 +1,111 @@
+
+
+pf_test <- tibble('check_id' = c('co'),
+                  'check_description' = c('conditions'),
+                  'schema' = c('cdm'),
+                  'table' = c('condition_occurrence'),
+                  'filter_logic' = c(NA))
+
+test_that('omop_or_pcornet limited inputs', {
+
+  conn <- mk_testdb_omop()
+
+  new_argos <- argos$new()
+  set_argos_default(new_argos)
+  config('db_src', conn)
+  config('cdm_schema', NA)
+  config('qry_site', 'test')
+  config('results_schema', NA)
+  config('vocabulary_schema', NA)
+  config('db_trace', FALSE)
+  config('results_name_tag', '')
+  config('current_version', '1')
+  config('retain_intermediates', FALSE)
+
+  expect_error(check_pf(pf_tbl = pf_test,
+                        visit_type_string = 'all',
+                        omop_or_pcornet = 'test'))
+
+})
+
+test_that('check_pf', {
+
+  conn <- mk_testdb_omop()
+
+  new_argos <- argos$new()
+  set_argos_default(new_argos)
+  config('db_src', conn)
+  config('cdm_schema', NA)
+  config('qry_site', 'test')
+  config('results_schema', NA)
+  config('vocabulary_schema', NA)
+  config('db_trace', FALSE)
+  config('results_name_tag', '')
+  config('current_version', '1')
+  config('retain_intermediates', FALSE)
+
+  # print(check_pf(pf_tbl = pf_test,
+  #          visit_type_string = 'all',
+  #          omop_or_pcornet = 'omop'))
+
+  expect_no_error(check_pf(pf_tbl = pf_test,
+                           visit_type_string = 'all',
+                           omop_or_pcornet = 'omop'))
+
+  expect_no_error(check_pf(pf_tbl = pf_test %>% mutate(filter_logic = 'person_id %in% c(1,2,3)'),
+                           visit_type_string = 'all',
+                           omop_or_pcornet = 'omop'))
+})
+
+
+test_that('check_pf local', {
+
+  conn <- mk_testdb_omop()
+
+  new_argos <- argos$new()
+  set_argos_default(new_argos)
+  config('db_src', conn)
+  config('cdm_schema', NA)
+  config('qry_site', 'test')
+  config('results_schema', NA)
+  config('vocabulary_schema', NA)
+  config('db_trace', FALSE)
+  config('results_name_tag', '')
+  config('current_version', '1')
+  config('retain_intermediates', FALSE)
+
+  pf_opt <- check_pf(pf_tbl = pf_test,
+                     visit_type_string = 'all',
+                     omop_or_pcornet = 'omop')
+
+  expect_no_error(process_pf(pf_results = pf_opt,
+                             rslt_source = 'local'))
+
+})
+
+test_that('check_pf remote', {
+
+  conn <- mk_testdb_omop()
+
+  new_argos <- argos$new()
+  set_argos_default(new_argos)
+  config('db_src', conn)
+  config('cdm_schema', NA)
+  config('qry_site', 'test')
+  config('results_schema', NA)
+  config('vocabulary_schema', NA)
+  config('db_trace', FALSE)
+  config('results_name_tag', '')
+  config('current_version', '1')
+  config('retain_intermediates', FALSE)
+
+  pf_opt <- check_pf(pf_tbl = pf_test,
+                     visit_type_string = 'all',
+                     omop_or_pcornet = 'omop')
+
+  DBI::dbWriteTable(conn, 'pf_output', pf_opt)
+
+  expect_no_error(process_pf(pf_results = 'pf_output',
+                             rslt_source = 'remote'))
+
+})

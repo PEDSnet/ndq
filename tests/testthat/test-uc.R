@@ -1,12 +1,12 @@
 
-uc_test <- tibble('check_id' = c('co'),
-                  'check_description' = c('inpatient conditions'),
-                  'schema' = c('cdm'),
-                  'table' = c('condition_occurrence'),
-                  'concept_field' = c('condition_concept_id'),
-                  'source_value_field' = c('condition_source_value'),
-                  'date_field' = c('condition_start_date'),
-                  'filter_logic' = c(NA))
+uc_test <- tibble('check_id' = c('co', 'vo'),
+                  'check_description' = c('inpatient conditions', 'visits'),
+                  'schema' = c('cdm', 'cdm'),
+                  'table' = c('condition_occurrence', 'visit_occurrence'),
+                  'concept_field' = c('condition_concept_id', 'visit_concept_id'),
+                  'source_value_field' = c('condition_source_value', 'visit_source_value'),
+                  'date_field' = c('condition_start_date', 'visit_start_date'),
+                  'filter_logic' = c(NA, 'visit_concept_id == 9202'))
 
 test_that('check_uc no time, no list', {
 

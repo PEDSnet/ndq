@@ -86,22 +86,22 @@ check_pf <- function(pf_tbl,
         no_fact_pts = n_distinct(!!sym(pt_col))
       ) %>% ungroup() %>% collect()
 
-    missed_pts <-
-      visit_tbl %>% select(!!sym(pt_col)) %>%
-      anti_join(tbl_use,
-                by=pt_col) %>%
-      mutate(check_description = check_description_name) %>%
-      group_by(
-        check_description
-      ) %>%
-      summarise(
-        no_fact_pts = n_distinct(!!sym(pt_col))
-      ) %>% ungroup() %>% collect()
+    # missed_pts <-
+    #   visit_tbl %>% select(!!sym(pt_col)) %>%
+    #   anti_join(tbl_use,
+    #             by=pt_col) %>%
+    #   mutate(check_description = check_description_name) %>%
+    #   group_by(
+    #     check_description
+    #   ) %>%
+    #   summarise(
+    #     no_fact_pts = n_distinct(!!sym(pt_col))
+    #   ) %>% ungroup() %>% collect()
 
     cts_combined <-
       visit_tbl_all_name %>%
       left_join(missed_visits) %>%
-      left_join(missed_pts) %>%
+      # left_join(missed_pts) %>%
       mutate(
         no_fact_visits_prop = round(
           no_fact_visits / total_visits, 2

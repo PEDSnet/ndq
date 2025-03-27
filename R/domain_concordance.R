@@ -96,11 +96,11 @@ check_dcon<- function(dcon_tbl,
 
     ## Combined cohort
     if(omop_or_pcornet == 'omop'){
-      if(compute_level=='visits'){
+      if(compute_level=='visit'){
         col_nm <- sym('visit_occurrence_id')
       } else{col_nm <- sym('person_id')}
     }else if(omop_or_pcornet == 'pcornet'){
-      if(compute_level=='visits'){
+      if(compute_level=='visit'){
         col_nm <- sym('encounterid')
       } else{col_nm <- sym('patid')}
     }

@@ -1,13 +1,15 @@
 
-bmc_test <- tibble('check_id' = c('co'),
-                   'check_description' = c('conditions'),
+ecp_test <- tibble('check_id' = c('hypertension'),
+                   'cohort_definition' = c('all patients'),
+                   'cohort_schema' = c('cdm'),
+                   'cohort_table' = c('person'),
                    'schema' = c('cdm'),
                    'table' = c('condition_occurrence'),
                    'concept_field' = c('condition_concept_id'),
-                   'concept_table_field' = c('concept_name'),
-                   'filter_logic' = c(NA))
+                   'conceptset_name' = c('synthea_hypertension'),
+                   'filter_logic' = c('condition_concept_id == 320128'))
 
-test_that('omop_or_pcornet limited input', {
+test_that('omop_or_pcornet limited inputs', {
 
   conn <- mk_testdb_omop()
 
@@ -21,14 +23,15 @@ test_that('omop_or_pcornet limited input', {
   config('db_trace', FALSE)
   config('results_name_tag', '')
   config('current_version', '1')
+  config('retain_intermediates', FALSE)
 
-  expect_error(check_bmc(bmc_tbl = bmc_test,
+  expect_error(check_ecp(ecp_tbl = ecp_test,
                          omop_or_pcornet = 'test'))
 
 })
 
 
-test_that('check_bmc', {
+test_that('check_ecp', {
 
   conn <- mk_testdb_omop()
 
@@ -43,16 +46,19 @@ test_that('check_bmc', {
   config('results_name_tag', '')
   config('current_version', '1')
   config('retain_intermediates', FALSE)
+  config('cache_enabled', FALSE)
+  config('base_dir', getwd())
+  config('subdirs', list('spec_dir' = 'testspecs'))
 
-  expect_no_error(check_bmc(bmc_tbl = bmc_test,
+  expect_no_error(check_ecp(ecp_tbl = ecp_test,
                             omop_or_pcornet = 'omop'))
-  expect_no_error(check_bmc(bmc_tbl = bmc_test %>% dplyr::mutate(filter_logic = 'condition_concept_id == 4281516'),
+  expect_no_error(check_ecp(ecp_tbl = ecp_test %>% dplyr::mutate(filter_logic = NA),
                             omop_or_pcornet = 'omop'))
 
 })
 
 
-test_that('process_bmc local', {
+test_that('process_ecp local', {
 
   conn <- mk_testdb_omop()
 
@@ -67,20 +73,20 @@ test_that('process_bmc local', {
   config('results_name_tag', '')
   config('current_version', '1')
   config('retain_intermediates', FALSE)
+  config('cache_enabled', FALSE)
+  config('base_dir', getwd())
+  config('subdirs', list('spec_dir' = 'testspecs'))
 
-  bmc_opt <- check_bmc(bmc_tbl = bmc_test,
+  ecp_opt <- check_ecp(ecp_tbl = ecp_test,
                        omop_or_pcornet = 'omop')
 
-  bmc_opt$bmc_concepts <- bmc_opt$bmc_concepts %>% mutate(include = NA)
-
-  expect_no_error(process_bmc(bmc_results = bmc_opt$bmc_counts,
-                              bmc_concepts = bmc_opt$bmc_concepts,
+  expect_no_error(process_ecp(ecp_results = ecp_opt,
                               rslt_source = 'local'))
 
 })
 
 
-test_that('process_bmc local', {
+test_that('process_ecp remote', {
 
   conn <- mk_testdb_omop()
 
@@ -95,17 +101,16 @@ test_that('process_bmc local', {
   config('results_name_tag', '')
   config('current_version', '1')
   config('retain_intermediates', FALSE)
+  config('cache_enabled', FALSE)
+  config('base_dir', getwd())
+  config('subdirs', list('spec_dir' = 'testspecs'))
 
-  bmc_opt <- check_bmc(bmc_tbl = bmc_test,
+  ecp_opt <- check_ecp(ecp_tbl = ecp_test,
                        omop_or_pcornet = 'omop')
 
-  bmc_opt$bmc_concepts <- bmc_opt$bmc_concepts %>% mutate(include = NA)
+  DBI::dbWriteTable(conn, 'ecp_output', ecp_opt)
 
-  DBI::dbWriteTable(conn, 'bmc_output', bmc_opt$bmc_counts)
-  DBI::dbWriteTable(conn, 'bmc_concepts', bmc_opt$bmc_concepts)
-
-  expect_no_error(process_bmc(bmc_results = 'bmc_output',
-                              bmc_concepts = 'bmc_concepts',
+  expect_no_error(process_ecp(ecp_results = 'ecp_output',
                               rslt_source = 'remote'))
 
 })
