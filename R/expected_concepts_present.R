@@ -1,18 +1,19 @@
 
-#' Check Expected Concept Presence
+#' Expected Concepts Present
 #'
-#' This function will loop through the provided table to identify
-#' the count of patients who have the concept identified in the list element and the proportion
-#' of patients who have the concept based on the user-provided denominator table.
+#' This function will iterate through the provided input table to identify
+#' the count of patients who have the concept identified in the defined concept set
+#' and the proportion of patients who have the concept based on the defined cohort table.
 #'
-#' @param ecp_tbl table with information regarding the variables and associated fact tables
-#'                that should be evaluated
+#' @param ecp_tbl table with information regarding the concepts and associated fact tables
+#'                that should be evaluated, and the cohort that should be used to establish
+#'                a patient denominator
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
 #' @param check_string an abbreviated identifier to identify all output from this module
 #'                     defaults to `ecp`
 #'
 #' @return a table with the total patient count, the count of patients with a particular concept,
-#'         the proportion of total patients with the concept, and relevant metadata
+#'         the proportion of total patients with the concept, and relevant descriptive metadata
 #'
 #' @export
 #'
@@ -94,6 +95,10 @@ check_ecp <- function(ecp_tbl,
 
 
 #' Expected Concepts Present -- Processing
+#'
+#' Intakes the output of check_ecp in order to apply additional processing. This
+#' includes creating a new check_name_app column to specify that the check
+#' was computed at the person level.
 #'
 #' @param ecp_results table output by check_ecp
 #' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),

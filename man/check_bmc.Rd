@@ -13,24 +13,25 @@ check_bmc(
 }
 \arguments{
 \item{bmc_tbl}{table with information regarding the fields that should be
-evaluated to determine if they only include "best" concepts}
+evaluated to determine if they only include "best" concepts;
+see \code{?bmc_input_omop} or \code{?bmc_input_pcornet} for details}
 
 \item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
 
-\item{concept_tbl}{the vocabulary table with concept information; defaults to 'concept'}
+\item{concept_tbl}{the vocabulary table with concept information; defaults to \code{vocabulary.concept}}
 
 \item{check_string}{string that contains a description of the table}
 }
 \value{
 a list of two dataframes:
-one dataframe that contains each concept present in the field
-and the associated row and patient counts/proportions
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{    and another dataframe with just the concepts to be used to identify
-    "best" vs "not best" concepts in the processing step
-}\if{html}{\out{</div>}}
+\code{bmc_counts}: each concept present in the specified field and the
+associated row and patient counts/proportions
+\code{bmc_concepts}: just the concepts from bmc_counts -- to be labelled
+as "best" (1) vs "not best" (0) concepts in a column
+called \code{include} for use in the processing step
 }
 \description{
-compute numbers proportion of rows and patients at
-each level of rxnorm drug level
+This function will identify the existing concepts within the specified field
+so the user can assess which of these concepts are acceptable ("best") or should
+not be used in that field ("not best")
 }

@@ -1,23 +1,28 @@
 
 #' Facts Over Time
 #'
-#' @param fot_tbl a table with information describing the fact tables that should be examined
+#' This function will compute the number of rows, patients, and (optionally) visits associated with
+#' the fact of interest within a specified time period. The user will supply the end points of the time span
+#' (i.e. January 2009 - January 2024) and the time period they wish to divide it by (i.e. month, year).
+#'
+#' @param fot_tbl a table with information describing the fact tables that should be examined;
+#'                see `?fot_input_omop` or `?fot_input_pcornet` for details
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param compute_method either loop or group; controls whether the check is executed by looping through each time period
-#'                       or grouping by a date field
-#' @param time_span a list that contains the start date and end date of the time span
-#' @param time_period string indicating the length of time that the time span should be divided into; i.e. months, years
+#' @param compute_method a string input of either `loop` or `group`; controls whether the
+#'                       check is executed by looping through each time period or grouping by a date field
+#' @param time_span a list that contains the start date and end date of the time span (i.e. list(2009-01-01, 2015-01-01))
+#' @param time_period string indicating the length of time that the time span should be divided into (i.e. months, years)
 #' @param lookback_weeks if lookback is in weeks instead of months, this should be set to a non-zero integer.
-#' Defaults to 0, for lookback to be in months.
+#'                       Defaults to 0, for lookback to be in months.
 #' @param lookback_months the number of months to look back; defaults to 1
 #' @param check_string the abbreviated name of the check; defaults to `fot`
-#' @param visits_only if TRUE, counts ONLY distinct visits and not patients
+#' @param visits_only if TRUE, counts ONLY distinct visits and not patients or rows
 #' @param distinct_visits if TRUE, counts distinct visits as well as total counts and total patients
 #'
-#' @return table with the following rows (if `distinct_visits` = `TRUE`:
-#'  `month_end` | `check_name` | `database_version` | `site` | `time_desc` | `row_cts` | `row_pts` | `row_visits`
-#'
-#'  ** if `time_tbls` contains fields that are grouped, the output will contain the grouped variables
+#' @return a dataframe with one row for each time period within the specified time span for each check;
+#' - if visits_only = TRUE, will produce only counts of visits for the check + time period
+#' - if visits_only = FALSE and distinct_visits = TRUE, will produce counts of patients, rows, and visits for the check + time period
+#' - if visits_only = FALSE and distinct_visits = FALSE, will produce counts of patients and rows for the check + time period
 #'
 #' @importFrom purrr reduce
 #' @import lubridate
@@ -85,20 +90,21 @@ check_fot <- function(fot_tbl,
 
 #' Facts Over Time (Original Postgres Implementation)
 #'
-#' @param fot_tbl a table with information describing the fact tables that should be examined
+#' @param fot_tbl a table with information describing the fact tables that should be examined;
+#'                see `?fot_input_omop` or `?fot_input_pcornet` for details
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param time_frame a list that contains the end date of every month to iterate through
+#' @param time_frame a list of dates that should be iterated through to retrieve the facts for each time period
 #' @param lookback_weeks if lookback is in weeks instead of months, this should be set to a non-zero integer.
-#' Defaults to 0, for lookback to be in months.
+#'                       Defaults to 0, for lookback to be in months.
 #' @param lookback_months the number of months to look back; defaults to 1
 #' @param check_string the abbreviated name of the check; defaults to `fot`
-#' @param visits_only if TRUE, counts ONLY distinct visits and not patients
+#' @param visits_only if TRUE, counts ONLY distinct visits and not patients or rows
 #' @param distinct_visits if TRUE, counts distinct visits as well as total counts and total patients
 #'
-#' @return table with the following rows (if `distinct_visits` = `TRUE`:
-#'  `month_end` | `check_name` | `database_version` | `site` | `time_desc` | `row_cts` | `row_pts` | `row_visits`
-#'
-#'  ** if `time_tbls` contains fields that are grouped, the output will contain the grouped variables
+#' @return a dataframe with one row for each time period within the specified time span for each check;
+#' - if visits_only = TRUE, will produce only counts of visits for the check + time period
+#' - if visits_only = FALSE and distinct_visits = TRUE, will produce counts of patients, rows, and visits for the check + time period
+#' - if visits_only = FALSE and distinct_visits = FALSE, will produce counts of patients and rows for the check + time period
 #'
 check_fot_loop <- function(fot_tbl,
                            time_frame = time_span,
@@ -230,22 +236,6 @@ check_fot_loop <- function(fot_tbl,
 
 
 
-#' Facts Over Time (Optimized for Trino)
-#'
-#' @param fot_tbl a table with information describing the fact tables that should be examined
-#' @param time_frame a list that contains at least end date of the first and last month of the desired time span
-#' @param lookback_weeks if lookback is in weeks instead of months, this should be set to a non-zero integer.
-#' Defaults to 0, for lookback to be in months.
-#' @param lookback_months the number of months to look back; defaults to 1
-#' @param check_string the abbreviated name of the check; defaults to `fot`
-#' @param visits_only if TRUE, counts ONLY distinct visits and not patients
-#' @param distinct_visits if TRUE, counts distinct visits as well as total counts and total patients
-#'
-#' @return table with the following rows (if `distinct_visits` = `TRUE`:
-#'  `month_end` | `check_name` | `database_version` | `site` | `time_desc` | `row_cts` | `row_pts` | `row_visits`
-#'
-#'  ** if `time_tbls` contains fields that are grouped, the output will contain the grouped variables
-#'
 # check_fot_group <- function(fot_tbl,
 #                             time_frame = time_span,
 #                             lookback_weeks=0,
@@ -345,7 +335,10 @@ check_fot_loop <- function(fot_tbl,
 # In plain words, its the current month divided by the weighted average of the
 # previous month, the next month, and the value from the current month in the
 # previous year
-fot_check_calc <- function(tblx, site_col,time_col, target_col) {
+fot_check_calc <- function(tblx,
+                           site_col,
+                           time_col,
+                           target_col) {
   tblx %>%
     collect() %>%
     # window_order(!!sym(site_col),!!sym(time_col)) %>%
@@ -456,7 +449,17 @@ add_fot_ratios <- function(fot_lib_output,
 
 
 
-#' Facts Over Time -- Process
+#' Facts Over Time -- Processing
+#'
+#' Intakes the output of check_fot in order to apply additional processing. This
+#' includes applying a heuristic meant to compare the fact count in a given time period
+#' to other time periods around it. For a montly computation, for example, the heuristic
+#' would be `month / ((month-1 * .25) + (month+1 * .25) + (month-12 * .5))` which is
+#' the value for a given month divided by the weighted average of the value in the previous
+#' month, the next month, and the same month in the previous year. The function can also
+#' optionally compute a ratio given a `total_pt` column (added by the user) to be used as a
+#' denominator and a `ratio_mult` value to be used as a multiplier.
+#'
 #'
 #' @param fot_results the table output by check_fot
 #' @param target_col the numerical column in fot_results that should be used to
@@ -474,12 +477,15 @@ add_fot_ratios <- function(fot_lib_output,
 #' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
 #'                      of these files. If the results are local or remote, leave NULL
 #'
-#' @returns a list with two dataframes:
-#'          one with the summary heuristic (month / ((month-1)*.25 +
-#'                                                  (month+1)*.25 +
-#'                                                  (month-12)*.5))
-#'          and another with summary values (mean, med, sd, q1, q3) based on
-#'          the heuristic
+#' @returns a list with up to three dataframes:
+#'          `fot_heuristic`: the summary heuristic (month / ((month-1)*.25 +
+#'                                                           (month+1)*.25 +
+#'                                                           (month-12)*.5))
+#'          `fot_heuristic_summary`: summary values (mean, med, sd, q1, q3) based on
+#'                                   the heuristic
+#'          and if add_ratios = TRUE
+#'          `fot_ratios`: the fot_results table with an additional column with the
+#'                        incidence ratio applied (as row_ratio)
 #'
 #' @importFrom stats median
 #' @importFrom stats quantile
@@ -513,7 +519,7 @@ process_fot <- function(fot_results,
     fot_ratios <- add_fot_ratios(fot_lib_output = fot_int,
                                  denom_mult = ratio_mult)
 
-    fot_list[[3]] <- fot_ratios
+    fot_list[['fot_ratios']] <- fot_ratios
 
   }
 

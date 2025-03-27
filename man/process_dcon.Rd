@@ -16,10 +16,23 @@ process_dcon(dcon_results, rslt_source = "remote", csv_rslt_path = NULL)
 of these files. If the results are local or remote, leave NULL}
 }
 \value{
-dcon_tbl with additional columns with totals and proportions for the checks
+a dataframe with one row for cohort overlap computation type listed in the description, with
+the associated raw count (of patients or visits) and the associated proportion
 }
 \description{
-Function to add a proportion column
-when counts are computed for each domain and for combined
-and to add total as a site summarizing cohorts from all sites
+Intakes the output of check_dcon in order to apply additional processing. This
+includes computing the following cohort overlap counts and proportions:
+\itemize{
+\item cohort_1_only: overall, patients in just cohort 1
+\item cohort_2_only: overall, patients in just cohort 2
+\item combined: overall, patients in both 1 and 2
+\item cohort_1_denom: patients in cohort 1 not cohort 2
+\item cohort_2_denom: patients in cohort 2 not cohort 1
+\item cohort_1_in_2: patients in cohort 2 who are also in 1 (use cohort 2 as denominator)
+\item cohort_2_in_1: patients in cohort 1 who are also in 2 (use cohort 1 as denominator)
+}
+}
+\details{
+Note that cohort_1_in_2 and cohort_2_in_1 will have the same raw count, but different
+proportions since the denominator is different
 }

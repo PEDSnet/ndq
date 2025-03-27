@@ -38,5 +38,7 @@ Depends:
     R (>= 3.5)
 LazyData: true
 Suggests: 
+    DBI,
+    RSQLite,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

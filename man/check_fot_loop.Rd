@@ -16,9 +16,10 @@ check_fot_loop(
 )
 }
 \arguments{
-\item{fot_tbl}{a table with information describing the fact tables that should be examined}
+\item{fot_tbl}{a table with information describing the fact tables that should be examined;
+see \code{?fot_input_omop} or \code{?fot_input_pcornet} for details}
 
-\item{time_frame}{a list that contains the end date of every month to iterate through}
+\item{time_frame}{a list of dates that should be iterated through to retrieve the facts for each time period}
 
 \item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
 
@@ -29,15 +30,17 @@ Defaults to 0, for lookback to be in months.}
 
 \item{check_string}{the abbreviated name of the check; defaults to \code{fot}}
 
-\item{visits_only}{if TRUE, counts ONLY distinct visits and not patients}
+\item{visits_only}{if TRUE, counts ONLY distinct visits and not patients or rows}
 
 \item{distinct_visits}{if TRUE, counts distinct visits as well as total counts and total patients}
 }
 \value{
-table with the following rows (if \code{distinct_visits} = \code{TRUE}:
-\code{month_end} | \code{check_name} | \code{database_version} | \code{site} | \code{time_desc} | \code{row_cts} | \code{row_pts} | \code{row_visits}
-
-** if \code{time_tbls} contains fields that are grouped, the output will contain the grouped variables
+a dataframe with one row for each time period within the specified time span for each check;
+\itemize{
+\item if visits_only = TRUE, will produce only counts of visits for the check + time period
+\item if visits_only = FALSE and distinct_visits = TRUE, will produce counts of patients, rows, and visits for the check + time period
+\item if visits_only = FALSE and distinct_visits = FALSE, will produce counts of patients and rows for the check + time period
+}
 }
 \description{
 Facts Over Time (Original Postgres Implementation)

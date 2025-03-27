@@ -1,21 +1,28 @@
 
 #' Data Cycle Changes
 #'
+#' This function will compute row & patient counts in the specified tables for both
+#' the current data model version and a previous data model version in order to
+#' assess changes across data extractions. If you have previously executed this function,
+#' you have the option to point to a previous result set instead of recomputing the
+#' counts from the CDM.
+#'
 #' @param dc_tbl table with details of the CDM elements that should be tested in
-#'               both the current and previous data model versions
+#'               both the current and previous data model versions. see `?dc_input_omop` or
+#'               `?dc_input_pcornet` for details
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
 #' @param prev_db_string string label indicating the previous CDM version; if
-#'                       prev_ct_src == 'result', ensure this matches the appropriate database
+#'                       `prev_ct_src == 'result'`, ensure this matches the appropriate database
 #'                       label in the last set of results
 #' @param current_db_string string label indicating the current CDM version
 #' @param prev_ct_src a string indicating where the counts from the previous data model
 #'                    should be extracted: either `cdm` (to pull from the previous CDM instance)
-#'                    or `result` (to pull from a previous instance of check_dc output)
-#' @param prev_rslt_tbl if prev_ct_src = 'result', the name of the table where previous results
+#'                    or `result` (to pull from a previous instance of `check_dc` output)
+#' @param prev_rslt_tbl if `prev_ct_src = 'result'`, the name of the table where previous results
 #'                      are stored
-#' @param prev_rslt_schema if prev_ct_src = 'result', the name of the schema where previous results
+#' @param prev_rslt_schema if `prev_ct_src = 'result'`, the name of the schema where previous results
 #'                         are stored. defaults to `config('results_schema')`
-#' @param prev_db the database connection to be used to access the previous CDM or results;
+#' @param prev_db the database connection to be used to access the previous CDM or result table(s);
 #'                defaults to `config('db_src')`
 #' @param check_string an abbreviated identifier to identify all output from this module
 #'                     defaults to `dc`
@@ -182,13 +189,13 @@ check_dc <- function(dc_tbl,
 
 #' Data Cycle Changes -- Processing
 #'
-#' function to add proportions,thresholds, and totals to the output
-#' of check_dc
+#' Intakes the output of check_dc in order to apply additional processing. This
+#' includes computing percent change across data model versions and computing an
+#' overall set of counts/percent changes across all sites included in the input.
 #'
-#'
-#' @param dc_ct_results the table output by check_dc labelled `dc_cts` that contains
+#' @param dc_ct_results the name of the table output by check_dc labelled `dc_cts` that contains
 #'                      the previous and current data cycle counts
-#' @param dc_meta_results the table output by check_dc labelled `dc_meta` that contains
+#' @param dc_meta_results the name of the table output by check_dc labelled `dc_meta` that contains
 #'                        metadata associated with each executed check
 #' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
 #'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote

@@ -18,27 +18,28 @@ check_dc(
 }
 \arguments{
 \item{dc_tbl}{table with details of the CDM elements that should be tested in
-both the current and previous data model versions}
+both the current and previous data model versions. see \code{?dc_input_omop} or
+\code{?dc_input_pcornet} for details}
 
 \item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
 
 \item{prev_db_string}{string label indicating the previous CDM version; if
-prev_ct_src == 'result', ensure this matches the appropriate database
+\code{prev_ct_src == 'result'}, ensure this matches the appropriate database
 label in the last set of results}
 
 \item{current_db_string}{string label indicating the current CDM version}
 
 \item{prev_ct_src}{a string indicating where the counts from the previous data model
 should be extracted: either \code{cdm} (to pull from the previous CDM instance)
-or \code{result} (to pull from a previous instance of check_dc output)}
+or \code{result} (to pull from a previous instance of \code{check_dc} output)}
 
-\item{prev_db}{the database connection to be used to access the previous CDM or results;
+\item{prev_db}{the database connection to be used to access the previous CDM or result table(s);
 defaults to \code{config('db_src')}}
 
-\item{prev_rslt_tbl}{if prev_ct_src = 'result', the name of the table where previous results
+\item{prev_rslt_tbl}{if \code{prev_ct_src = 'result'}, the name of the table where previous results
 are stored}
 
-\item{prev_rslt_schema}{if prev_ct_src = 'result', the name of the schema where previous results
+\item{prev_rslt_schema}{if \code{prev_ct_src = 'result'}, the name of the schema where previous results
 are stored. defaults to \code{config('results_schema')}}
 
 \item{check_string}{an abbreviated identifier to identify all output from this module
@@ -50,5 +51,9 @@ a list with two dataframes:
 - \code{dc_meta}: the metadata associated with each input table that appears in \code{dc_cts}
 }
 \description{
-Data Cycle Changes
+This function will compute row & patient counts in the specified tables for both
+the current data model version and a previous data model version in order to
+assess changes across data extractions. If you have previously executed this function,
+you have the option to point to a previous result set instead of recomputing the
+counts from the CDM.
 }

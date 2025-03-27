@@ -18,16 +18,17 @@ check_fot(
 )
 }
 \arguments{
-\item{fot_tbl}{a table with information describing the fact tables that should be examined}
+\item{fot_tbl}{a table with information describing the fact tables that should be examined;
+see \code{?fot_input_omop} or \code{?fot_input_pcornet} for details}
 
 \item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
 
-\item{compute_method}{either loop or group; controls whether the check is executed by looping through each time period
-or grouping by a date field}
+\item{compute_method}{a string input of either \code{loop} or \code{group}; controls whether the
+check is executed by looping through each time period or grouping by a date field}
 
-\item{time_span}{a list that contains the start date and end date of the time span}
+\item{time_span}{a list that contains the start date and end date of the time span (i.e. list(2009-01-01, 2015-01-01))}
 
-\item{time_period}{string indicating the length of time that the time span should be divided into; i.e. months, years}
+\item{time_period}{string indicating the length of time that the time span should be divided into (i.e. months, years)}
 
 \item{lookback_weeks}{if lookback is in weeks instead of months, this should be set to a non-zero integer.
 Defaults to 0, for lookback to be in months.}
@@ -36,16 +37,20 @@ Defaults to 0, for lookback to be in months.}
 
 \item{check_string}{the abbreviated name of the check; defaults to \code{fot}}
 
-\item{visits_only}{if TRUE, counts ONLY distinct visits and not patients}
+\item{visits_only}{if TRUE, counts ONLY distinct visits and not patients or rows}
 
 \item{distinct_visits}{if TRUE, counts distinct visits as well as total counts and total patients}
 }
 \value{
-table with the following rows (if \code{distinct_visits} = \code{TRUE}:
-\code{month_end} | \code{check_name} | \code{database_version} | \code{site} | \code{time_desc} | \code{row_cts} | \code{row_pts} | \code{row_visits}
-
-** if \code{time_tbls} contains fields that are grouped, the output will contain the grouped variables
+a dataframe with one row for each time period within the specified time span for each check;
+\itemize{
+\item if visits_only = TRUE, will produce only counts of visits for the check + time period
+\item if visits_only = FALSE and distinct_visits = TRUE, will produce counts of patients, rows, and visits for the check + time period
+\item if visits_only = FALSE and distinct_visits = FALSE, will produce counts of patients and rows for the check + time period
+}
 }
 \description{
-Facts Over Time
+This function will compute the number of rows, patients, and (optionally) visits associated with
+the fact of interest within a specified time period. The user will supply the end points of the time span
+(i.e. January 2009 - January 2024) and the time period they wish to divide it by (i.e. month, year).
 }

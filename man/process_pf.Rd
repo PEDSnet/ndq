@@ -19,5 +19,7 @@ of these files. If the results are local or remote, leave NULL}
 pf_output tbl with additional total counts
 }
 \description{
-function to add total counts by check_description
+Intakes the output of check_pf in order to apply additional processing. This
+includes computing overall counts/proportions across all sites included in the input and tidying
+some of the descriptive metadata.
 }

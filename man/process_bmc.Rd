@@ -12,11 +12,11 @@ process_bmc(
 )
 }
 \arguments{
-\item{bmc_results}{the bmc_counts table output by check_bmc}
+\item{bmc_results}{the \code{bmc_counts} table output by check_bmc}
 
-\item{bmc_concepts_labelled}{the bmc_concepts table output by check_bmc, with an additional
-column called "include" added with "not best" or unideal concepts
-marked with a 0}
+\item{bmc_concepts_labelled}{the \code{bmc_concepts} table output by check_bmc, with an additional
+column called \code{include} added with "not best" or non-ideal concepts
+marked with a 0 (optionally, "best" concepts can also be marked with a 1)}
 
 \item{rslt_source}{the location of the results. acceptable values are \code{local} (stored as a dataframe in the R environment),
 \code{csv} (stored as CSV files), or \code{remote} (stored on a remote DBMS); defaults to remote}
@@ -29,5 +29,8 @@ a dataframe summarizing the proportion of best vs not best concepts for a given 
 the appropriate value in the "include" column
 }
 \description{
-Best Mapped Concepts -- Processing
+Intakes the output of check_bmc in order to apply additional processing. This
+includes applying the user-specified best/not best labels that were added to
+the bmc_concepts output, then using those labels to compute proportions of
+best vs not best concept representation in each check.
 }

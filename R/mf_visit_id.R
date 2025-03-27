@@ -1,19 +1,25 @@
 
 #' Missing Field: Visit ID
 #'
-#' Function to check for visits in a table having an associated visit_occurrence_id
+#' This function will check to see if the visit_occurrence_id/encounterid in a given fact table
+#' also exists in the visit_occurrence/encoubter table and identify cases where the visit_occurrence_id/encounterid
+#' is missing entirely (NULL). There may be cases where this is expected
+#' (for example, immunizations imported from an external registry) but generally the
+#' visit_occurrence_id/encounterid should be populated and exist as a primary key in the
+#' visit_occurrence/encounter table.
 #'
 #' @param mf_tbl a table with information about the tables that should be cross
 #'               checked against the visit_tbl to ensure the visit_occurrence_id / encounterid
 #'               exists as a primary key
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param visit_tbl the CDM visit / encounter table that contains the visit ID primary key
+#' @param visit_tbl the CDM visit_occurrence / encounter table that contains the visit ID primary key
 #' @param check_string an abbreviated identifier to identify all output from this module
 #'                     defaults to `mf_visitid`
 #'
-#' @return table with:
-#' measure | total_visits | missing_visits_total | missing_visits_distinct |
-#' visit_na | total_id | check_name | database_version | site
+#' @return a table summarizing the total number of visits in the fact table, the number of NULL visits,
+#'         and the number of visits that cannot link back to the visit table. has columns: measure,
+#'         total_visits, missing_visits_total, missing_visits_distinct, visit_na, total_id, check_name,
+#'         database_version,site
 #'
 #' @export
 #'
@@ -159,7 +165,9 @@ check_mf_visitid <- function(mf_tbl,
 
 #' Missing Field: Visit ID -- Processing
 #'
-#' function to add proportions to mf results
+#' Intakes the output of check_mf_visitid in order to apply additional processing.
+#' This includes computing proportions of missing visits and computing overall
+#' totals across all sites included in the input.
 #'
 #' @param mf_visitid_results output of check_mf_visitid
 #' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),

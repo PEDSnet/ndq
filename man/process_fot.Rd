@@ -2,7 +2,7 @@
 % Please edit documentation in R/facts_over_time.R
 \name{process_fot}
 \alias{process_fot}
-\title{Facts Over Time -- Process}
+\title{Facts Over Time -- Processing}
 \usage{
 process_fot(
   fot_results,
@@ -37,13 +37,23 @@ be used to compute the rate}
 of these files. If the results are local or remote, leave NULL}
 }
 \value{
-a list with two dataframes:
-one with the summary heuristic (month / ((month-1)\emph{.25 +
+a list with up to three dataframes:
+\code{fot_heuristic}: the summary heuristic (month / ((month-1)\emph{.25 +
 (month+1)}.25 +
 (month-12)*.5))
-and another with summary values (mean, med, sd, q1, q3) based on
+\code{fot_heuristic_summary}: summary values (mean, med, sd, q1, q3) based on
 the heuristic
+and if add_ratios = TRUE
+\code{fot_ratios}: the fot_results table with an additional column with the
+incidence ratio applied (as row_ratio)
 }
 \description{
-Facts Over Time -- Process
+Intakes the output of check_fot in order to apply additional processing. This
+includes applying a heuristic meant to compare the fact count in a given time period
+to other time periods around it. For a montly computation, for example, the heuristic
+would be \code{month / ((month-1 * .25) + (month+1 * .25) + (month-12 * .5))} which is
+the value for a given month divided by the weighted average of the value in the previous
+month, the next month, and the same month in the previous year. The function can also
+optionally compute a ratio given a \code{total_pt} column (added by the user) to be used as a
+denominator and a \code{ratio_mult} value to be used as a multiplier.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/patient_facts.R
 \name{check_pf}
 \alias{check_pf}
-\title{Patient Facts (NDQ)}
+\title{Patient Facts}
 \usage{
 check_pf(
   pf_tbl,
@@ -14,7 +14,7 @@ check_pf(
 }
 \arguments{
 \item{pf_tbl}{a table with information about the fact tables that should be
-evaluated against the visit_tbl}
+evaluated against the visit_tbl; see \verb{?pf_input omop} or \code{?pf_input_pcornet}}
 
 \item{visit_type_string}{a string label to identify the visit type for which
 .                         you are executing the check (i.e. inpatient)}
@@ -32,5 +32,7 @@ tbl with visit_occurrences, and all columns in the original visit_occurrence tab
 for which there are no facts in the \code{fact_tbls}
 }
 \description{
-Function to find visit_occurrences without facts in another set of tables
+This function will identify visits that do not link to the user-specified
+facts. It will also compute the counts of patients who have at least one
+visit that does not link to the specified fact type.
 }

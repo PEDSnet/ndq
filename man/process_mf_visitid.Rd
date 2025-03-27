@@ -24,5 +24,7 @@ mf_visitid tbl with additional domain, total_ct, and proportion
 column
 }
 \description{
-function to add proportions to mf results
+Intakes the output of check_mf_visitid in order to apply additional processing.
+This includes computing proportions of missing visits and computing overall
+totals across all sites included in the input.
 }

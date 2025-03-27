@@ -2,21 +2,23 @@
 
 #' Best Mapped Concepts
 #'
-#' compute numbers proportion of rows and patients at
-#' each level of rxnorm drug level
+#' This function will identify the existing concepts within the specified field
+#' so the user can assess which of these concepts are acceptable ("best") or should
+#' not be used in that field ("not best")
 #'
 #' @param bmc_tbl table with information regarding the fields that should be
-#'                evaluated to determine if they only include "best" concepts
+#'                evaluated to determine if they only include "best" concepts;
+#'                see `?bmc_input_omop` or `?bmc_input_pcornet` for details
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param concept_tbl the vocabulary table with concept information; defaults to 'concept'
+#' @param concept_tbl the vocabulary table with concept information; defaults to `vocabulary.concept`
 #' @param check_string string that contains a description of the table
 #'
 #' @return a list of two dataframes:
-#'         one dataframe that contains each concept present in the field
-#'         and the associated row and patient counts/proportions
-#'
-#'         and another dataframe with just the concepts to be used to identify
-#'         "best" vs "not best" concepts in the processing step
+#'         `bmc_counts`: each concept present in the specified field and the
+#'                       associated row and patient counts/proportions
+#'         `bmc_concepts`: just the concepts from bmc_counts -- to be labelled
+#'                         as "best" (1) vs "not best" (0) concepts in a column
+#'                         called `include` for use in the processing step
 #'
 #' @export
 #'
@@ -254,10 +256,15 @@ bmc_rollup <- function(bmc_output_pp){
 
 #' Best Mapped Concepts -- Processing
 #'
-#' @param bmc_results the bmc_counts table output by check_bmc
-#' @param bmc_concepts_labelled the bmc_concepts table output by check_bmc, with an additional
-#'                              column called "include" added with "not best" or unideal concepts
-#'                              marked with a 0
+#' Intakes the output of check_bmc in order to apply additional processing. This
+#' includes applying the user-specified best/not best labels that were added to
+#' the bmc_concepts output, then using those labels to compute proportions of
+#' best vs not best concept representation in each check.
+#'
+#' @param bmc_results the `bmc_counts` table output by check_bmc
+#' @param bmc_concepts_labelled the `bmc_concepts` table output by check_bmc, with an additional
+#'                              column called `include` added with "not best" or non-ideal concepts
+#'                              marked with a 0 (optionally, "best" concepts can also be marked with a 1)
 #' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
 #'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
 #' @param csv_rslt_path if the results have been stored as CSV files, the path to the location

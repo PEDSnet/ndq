@@ -2,7 +2,7 @@
 % Please edit documentation in R/domain_concordance.R
 \name{check_dcon}
 \alias{check_dcon}
-\title{Compute domain concordance between 2 cohorts}
+\title{Domain Concordance}
 \usage{
 check_dcon(
   dcon_tbl,
@@ -13,10 +13,11 @@ check_dcon(
 }
 \arguments{
 \item{dcon_tbl}{table describing each cohort pair that should be examined;
-there should be 2 rows per check, one for each cohort, with the same check_id}
+there should be 2 rows per check, one for each cohort, with the same check_id
+see \code{?dcon_input_omop} or \code{?dcon_input_pcornet} for details}
 
 \item{compute_level}{string indicating the level at which the computation should be executed
-accepted values are 'patient' or 'visit'}
+accepted values are \code{patient} or \code{visit}}
 
 \item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
 
@@ -25,11 +26,12 @@ accepted values are 'patient' or 'visit'}
 \value{
 one dataframe with counts for the patients/visits in the first cohort,
 the patients/visits in the second cohort, and the patients/visits in both
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{    contains the columns: value, cohort, yr (set to 9999), check_type,
-                          database_version, site, check_name, check_desc
-}\if{html}{\out{</div>}}
 }
 \description{
-Compute domain concordance between 2 cohorts
+Given the details of a pair of clinical events, this function
+will determine the count of patients OR visits that meet criteria for
+the first event, the second event, and both events. Users can optionally
+define a time limitation for the combined cohort, so patients/visits will only
+count towards that cohort when the two events occur within a specified number of days
+of each other.
 }

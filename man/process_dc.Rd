@@ -12,10 +12,10 @@ process_dc(
 )
 }
 \arguments{
-\item{dc_ct_results}{the table output by check_dc labelled \code{dc_cts} that contains
+\item{dc_ct_results}{the name of the table output by check_dc labelled \code{dc_cts} that contains
 the previous and current data cycle counts}
 
-\item{dc_meta_results}{the table output by check_dc labelled \code{dc_meta} that contains
+\item{dc_meta_results}{the name of the table output by check_dc labelled \code{dc_meta} that contains
 metadata associated with each executed check}
 
 \item{rslt_source}{the location of the results. acceptable values are \code{local} (stored as a dataframe in the R environment),
@@ -30,6 +30,7 @@ and threshold columns; the dc_meta_results table remains unchanged, so the origi
 version should be used where needed
 }
 \description{
-function to add proportions,thresholds, and totals to the output
-of check_dc
+Intakes the output of check_dc in order to apply additional processing. This
+includes computing percent change across data model versions and computing an
+overall set of counts/percent changes across all sites included in the input.
 }

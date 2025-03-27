@@ -2,13 +2,14 @@
 % Please edit documentation in R/expected_concepts_present.R
 \name{check_ecp}
 \alias{check_ecp}
-\title{Check Expected Concept Presence}
+\title{Expected Concepts Present}
 \usage{
 check_ecp(ecp_tbl, omop_or_pcornet = "omop", check_string = "ecp")
 }
 \arguments{
-\item{ecp_tbl}{table with information regarding the variables and associated fact tables
-that should be evaluated}
+\item{ecp_tbl}{table with information regarding the concepts and associated fact tables
+that should be evaluated, and the cohort that should be used to establish
+a patient denominator}
 
 \item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
 
@@ -17,10 +18,10 @@ defaults to \code{ecp}}
 }
 \value{
 a table with the total patient count, the count of patients with a particular concept,
-the proportion of total patients with the concept, and relevant metadata
+the proportion of total patients with the concept, and relevant descriptive metadata
 }
 \description{
-This function will loop through the provided table to identify
-the count of patients who have the concept identified in the list element and the proportion
-of patients who have the concept based on the user-provided denominator table.
+This function will iterate through the provided input table to identify
+the count of patients who have the concept identified in the defined concept set
+and the proportion of patients who have the concept based on the defined cohort table.
 }

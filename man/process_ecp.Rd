@@ -19,5 +19,7 @@ of these files. If the results are local or remote, leave NULL}
 same input table with additional check_name_app column to indicate application level
 }
 \description{
-Expected Concepts Present -- Processing
+Intakes the output of check_ecp in order to apply additional processing. This
+includes creating a new check_name_app column to specify that the check
+was computed at the person level.
 }

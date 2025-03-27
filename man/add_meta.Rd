@@ -8,7 +8,7 @@ add_meta(
   tbl_meta,
   check_lib,
   version = config("current_version"),
-  site_nm = config("site")
+  site_nm = config("qry_site")
 )
 }
 \arguments{

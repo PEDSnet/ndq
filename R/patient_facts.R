@@ -1,10 +1,12 @@
 
-#' Patient Facts (NDQ)
+#' Patient Facts
 #'
-#' Function to find visit_occurrences without facts in another set of tables
+#' This function will identify visits that do not link to the user-specified
+#' facts. It will also compute the counts of patients who have at least one
+#' visit that does not link to the specified fact type.
 #'
 #' @param pf_tbl a table with information about the fact tables that should be
-#'               evaluated against the visit_tbl
+#'               evaluated against the visit_tbl; see `?pf_input omop` or `?pf_input_pcornet`
 #' @param visit_type_string a string label to identify the visit type for which
 #'.                         you are executing the check (i.e. inpatient)
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
@@ -132,7 +134,9 @@ check_pf <- function(pf_tbl,
 
 #' Patient Facts -- Processing
 #'
-#' function to add total counts by check_description
+#' Intakes the output of check_pf in order to apply additional processing. This
+#' includes computing overall counts/proportions across all sites included in the input and tidying
+#' some of the descriptive metadata.
 #'
 #' @param pf_results table output by check_pf
 #' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
