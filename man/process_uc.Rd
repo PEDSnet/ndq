@@ -16,10 +16,12 @@ process_uc(uc_results, rslt_source = "remote", csv_rslt_path = NULL)
 of these files. If the results are local or remote, leave NULL}
 }
 \value{
-table with additional columns/etc needed for pp output
+a table with either an additional column with unmapped proportions (by_year) or
+with additional rows that include total unmapped counts/proportions across all
+sites (not by_year)
 }
 \description{
-Function to add post-processed columns to the unmapped concepts dqa_library output
-and to add a \code{total} row with for each of the check applications
-for the overall number and proportion of unmapped rows
+Intakes the output of check_uc in order to apply additional processing. This
+includes either adding proportions (for by_year output) or computing overall
+totals across all sites included in the input (for not by_year output)
 }

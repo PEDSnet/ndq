@@ -17,24 +17,14 @@ of these files. If the results are local or remote, leave NULL}
 }
 \value{
 a list that contains two dataframes:
-table with:
-site
-table_application
-measurement_column
-vocabulary_id
-check_type
-check_name
-total_denom_ct
-total_concept_ct
-accepted_value
-tot_ct: sum of total rows for given value in vocab
-tot_prop: sum of proportion of all values for that vocab
-tot_dist_concept_ct: total distinct concepts for that vocab
-tot_dist_concept_prop: proportion of concepts in vocab of all concepts in table
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{     and another table with a similar structure but only containing the vocabulary violations
-}\if{html}{\out{</div>}}
+\itemize{
+\item \code{vc_processed}: a dataframe with additional columns that include proportions of violations
+and the overall summary
+\item \code{vc_violations}: a dataframe with ONLY violating vocabularies
+}
 }
 \description{
-Function to compute proportions of vocabulary values from vc check
+Intakes the output of check_vc in order to apply additional processing. This
+includes computing row and patient proportions and computing overall totals
+across all sites included in the input.
 }

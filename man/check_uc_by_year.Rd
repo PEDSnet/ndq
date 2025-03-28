@@ -20,17 +20,11 @@ unmapped concepts should be identified}
 defaults to \code{uc}}
 }
 \value{
-a dataframe with the following columns:
-\itemize{
-\item site
-\item year_date
-\item total_unmapped_row_ct
-\item total_row_ct
-\item unmapped_description
-\item check_name
-\item database_version
-}
+a dataframe with the total row count, the unmapped row count, the proportion
+of unmapped values, and some additional descriptive metadata for each check stratified by each year
+present in the fact table
 }
 \description{
-Function that produces output that contains unmapped values by year
+This function will evaluate the count and proportion of unmapped concepts associated
+with the fact type of interest, stratified by year.
 }

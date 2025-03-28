@@ -2,7 +2,7 @@
 % Please edit documentation in R/unmapped_concepts.R
 \name{check_uc}
 \alias{check_uc}
-\title{Function to check for value set conformance to a defined set}
+\title{Unmapped Concepts}
 \usage{
 check_uc(
   uc_tbl,
@@ -31,29 +31,21 @@ are included.}
 defaults to \code{uc}}
 }
 \value{
-tbl with the following columns:
-\itemize{
-\item site
-\item measure: from element name describing measuer
-\item total_rows: the denominator
-\item unmapped_rows: numerator
-\item check_name: from \code{check_string}
-\item database_version
-\item unmapped_prop
-}
+if \code{by_year} is \code{FALSE}: a dataframe with the total row count, the unmapped row count, the proportion
+of unmapped values, and some additional descriptive metadata for each check
 
-if \code{produce_mapped_list} is \code{TRUE}, then the following table will be automatically output
-to the database with the table name \code{st_conf_concepts_grpd}:
-\itemize{
-\item site
-\item unmapped_description
-\item database_version
-\item check_name
-\item src_value
-\item src_value_name
-\item src_value_ct
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    if `by_year` is `TRUE`: a dataframe with the total row count, the unmapped row count, the proportion
+    of unmapped values, and some additional descriptive metadata for each check stratified by each year
+    present in the fact table
+
+    if `produce_mapped_list` is `TRUE`, then a table with name `uc_grpd` that includes
+    the source values (with > 10 appearances) and counts of those values associated
+    with unmapped concepts
+}\if{html}{\out{</div>}}
 }
 \description{
-Function to check for value set conformance to a defined set
+This function will evaluate the count and proportion of unmapped concepts associated
+with the fact type of interest. If produce_mapped_list is set to TRUE, a summary of
+the source values associated with unmapped concepts will also be produced to help
+identify areas where mappings could potentially be improved.
 }

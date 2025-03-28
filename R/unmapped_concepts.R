@@ -1,5 +1,11 @@
 
-#' Function to check for value set conformance to a defined set
+#' Unmapped Concepts
+#'
+#' This function will evaluate the count and proportion of unmapped concepts associated
+#' with the fact type of interest. If produce_mapped_list is set to TRUE, a summary of
+#' the source values associated with unmapped concepts will also be produced to help
+#' identify areas where mappings could potentially be improved.
+#'
 #' @param uc_tbl dataframe with metadata describing the tables/columns for which
 #'               unmapped concepts should be identified
 #' @param by_year boolean indicating whether the analysis should be conducted longitudinally by year
@@ -13,26 +19,16 @@
 #'                            NOT be stored locally. Only source values with > 10 occurrences
 #'                            are included.
 #'
-#' @return
-#'   tbl with the following columns:
-#'   - site
-#'   - measure: from element name describing measuer
-#'   - total_rows: the denominator
-#'   - unmapped_rows: numerator
-#'   - check_name: from `check_string`
-#'   - database_version
-#'   - unmapped_prop
+#' @return if `by_year` is `FALSE`: a dataframe with the total row count, the unmapped row count, the proportion
+#'         of unmapped values, and some additional descriptive metadata for each check
 #'
-#' if `produce_mapped_list` is `TRUE`, then the following table will be automatically output
-#' to the database with the table name `st_conf_concepts_grpd`:
-#'   - site
-#'   - unmapped_description
-#'   - database_version
-#'   - check_name
-#'   - src_value
-#'   - src_value_name
-#'   - src_value_ct
+#'         if `by_year` is `TRUE`: a dataframe with the total row count, the unmapped row count, the proportion
+#'         of unmapped values, and some additional descriptive metadata for each check stratified by each year
+#'         present in the fact table
 #'
+#'         if `produce_mapped_list` is `TRUE`, then a table with name `uc_grpd` that includes
+#'         the source values (with > 10 appearances) and counts of those values associated
+#'         with unmapped concepts
 #'
 #' @export
 #'
@@ -139,7 +135,8 @@ check_uc <- function(uc_tbl,
 
 #' Unmapped Concepts by Year
 #'
-#' Function that produces output that contains unmapped values by year
+#' This function will evaluate the count and proportion of unmapped concepts associated
+#' with the fact type of interest, stratified by year.
 #'
 #' @param uc_tbl dataframe with metadata describing the tables/columns for which
 #'               unmapped concepts should be identified
@@ -147,14 +144,9 @@ check_uc <- function(uc_tbl,
 #' @param check_string an abbreviated identifier to identify all output from this module
 #'                     defaults to `uc`
 #'
-#' @return a dataframe with the following columns:
-#' - site
-#' - year_date
-#' - total_unmapped_row_ct
-#' - total_row_ct
-#' - unmapped_description
-#' - check_name
-#' - database_version
+#' @return a dataframe with the total row count, the unmapped row count, the proportion
+#'         of unmapped values, and some additional descriptive metadata for each check stratified by each year
+#'         present in the fact table
 #'
 #'
 check_uc_by_year <- function(uc_tbl,
@@ -248,9 +240,9 @@ check_uc_by_year <- function(uc_tbl,
 
 #' Unmapped Concepts -- Processing
 #'
-#' Function to add post-processed columns to the unmapped concepts dqa_library output
-#'             and to add a `total` row with for each of the check applications
-#'             for the overall number and proportion of unmapped rows
+#' Intakes the output of check_uc in order to apply additional processing. This
+#' includes either adding proportions (for by_year output) or computing overall
+#' totals across all sites included in the input (for not by_year output)
 #'
 #' @param uc_results the output of check_uc
 #' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
@@ -258,7 +250,9 @@ check_uc_by_year <- function(uc_tbl,
 #' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
 #'                      of these files. If the results are local or remote, leave NULL
 #'
-#' @return table with additional columns/etc needed for pp output
+#' @return a table with either an additional column with unmapped proportions (by_year) or
+#'         with additional rows that include total unmapped counts/proportions across all
+#'         sites (not by_year)
 #'
 #' @export
 #'

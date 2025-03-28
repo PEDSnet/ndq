@@ -25,12 +25,11 @@ but are broadly accepted) that should be excluded when identifying non-valueset 
 }
 \value{
 a dataframe with summary information about each vocabulary that appears in the field,
-with violations marked in a T/F field
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{    vocabularies associated with the indicated null_values are ignored, so proportions may not add
-    up to 1 as a result
-}\if{html}{\out{</div>}}
+with violations marked in a T/F field; vocabularies associated with the indicated
+null_values are ignored, so proportions may not add up to 1 as a result
 }
 \description{
-Vocabulary Conformance
+This function will use the \code{vocabulary.concept} table to identify the vocabulary
+of each concept and determine how many rows comply with the standard vocabularies
+expected for that field and how many rows violate these expectations.
 }

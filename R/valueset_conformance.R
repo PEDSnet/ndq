@@ -1,6 +1,10 @@
 
 #' Valueset Conformance
 #'
+#' This function will intake a limited valueset that is expected to make up the
+#' entire contents of a field (minus the specified `null_values`) and identify
+#' if any non-permitted values exist in the field (and how often).
+#'
 #' @param vs_tbl a table with the table, field, and valueset information for each
 #'               check
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
@@ -128,6 +132,10 @@ check_vs <- function(vs_tbl,
 
 #' Valueset Conformance -- Processing
 #'
+#' Intakes the output of check_vs in order to apply additional processing. This
+#' includes computing row and patient proportions and computing overall totals
+#' across all sites included in the input.
+#'
 #' @param vs_results the output of check_vs
 #' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
 #'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
@@ -135,19 +143,9 @@ check_vs <- function(vs_tbl,
 #'                      of these files. If the results are local or remote, leave NULL
 #'
 #' @return a list that contains two dataframes:
-#'         table with:
-#'            site
-#'            table_application
-#'            measurement_column
-#'            vocabulary_id
-#'            check_type
-#'            check_name
-#'            total_denom_ct
-#'            accepted_value
-#'            tot_ct: sum of total rows for given value in vs
-#'            tot_prop: sum of proportion of all values for that vs
-#'
-#'          and another table with a similar structure but only containing the valueset violations
+#' - `vs_processed`: a dataframe with additional columns that include proportions of violations
+#'                   and the overall summary
+#' - `vs_violations`: a dataframe with ONLY violating values that do not appear in the valueset
 #'
 #' @export
 #'

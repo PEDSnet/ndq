@@ -28,5 +28,7 @@ a dataframe with summary information about each value that does not
 appear in the valueset, or a row with dummy information if no violations are identified
 }
 \description{
-Valueset Conformance
+This function will intake a limited valueset that is expected to make up the
+entire contents of a field (minus the specified \code{null_values}) and identify
+if any non-permitted values exist in the field (and how often).
 }

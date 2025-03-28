@@ -1,6 +1,10 @@
 
 #' Vocabulary Conformance
 #'
+#' This function will use the `vocabulary.concept` table to identify the vocabulary
+#' of each concept and determine how many rows comply with the standard vocabularies
+#' expected for that field and how many rows violate these expectations.
+#'
 #' @param vc_tbl a table with the table, field, and vocabulary information for each
 #'               check
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
@@ -10,10 +14,8 @@
 #'                    but are broadly accepted) that should be excluded when identifying non-valueset concepts
 #'
 #' @return a dataframe with summary information about each vocabulary that appears in the field,
-#'         with violations marked in a T/F field
-#'
-#'         vocabularies associated with the indicated null_values are ignored, so proportions may not add
-#'         up to 1 as a result
+#'         with violations marked in a T/F field; vocabularies associated with the indicated
+#'         null_values are ignored, so proportions may not add up to 1 as a result
 #'
 #' @importFrom stringr str_split
 #'
@@ -116,7 +118,9 @@ check_vc <- function(vc_tbl,
 
 #' Vocabulary Conformance -- Processing
 #'
-#' Function to compute proportions of vocabulary values from vc check
+#' Intakes the output of check_vc in order to apply additional processing. This
+#' includes computing row and patient proportions and computing overall totals
+#' across all sites included in the input.
 #'
 #' @param vc_results the output of check_vs
 #' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
@@ -125,22 +129,9 @@ check_vc <- function(vc_tbl,
 #'                      of these files. If the results are local or remote, leave NULL
 #'
 #' @return a list that contains two dataframes:
-#'         table with:
-#'            site
-#'            table_application
-#'            measurement_column
-#'            vocabulary_id
-#'            check_type
-#'            check_name
-#'            total_denom_ct
-#'            total_concept_ct
-#'            accepted_value
-#'            tot_ct: sum of total rows for given value in vocab
-#'            tot_prop: sum of proportion of all values for that vocab
-#'            tot_dist_concept_ct: total distinct concepts for that vocab
-#'            tot_dist_concept_prop: proportion of concepts in vocab of all concepts in table
-#'
-#'          and another table with a similar structure but only containing the vocabulary violations
+#' - `vc_processed`: a dataframe with additional columns that include proportions of violations
+#'                   and the overall summary
+#' - `vc_violations`: a dataframe with ONLY violating vocabularies
 #'
 #' @export
 #'

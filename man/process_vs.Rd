@@ -17,21 +17,14 @@ of these files. If the results are local or remote, leave NULL}
 }
 \value{
 a list that contains two dataframes:
-table with:
-site
-table_application
-measurement_column
-vocabulary_id
-check_type
-check_name
-total_denom_ct
-accepted_value
-tot_ct: sum of total rows for given value in vs
-tot_prop: sum of proportion of all values for that vs
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{     and another table with a similar structure but only containing the valueset violations
-}\if{html}{\out{</div>}}
+\itemize{
+\item \code{vs_processed}: a dataframe with additional columns that include proportions of violations
+and the overall summary
+\item \code{vs_violations}: a dataframe with ONLY violating values that do not appear in the valueset
+}
 }
 \description{
-Valueset Conformance -- Processing
+Intakes the output of check_vs in order to apply additional processing. This
+includes computing row and patient proportions and computing overall totals
+across all sites included in the input.
 }
