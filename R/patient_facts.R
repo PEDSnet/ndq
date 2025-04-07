@@ -166,7 +166,7 @@ process_pf <- function(pf_results,
   db_version<-config('current_version')
 
   pf_totals <- pf_int %>%
-    group_by(check_description, check_name) %>%
+    group_by(check_description, check_name, visit_type) %>%
     summarise(no_fact_visits=sum(no_fact_visits),
               no_fact_pts=sum(no_fact_pts),
               total_visits=sum(total_visits),
