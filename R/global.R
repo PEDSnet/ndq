@@ -16,4 +16,4 @@ utils::globalVariables(c('.', 'accepted_value', 'application', 'best_rows', 'che
                        'total_unmapped_row_ct', 'total_viol_concept_ct', 'total_viol_ct',
                        'total_viol_pt_ct', 'total_visits', 'unmapped_prop', 'unmapped_rows', 'value',
                        'version_current', 'version_previous', 'visit_na', 'visit_occurrence_id',
-                       'visits_narrowed', 'vocabulary_id', 'year_date'))
+                       'visits_narrowed', 'vocabulary_id', 'year_date', 'visit_type'))

@@ -6,6 +6,9 @@ pf_test <- tibble('check_id' = c('co'),
                   'table' = c('condition_occurrence'),
                   'filter_logic' = c(NA))
 
+pf_visits <- tibble('visit_type' = 'outpatient',
+                    'visit_concept_id' = 9202)
+
 test_that('omop_or_pcornet limited inputs', {
 
   conn <- mk_testdb_omop()
@@ -23,7 +26,8 @@ test_that('omop_or_pcornet limited inputs', {
   config('retain_intermediates', FALSE)
 
   expect_error(check_pf(pf_tbl = pf_test,
-                        visit_type_string = 'all',
+                        visit_type_filter = c('all', 'outpatient'),
+                        visit_type_tbl = pf_visits,
                         omop_or_pcornet = 'test'))
 
 })
@@ -49,11 +53,13 @@ test_that('check_pf', {
   #          omop_or_pcornet = 'omop'))
 
   expect_no_error(check_pf(pf_tbl = pf_test,
-                           visit_type_string = 'all',
+                           visit_type_filter = c('all', 'outpatient'),
+                           visit_type_tbl = pf_visits,
                            omop_or_pcornet = 'omop'))
 
   expect_no_error(check_pf(pf_tbl = pf_test %>% mutate(filter_logic = 'person_id %in% c(1,2,3)'),
-                           visit_type_string = 'all',
+                           visit_type_filter = c('all', 'outpatient'),
+                           visit_type_tbl = pf_visits,
                            omop_or_pcornet = 'omop'))
 })
 
@@ -75,7 +81,8 @@ test_that('check_pf local', {
   config('retain_intermediates', FALSE)
 
   pf_opt <- check_pf(pf_tbl = pf_test,
-                     visit_type_string = 'all',
+                     visit_type_filter = c('all', 'outpatient'),
+                     visit_type_tbl = pf_visits,
                      omop_or_pcornet = 'omop')
 
   expect_no_error(process_pf(pf_results = pf_opt,
@@ -100,7 +107,8 @@ test_that('check_pf remote', {
   config('retain_intermediates', FALSE)
 
   pf_opt <- check_pf(pf_tbl = pf_test,
-                     visit_type_string = 'all',
+                     visit_type_filter = c('all', 'outpatient'),
+                     visit_type_tbl = pf_visits,
                      omop_or_pcornet = 'omop')
 
   DBI::dbWriteTable(conn, 'pf_output', pf_opt)

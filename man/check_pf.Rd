@@ -6,7 +6,8 @@
 \usage{
 check_pf(
   pf_tbl,
-  visit_type_string,
+  visit_type_filter,
+  visit_type_tbl,
   omop_or_pcornet = "omop",
   visit_tbl = cdm_tbl("visit_occurrence"),
   check_string = "pf"
@@ -16,13 +17,23 @@ check_pf(
 \item{pf_tbl}{a table with information about the fact tables that should be
 evaluated against the visit_tbl; see \verb{?pf_input omop} or \code{?pf_input_pcornet}}
 
-\item{visit_type_string}{a string label to identify the visit type for which
-.                         you are executing the check (i.e. inpatient)}
+\item{visit_type_filter}{a string or vector of strings label to identify the
+visit type(s) for which you are executing the check
+(i.e. inpatient, c(inpatient, outpatient));
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{                     if `all` is included as a visit type, all available
+                     visit types will be pulled from the visit_tbl
+                     (not just the visit_type_tbl) to capture the full array of visits.
+}\if{html}{\out{</div>}}}
+
+\item{visit_type_tbl}{a table with mappings from the visit type string label to the
+visit_concept_ids / enc_types that represent it. Multiple rows
+should be included for multiple mappings.}
 
 \item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
 
-\item{visit_tbl}{the CDM table with visit information, filtered to the visit
-type of interest}
+\item{visit_tbl}{the CDM table with visit information, that will be filtered to the visit
+type of interest based on the visit_type_tbl + visit_type_filter}
 
 \item{check_string}{an abbreviated identifier to identify all output from this module
 defaults to \code{pf}}

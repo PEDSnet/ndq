@@ -7,11 +7,19 @@
 #'
 #' @param pf_tbl a table with information about the fact tables that should be
 #'               evaluated against the visit_tbl; see `?pf_input omop` or `?pf_input_pcornet`
-#' @param visit_type_string a string label to identify the visit type for which
-#'.                         you are executing the check (i.e. inpatient)
+#' @param visit_type_filter a string or vector of strings label to identify the
+#'                          visit type(s) for which you are executing the check
+#'                          (i.e. inpatient, c(inpatient, outpatient));
+#'
+#'                          if `all` is included as a visit type, all available
+#'                          visit types will be pulled from the visit_tbl
+#'                          (not just the visit_type_tbl) to capture the full array of visits.
+#' @param visit_type_tbl a table with mappings from the visit type string label to the
+#'                       visit_concept_ids / enc_types that represent it. Multiple rows
+#'                       should be included for multiple mappings.
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param visit_tbl the CDM table with visit information, filtered to the visit
-#'                  type of interest
+#' @param visit_tbl the CDM table with visit information, that will be filtered to the visit
+#'                  type of interest based on the visit_type_tbl + visit_type_filter
 #' @param check_string an abbreviated identifier to identify all output from this module
 #'                     defaults to `pf`
 #'
@@ -22,7 +30,8 @@
 #' @export
 #'
 check_pf <- function(pf_tbl,
-                     visit_type_string,
+                     visit_type_filter,
+                     visit_type_tbl,
                      omop_or_pcornet = 'omop',
                      visit_tbl=cdm_tbl('visit_occurrence'),
                      check_string='pf') {
@@ -32,97 +41,115 @@ check_pf <- function(pf_tbl,
   if(tolower(omop_or_pcornet) == 'omop'){
     pt_col <- 'person_id'
     visit_col <- 'visit_occurrence_id'
+    visit_type_col <- colnames(visit_type_tbl)[2]
   }else if(tolower(omop_or_pcornet) == 'pcornet'){
     pt_col <- 'patid'
     visit_col <- 'encounterid'
+    visit_type_col <- colnames(visit_type_tbl)[2]
   }else{cli::cli_abort('Invalid value for omop_or_pcornet. Please choose `omop` or `pcornet` as the CDM')}
 
-  visit_tbl_all <-
-    visit_tbl %>%
-    add_site() %>% filter(site == site_nm) %>%
-    summarise(
-      total_visits = n(),
-      total_pts = n_distinct(!!sym(pt_col))
-    ) %>% ungroup() %>% collect()
+  for(k in visit_type_filter){
 
-  fact_tbls <- split(pf_tbl, seq(nrow(pf_tbl)))
-
-  all_tbls <- list()
-
-  for (i in 1:length(fact_tbls)) {
-
-    if(!is.na(fact_tbls[[i]]$filter_logic)){
-      tbl_use <- pick_schema(schema = fact_tbls[[i]]$schema,
-                             table = fact_tbls[[i]]$table,
-                             db = config('db_src')) %>%
-        filter(!! rlang::parse_expr(fact_tbls[[i]]$filter_logic))
+    if(k != 'all'){
+      cids <- visit_type_tbl %>%
+        filter(visit_type == k) %>%
+        pull(!!sym(visit_type_col))
     }else{
-      tbl_use <- pick_schema(schema = fact_tbls[[i]]$schema,
-                             table = fact_tbls[[i]]$table,
-                             db = config('db_src'))
+      cids <- visit_tbl %>%
+        distinct(!!sym(visit_type_col)) %>%
+        collect() %>% pull(!!sym(visit_type_col))
     }
 
-    check_description_name <- fact_tbls[[i]]$check_description
+    visit_tbl_filt <- visit_tbl %>%
+      add_site() %>%
+      filter(site == site_nm,
+             !!sym(visit_type_col) %in% cids)
 
-    chk_nm <- fact_tbls[[i]]$check_id
-
-    cli::cli_inform(paste0('Starting ',check_description_name))
-
-    visit_tbl_all_name <-
-      visit_tbl_all %>%
-      mutate(check_description = check_description_name)
-
-    missed_visits <-
-      visit_tbl %>%
-      add_site() %>% filter(site == site_nm) %>%
-      select(person_id,
-             !!sym(visit_col)) %>%
-      anti_join(tbl_use,
-                by=visit_col) %>%
-      mutate(check_description = check_description_name) %>%
-      group_by(
-        check_description
-      ) %>%
+    visit_tbl_all <-
+      visit_tbl_filt %>%
       summarise(
-        no_fact_visits = n(),
-        no_fact_pts = n_distinct(!!sym(pt_col))
+        total_visits = n(),
+        total_pts = n_distinct(!!sym(pt_col))
       ) %>% ungroup() %>% collect()
 
-    # missed_pts <-
-    #   visit_tbl %>% select(!!sym(pt_col)) %>%
-    #   anti_join(tbl_use,
-    #             by=pt_col) %>%
-    #   mutate(check_description = check_description_name) %>%
-    #   group_by(
-    #     check_description
-    #   ) %>%
-    #   summarise(
-    #     no_fact_pts = n_distinct(!!sym(pt_col))
-    #   ) %>% ungroup() %>% collect()
+    fact_tbls <- split(pf_tbl, seq(nrow(pf_tbl)))
 
-    cts_combined <-
-      visit_tbl_all_name %>%
-      left_join(missed_visits) %>%
-      # left_join(missed_pts) %>%
-      mutate(
-        no_fact_visits_prop = round(
-          no_fact_visits / total_visits, 2
-        ),
-        no_fact_pts_prop = round(
-          no_fact_pts / total_pts, 2
-        )
-      )  %>%
-      add_meta(check_lib=check_string) %>%
-      mutate_if(., is.numeric, ~replace(., is.na(.), 0)) %>%
-      mutate(
-        fact_visits = total_visits - no_fact_visits,
-        fact_pts = total_pts - no_fact_pts,
-        fact_visits_prop = round(1.00 - no_fact_visits_prop, 2),
-        fact_pts_prop = round(1.00 - no_fact_pts_prop, 2)
-      ) %>% mutate(check_name=paste0(check_string, '_', chk_nm),
-                   visit_type = visit_type_string)
+    all_tbls <- list()
 
-    all_tbls[[chk_nm]] <- cts_combined
+    for (i in 1:length(fact_tbls)) {
+
+      if(!is.na(fact_tbls[[i]]$filter_logic)){
+        tbl_use <- pick_schema(schema = fact_tbls[[i]]$schema,
+                               table = fact_tbls[[i]]$table,
+                               db = config('db_src')) %>%
+          filter(!! rlang::parse_expr(fact_tbls[[i]]$filter_logic))
+      }else{
+        tbl_use <- pick_schema(schema = fact_tbls[[i]]$schema,
+                               table = fact_tbls[[i]]$table,
+                               db = config('db_src'))
+      }
+
+      check_description_name <- fact_tbls[[i]]$check_description
+
+      chk_nm <- fact_tbls[[i]]$check_id
+
+      cli::cli_inform(paste0('Starting ',check_description_name))
+
+      visit_tbl_all_name <-
+        visit_tbl_all %>%
+        mutate(check_description = check_description_name)
+
+      missed_visits <-
+        visit_tbl_filt %>%
+        select(person_id,
+               !!sym(visit_col)) %>%
+        anti_join(tbl_use,
+                  by=visit_col) %>%
+        mutate(check_description = check_description_name) %>%
+        group_by(
+          check_description
+        ) %>%
+        summarise(
+          no_fact_visits = n(),
+          no_fact_pts = n_distinct(!!sym(pt_col))
+        ) %>% ungroup() %>% collect()
+
+      # missed_pts <-
+      #   visit_tbl %>% select(!!sym(pt_col)) %>%
+      #   anti_join(tbl_use,
+      #             by=pt_col) %>%
+      #   mutate(check_description = check_description_name) %>%
+      #   group_by(
+      #     check_description
+      #   ) %>%
+      #   summarise(
+      #     no_fact_pts = n_distinct(!!sym(pt_col))
+      #   ) %>% ungroup() %>% collect()
+
+      cts_combined <-
+        visit_tbl_all_name %>%
+        left_join(missed_visits) %>%
+        # left_join(missed_pts) %>%
+        mutate(
+          no_fact_visits_prop = round(
+            no_fact_visits / total_visits, 2
+          ),
+          no_fact_pts_prop = round(
+            no_fact_pts / total_pts, 2
+          )
+        )  %>%
+        add_meta(check_lib=check_string) %>%
+        mutate_if(., is.numeric, ~replace(., is.na(.), 0)) %>%
+        mutate(
+          fact_visits = total_visits - no_fact_visits,
+          fact_pts = total_pts - no_fact_pts,
+          fact_visits_prop = round(1.00 - no_fact_visits_prop, 2),
+          fact_pts_prop = round(1.00 - no_fact_pts_prop, 2)
+        ) %>% mutate(check_name=paste0(check_string, '_', chk_nm),
+                     visit_type = k)
+
+      all_tbls[[chk_nm]] <- cts_combined
+    }
   }
 
 
