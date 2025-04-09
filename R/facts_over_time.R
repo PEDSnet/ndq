@@ -396,7 +396,7 @@ check_fot_group <- function(fot_tbl,
     time_cj <- visit_cts_filter %>%
       ungroup() %>%
       distinct(time_end, time_start) %>%
-      full_join(time_frame)
+      union(time_frame %>% mutate(time_start = time_start + 1))
 
     fill_blanks <- visit_cts_filter %>%
       ungroup() %>%
@@ -405,6 +405,7 @@ check_fot_group <- function(fot_tbl,
       cross_join(time_cj)
 
     final_results[[paste0(n)]] = visit_cts_filter %>%
+      ungroup() %>%
       right_join(fill_blanks) %>%
       mutate(across(where(is.numeric), .fns = ~replace_na(.,0)))
 
