@@ -317,8 +317,8 @@ check_fot_group <- function(fot_tbl,
       filter(!! sym(colname_string) <= end_date &
                !! sym(colname_string) >= start_date)
 
-    n <- names(time_tbls[i])
-    d <- time_tbls[[i]][[2]]
+    n <- paste0(check_string, '_', time_tbls[[i]]$check_id)
+    d <- time_tbls[[i]]$check_description
     t <- time_tbls[[i]]$table
 
     if(visits_only) {
