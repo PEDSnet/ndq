@@ -394,10 +394,12 @@ check_fot_group <- function(fot_tbl,
     }
 
     time_cj <- visit_cts_filter %>%
+      ungroup() %>%
       distinct(time_end, time_start) %>%
       full_join(time_frame)
 
     fill_blanks <- visit_cts_filter %>%
+      ungroup() %>%
       distinct(check_type, database_version, site, check_name, check_desc,
                domain) %>%
       cross_join(time_cj)
