@@ -10,8 +10,7 @@ check_fot(
   compute_method = "loop",
   time_span = list("2009-01-01", today()),
   time_period = "month",
-  lookback_weeks = 0,
-  lookback_months = 1,
+  lookback_interval = 1,
   check_string = "fot",
   visits_only = FALSE,
   distinct_visits = TRUE
@@ -30,10 +29,8 @@ check is executed by looping through each time period or grouping by a date fiel
 
 \item{time_period}{string indicating the length of time that the time span should be divided into (i.e. months, years)}
 
-\item{lookback_weeks}{if lookback is in weeks instead of months, this should be set to a non-zero integer.
-Defaults to 0, for lookback to be in months.}
-
-\item{lookback_months}{the number of months to look back; defaults to 1}
+\item{lookback_interval}{the number of time periods (defined in \code{time_period}) to look back in each interval
+(i.e. 1 year, 3 months); defaults to 1}
 
 \item{check_string}{the abbreviated name of the check; defaults to \code{fot}}
 

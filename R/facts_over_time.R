@@ -12,9 +12,8 @@
 #'                       check is executed by looping through each time period or grouping by a date field
 #' @param time_span a list that contains the start date and end date of the time span (i.e. list(2009-01-01, 2015-01-01))
 #' @param time_period string indicating the length of time that the time span should be divided into (i.e. months, years)
-#' @param lookback_weeks if lookback is in weeks instead of months, this should be set to a non-zero integer.
-#'                       Defaults to 0, for lookback to be in months.
-#' @param lookback_months the number of months to look back; defaults to 1
+#' @param lookback_interval the number of time periods (defined in `time_period`) to look back in each interval
+#'                          (i.e. 1 year, 3 months); defaults to 1
 #' @param check_string the abbreviated name of the check; defaults to `fot`
 #' @param visits_only if TRUE, counts ONLY distinct visits and not patients or rows
 #' @param distinct_visits if TRUE, counts distinct visits as well as total counts and total patients
@@ -35,8 +34,7 @@ check_fot <- function(fot_tbl,
                       compute_method = 'loop',
                       time_span = list('2009-01-01', today()),
                       time_period = 'month',
-                      lookback_weeks=0,
-                      lookback_months=1,
+                      lookback_interval = 1,
                       check_string = 'fot',
                       visits_only = FALSE,
                       distinct_visits = TRUE) {
@@ -47,37 +45,39 @@ check_fot <- function(fot_tbl,
     time_span_list_output <-
       as.character(seq(as.Date(time_span[[1]]), length = num_mnths, by='months'))
 
-    time_frame <- c(time_span_list_output)
+    time_frame <- tibble(time_span_list_output) %>%
+      rename('time_end' = 'time_span_list_output') %>%
+      mutate(time_start = as.Date(time_end) %m-% months(lookback_interval))
   }else if(tolower(time_period) == 'year'){
     num_yrs <- (interval(time_span[[1]], time_span[[2]]) %/% years(1))
 
     time_span_list_output <-
       as.character(seq(as.Date(time_span[[1]]), length = num_yrs, by='years'))
 
-    time_frame <- c(time_span_list_output)
+    time_frame <- tibble(time_span_list_output) %>%
+      rename('time_end' = 'time_span_list_output') %>%
+      mutate(time_start = as.Date(time_end) %m-% years(lookback_interval))
   }
 
 
   if(tolower(compute_method) == 'group'){
 
-    # fot_rslt <- check_fot_group(fot_tbl = fot_tbl,
-    #                             omop_or_pcornet = omop_or_pcornet,
-    #                             time_frame = time_frame,
-    #                             lookback_weeks = lookback_weeks,
-    #                             lookback_months = lookback_months,
-    #                             check_string = check_string,
-    #                             visits_only = visits_only,
-    #                             distinct_visits = distinct_visits)
+    fot_rslt <- check_fot_group(fot_tbl = fot_tbl,
+                                omop_or_pcornet = omop_or_pcornet,
+                                time_frame = time_frame,
+                                lookback_interval = lookback_interval,
+                                check_string = check_string,
+                                visits_only = visits_only,
+                                distinct_visits = distinct_visits)
 
-    cli::cli_abort('`group` method still under development')
+    # cli::cli_abort('`group` method still under development')
 
   }else if(tolower(compute_method) == 'loop'){
 
     fot_rslt <- check_fot_loop(fot_tbl = fot_tbl,
                                omop_or_pcornet = omop_or_pcornet,
                                time_frame = time_frame,
-                               lookback_weeks = lookback_weeks,
-                               lookback_months = lookback_months,
+                               lookback_interval = lookback_interval,
                                check_string = check_string,
                                visits_only = visits_only,
                                distinct_visits = distinct_visits)
@@ -93,10 +93,10 @@ check_fot <- function(fot_tbl,
 #' @param fot_tbl a table with information describing the fact tables that should be examined;
 #'                see `?fot_input_omop` or `?fot_input_pcornet` for details
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param time_frame a list of dates that should be iterated through to retrieve the facts for each time period
-#' @param lookback_weeks if lookback is in weeks instead of months, this should be set to a non-zero integer.
-#'                       Defaults to 0, for lookback to be in months.
-#' @param lookback_months the number of months to look back; defaults to 1
+#' @param time_frame a table of dates that should be iterated through to retrieve the facts for each time period;
+#'                   has columns: time_start, time_end
+#' @param lookback_interval the number of time periods (defined in check_fot) to look back;
+#'                          defaults to 1
 #' @param check_string the abbreviated name of the check; defaults to `fot`
 #' @param visits_only if TRUE, counts ONLY distinct visits and not patients or rows
 #' @param distinct_visits if TRUE, counts distinct visits as well as total counts and total patients
@@ -107,10 +107,9 @@ check_fot <- function(fot_tbl,
 #' - if visits_only = FALSE and distinct_visits = FALSE, will produce counts of patients and rows for the check + time period
 #'
 check_fot_loop <- function(fot_tbl,
-                           time_frame = time_span,
+                           time_frame,
                            omop_or_pcornet = 'omop',
-                           lookback_weeks=0,
-                           lookback_months=1,
+                           lookback_interval = 1,
                            check_string = 'fot',
                            visits_only = FALSE,
                            distinct_visits = TRUE) {
@@ -127,16 +126,21 @@ check_fot_loop <- function(fot_tbl,
 
     temp_results <- list()
 
-    for(k in time_frame) {
+    time_frame <- split(time_frame, seq(nrow(time_frame)))
 
-      message(paste0('Starting ',k))
+    for(k in 1:length(time_frame)) {
 
-      target <- ymd(k)
+      message(paste0('Starting ',time_frame[[k]]$time_end))
 
-      baseline_end_date <- target
-      if(lookback_weeks == 0) {
-        baseline_start_date <- target %m-% months(lookback_months)
-      } else {baseline_start_date <- target - weeks(x=lookback_weeks)}
+      baseline_start_date <- time_frame[[k]]$time_start
+      baseline_end_date <- time_frame[[k]]$time_end
+
+      # target <- ymd(k)
+
+      # baseline_end_date <- target
+      # if(lookback_weeks == 0) {
+      #   baseline_start_date <- target %m-% months(lookback_months)
+      # } else {baseline_start_date <- target - weeks(x=lookback_weeks)}
 
       if(tolower(omop_or_pcornet) == 'omop'){
         visit_col <- 'visit_occurrence_id'
@@ -169,8 +173,9 @@ check_fot_loop <- function(fot_tbl,
 
       visits_narrowed <-
         tbl_use %>%
-        filter(!! sym(colname_string) < baseline_end_date &
-                 !! sym(colname_string) >= baseline_start_date)
+        add_site() %>% filter(site == site_nm) %>%
+        filter(!! sym(colname_string) <= baseline_end_date &
+                 !! sym(colname_string) > baseline_start_date)
 
       n <- paste0(check_string, '_', time_tbls[[i]]$check_id)
       d <- time_tbls[[i]]$check_description
@@ -212,13 +217,9 @@ check_fot_loop <- function(fot_tbl,
       }
 
 
-      if(! lookback_weeks) {
-        this_round <- visit_cts %>%
-          mutate(month_end = lubridate::date(k) - 1,
-                 month_start = baseline_start_date)
-      } else {this_round <- visit_cts %>%
-        mutate(week_end = lubridate::date(k) - 1,
-               week_start = baseline_start_date) }
+      this_round <- visit_cts %>%
+        mutate(time_end = baseline_end_date,
+               time_start = ymd(baseline_start_date) + 1)
 
       temp_results[[k]] <- this_round
 
@@ -235,95 +236,139 @@ check_fot_loop <- function(fot_tbl,
 }
 
 
+#' Facts Over Time (Trino/Snowflake Implementation)
+#'
+#' @param fot_tbl a table with information describing the fact tables that should be examined;
+#'                see `?fot_input_omop` or `?fot_input_pcornet` for details
+#' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
+#' @param time_frame a table of dates that should be iterated through to retrieve the facts for each time period;
+#'                   has columns: time_start, time_end
+#' @param lookback_interval the number of time periods (defined in check_fot) to look back;
+#'                          defaults to 1
+#' @param check_string the abbreviated name of the check; defaults to `fot`
+#' @param visits_only if TRUE, counts ONLY distinct visits and not patients or rows
+#' @param distinct_visits if TRUE, counts distinct visits as well as total counts and total patients
+#'
+#' @return a dataframe with one row for each time period within the specified time span for each check;
+#' - if visits_only = TRUE, will produce only counts of visits for the check + time period
+#' - if visits_only = FALSE and distinct_visits = TRUE, will produce counts of patients, rows, and visits for the check + time period
+#' - if visits_only = FALSE and distinct_visits = FALSE, will produce counts of patients and rows for the check + time period
+#'
+check_fot_group <- function(fot_tbl,
+                            omop_or_pcornet = 'omop',
+                            time_frame,
+                            lookback_interval = 1,
+                            check_string = 'fot',
+                            visits_only = TRUE,
+                            distinct_visits = TRUE) {
 
-# check_fot_group <- function(fot_tbl,
-#                             time_frame = time_span,
-#                             lookback_weeks=0,
-#                             lookback_months=1,
-#                             check_string = 'fot',
-#                             visits_only = TRUE,
-#                             distinct_visits = TRUE) {
-#
-#   site_nm <- config('qry_site')
-#
-#   time_tbls <- split(fot_tbl, seq(nrow(fot_tbl)))
-#
-#   final_results <- list()
-#
-#   for(i in 1:length(time_tbls)) {
-#
-#     cli::cli_inform(paste0('Starting ',time_tbls[[i]]$check_description))
-#
-#     start_date <- as.Date(time_span[1]) - months(lookback_months)
-#     end_int <- length(time_span)
-#     end_date <- time_span[end_int]
-#
-#     date_cols <- time_tbls[[i]]$date_field
-#
-#     order_cols <- ncol(date_cols)
-#
-#     date_cols_unmapped <-
-#       date_cols %>%
-#       select(all_of(order_cols))
-#
-#     colname_string <- as.character(colnames(date_cols_unmapped)[1])
-#
-#     # visits_narrowed <-
-#     #   time_tbls[[i]][[1]] %>%
-#     #   filter(!! sym(colname_string) < as.Date(end_date) &
-#     #            !! sym(colname_string) >= as.Date(start_date)) %>%
-#     #   mutate(month_end = last_day_of_month(!!sym(colname_string)),
-#     #          month_start = first_day_of_month(!!sym(colname_string)))
-#
-#     n <- names(time_tbls[i])
-#     d <- time_tbls[[i]][[2]]
-#     t <- time_tbls[[i]]$table
-#
-#     if(visits_only) {
-#       visit_cts <-
-#         visits_narrowed %>%
-#         group_by(month_end) %>%
-#         summarise(row_visits = n_distinct(visit_occurrence_id)) %>%
-#         collect() %>%
-#         ungroup()  %>%
-#         add_meta(check_lib=check_string) %>%
-#         mutate(check_name = n) %>%
-#         mutate(check_desc = d,
-#                domain = t)
-#     } else if(distinct_visits & !visits_only) {
-#       visit_cts <-
-#         visits_narrowed %>%
-#         group_by(month_end) %>%
-#         summarise(row_cts = n(),
-#                   row_visits = n_distinct(visit_occurrence_id),
-#                   row_pts = n_distinct(person_id)) %>%
-#         collect() %>%
-#         ungroup()  %>%
-#         add_meta(check_lib=check_string) %>%
-#         mutate(check_name = n) %>%
-#         mutate(check_desc = d,
-#                domain = t)
-#     } else if(!distinct_visits & !visits_only) {
-#       visit_cts <-
-#         visits_narrowed %>%
-#         group_by(month_end) %>%
-#         summarise(row_cts = n(),
-#                   row_pts = n_distinct(person_id)) %>%
-#         collect() %>%
-#         ungroup()  %>%
-#         add_meta(check_lib=check_string) %>%
-#         mutate(check_name = n) %>%
-#         mutate(check_desc = d,
-#                domain = t)
-#     }
-#
-#     final_results[[paste0(n)]] = visit_cts
-#
-#   }
-#
-#   final_results
-#
-# }
+  site_nm <- config('qry_site')
+
+  time_tbls <- split(fot_tbl, seq(nrow(fot_tbl)))
+
+  final_results <- list()
+
+  for(i in 1:length(time_tbls)) {
+
+    cli::cli_inform(paste0('Starting ',time_tbls[[i]]$check_description))
+
+    start_date <- time_frame %>% filter(time_start == min(time_start)) %>% pull(time_start)
+    end_date <- time_frame %>% filter(time_end == max(time_end)) %>% pull(time_end)
+
+    if(tolower(omop_or_pcornet) == 'omop'){
+      visit_col <- 'visit_occurrence_id'
+      pt_col <- 'person_id'
+    }else if(tolower(omop_or_pcornet) == 'pcornet'){
+      visit_col <- 'encounterid'
+      pt_col <- 'patid'
+    }else{cli::cli_abort('Invalid value for omop_or_pcornet. Please choose `omop` or `pcornet` as the CDM')}
+
+    date_cols <- time_tbls[[i]]$date_field
+
+    # order_cols <- ncol(date_cols)
+    #
+    # date_cols_unmapped <-
+    #   date_cols %>%
+    #   select(all_of(order_cols))
+
+    colname_string <- as.character(date_cols)
+
+    if(!is.na(time_tbls[[i]]$filter_logic)){
+      tbl_use <- pick_schema(schema = time_tbls[[i]]$schema,
+                             table = time_tbls[[i]]$table,
+                             db = config('db_src')) %>%
+        filter(!! rlang::parse_expr(time_tbls[[i]]$filter_logic))
+    }else{
+      tbl_use <- pick_schema(schema = time_tbls[[i]]$schema,
+                             table = time_tbls[[i]]$table,
+                             db = config('db_src'))
+    }
+
+    visits_narrowed <-
+      tbl_use %>%
+      add_site() %>% filter(site == site_nm) %>%
+      filter(!! sym(colname_string) <= end_date &
+               !! sym(colname_string) >= start_date)
+
+    n <- names(time_tbls[i])
+    d <- time_tbls[[i]][[2]]
+    t <- time_tbls[[i]]$table
+
+    if(visits_only) {
+      visit_cts <-
+        visits_narrowed %>%
+        group_by(!!sym(colname_string)) %>%
+        summarise(row_visits = n_distinct(!!sym(visit_col))) %>%
+        collect() %>%
+        ungroup()  %>%
+        add_meta(check_lib=check_string) %>%
+        mutate(check_name = n) %>%
+        mutate(check_desc = d,
+               domain = t)
+    } else if(distinct_visits & !visits_only) {
+      visit_cts <-
+        visits_narrowed %>%
+        group_by(!!sym(colname_string)) %>%
+        summarise(row_cts = n(),
+                  row_visits = n_distinct(!!sym(visit_col)),
+                  row_pts = n_distinct(!!sym(pt_col))) %>%
+        collect() %>%
+        ungroup()  %>%
+        add_meta(check_lib=check_string) %>%
+        mutate(check_name = n) %>%
+        mutate(check_desc = d,
+               domain = t)
+    } else if(!distinct_visits & !visits_only) {
+      visit_cts <-
+        visits_narrowed %>%
+        group_by(!!sym(colname_string)) %>%
+        summarise(row_cts = n(),
+                  row_pts = n_distinct(!!sym(pt_col))) %>%
+        collect() %>%
+        ungroup()  %>%
+        add_meta(check_lib=check_string) %>%
+        mutate(check_name = n) %>%
+        mutate(check_desc = d,
+               domain = t)
+    }
+
+    visit_cts_filter <- visit_cts %>%
+      cross_join(time_frame) %>%
+      filter(!!sym(colname_string) > time_start,
+             !!sym(colname_string) <= time_end) %>%
+      select(- !!sym(colname_string)) %>%
+      distinct() %>% mutate(time_start = ymd(time_start) + 1)
+
+    final_results[[paste0(n)]] = visit_cts_filter
+
+  }
+
+  final_results_red <- purrr::reduce(.x = final_results,
+                                     .f = dplyr::union)
+
+  return(final_results_red)
+
+}
 
 
 
@@ -361,7 +406,7 @@ fot_check <- function(target_col,
                       check_col='check_name',
                       check_desc='check_desc',
                       site_col='site',
-                      time_col='month_end') {
+                      time_col='time_end') {
 
   cols_to_keep <- c('domain',eval(site_col),eval(check_col),eval(check_desc),eval(time_col),'check')
 
@@ -429,13 +474,13 @@ add_fot_ratios <- function(fot_lib_output,
                                TRUE~row_pts/(total_pt)*denom_mult))%>%collect()
 
   fot_input_tbl_allsite_med<-fot_input_tbl%>%
-    group_by(check_type, check_name, check_desc, database_version, month_end) %>%
+    group_by(check_type, check_name, check_desc, database_version, time_end) %>%
     summarise(row_ratio=median(row_ratio, na.rm=TRUE))%>%
     ungroup()%>%
     mutate(site='allsite_median')
 
   fot_input_tbl_allsite_mean<-fot_input_tbl%>%
-    group_by(check_type, check_name, check_desc, database_version, month_end) %>%
+    group_by(check_type, check_name, check_desc, database_version, time_end) %>%
     summarise(row_ratio=mean(row_ratio, na.rm=TRUE))%>%
     ungroup()%>%
     mutate(site='allsite_mean')
@@ -512,7 +557,11 @@ process_fot <- function(fot_results,
 
 
   fot_list <- fot_check(target_col = target_col,
-                        tblx = fot_int)
+                        tblx = fot_int,
+                        check_col='check_name',
+                        check_desc='check_desc',
+                        site_col='site',
+                        time_col='time_end')
 
   if(add_ratios){
 

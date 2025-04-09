@@ -27,13 +27,13 @@ test_that('test erroring', {
   expect_error(check_fot(fot_tbl = fot_test,
                          omop_or_pcornet = 'omop',
                          compute_method = 'test'))
-  expect_error(check_fot(fot_tbl = fot_test,
-                         omop_or_pcornet = 'omop',
-                         compute_method = 'group'))
+  # expect_error(check_fot(fot_tbl = fot_test,
+  #                        omop_or_pcornet = 'omop',
+  #                        compute_method = 'group'))
 })
 
 
-test_that('check_fot month', {
+test_that('check_fot loop month', {
 
   conn <- mk_testdb_omop()
 
@@ -83,8 +83,58 @@ test_that('check_fot month', {
 
 })
 
+test_that('check_fot group month', {
 
-test_that('check_fot year', {
+  conn <- mk_testdb_omop()
+
+  new_argos <- argos$new()
+  set_argos_default(new_argos)
+  config('db_src', conn)
+  config('cdm_schema', NA)
+  config('qry_site', 'test')
+  config('results_schema', NA)
+  config('vocabulary_schema', NA)
+  config('db_trace', FALSE)
+  config('results_name_tag', '')
+  config('current_version', '1')
+  config('retain_intermediates', FALSE)
+
+  expect_no_error(check_fot(fot_tbl = fot_test,
+                            omop_or_pcornet = 'omop',
+                            compute_method = 'group',
+                            time_span = c('2024-01-01', '2024-12-01'),
+                            time_period = 'month',
+                            distinct_visits = TRUE,
+                            visits_only = FALSE))
+
+  expect_no_error(check_fot(fot_tbl = fot_test,
+                            omop_or_pcornet = 'omop',
+                            compute_method = 'group',
+                            time_span = c('2024-01-01', '2024-12-01'),
+                            time_period = 'month',
+                            distinct_visits = TRUE,
+                            visits_only = TRUE))
+
+  expect_no_error(check_fot(fot_tbl = fot_test,
+                            omop_or_pcornet = 'omop',
+                            compute_method = 'group',
+                            time_span = c('2024-01-01', '2024-12-01'),
+                            time_period = 'month',
+                            distinct_visits = FALSE,
+                            visits_only = TRUE))
+
+  expect_no_error(check_fot(fot_tbl = fot_test,
+                            omop_or_pcornet = 'omop',
+                            compute_method = 'group',
+                            time_span = c('2024-01-01', '2024-12-01'),
+                            time_period = 'month',
+                            distinct_visits = FALSE,
+                            visits_only = FALSE))
+
+})
+
+
+test_that('check_fot loop year', {
 
   conn <- mk_testdb_omop()
 
@@ -105,14 +155,39 @@ test_that('check_fot year', {
                             compute_method = 'loop',
                             time_span = c('2022-01-01', '2024-01-01'),
                             time_period = 'year',
-                            lookback_weeks = 1,
+                            distinct_visits = TRUE,
+                            visits_only = FALSE))
+
+})
+
+test_that('check_fot group year', {
+
+  conn <- mk_testdb_omop()
+
+  new_argos <- argos$new()
+  set_argos_default(new_argos)
+  config('db_src', conn)
+  config('cdm_schema', NA)
+  config('qry_site', 'test')
+  config('results_schema', NA)
+  config('vocabulary_schema', NA)
+  config('db_trace', FALSE)
+  config('results_name_tag', '')
+  config('current_version', '1')
+  config('retain_intermediates', FALSE)
+
+  expect_no_error(check_fot(fot_tbl = fot_test %>% mutate(filter_logic = NA),
+                            omop_or_pcornet = 'omop',
+                            compute_method = 'group',
+                            time_span = c('2022-01-01', '2024-01-01'),
+                            time_period = 'year',
                             distinct_visits = TRUE,
                             visits_only = FALSE))
 
 })
 
 
-test_that('check_fot month', {
+test_that('process_fot', {
 
   conn <- mk_testdb_omop()
 
