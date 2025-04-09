@@ -399,7 +399,7 @@ check_fot_group <- function(fot_tbl,
       full_join(time_frame)
 
     final_results[[paste0(n)]] = visit_cts_filter %>%
-      full_join(fill_blanks) %>%
+      left_join(fill_blanks) %>%
       mutate(across(where(is.numeric), .fns = ~replace_na(.,0)))
 
   }
