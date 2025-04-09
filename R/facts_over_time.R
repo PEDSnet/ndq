@@ -261,6 +261,8 @@ check_fot_loop <- function(fot_tbl,
 #' - if visits_only = FALSE and distinct_visits = TRUE, will produce counts of patients, rows, and visits for the check + time period
 #' - if visits_only = FALSE and distinct_visits = FALSE, will produce counts of patients and rows for the check + time period
 #'
+#' @importFrom tidyr replace_na
+#'
 check_fot_group <- function(fot_tbl,
                             omop_or_pcornet = 'omop',
                             time_frame,
@@ -338,8 +340,8 @@ check_fot_group <- function(fot_tbl,
         filter(!!sym(colname_string) > time_start,
                !!sym(colname_string) <= time_end) %>%
         mutate(time_start = ymd(time_start) + 1) %>%
-        group_by(site, time_start, time_end, check_name, check_desc,
-                 domain, database_version) %>%
+        group_by(check_type, database_version, site, check_name, check_desc,
+                 domain, time_end, time_start) %>%
         summarise(row_visits = sum(row_visits))
 
     } else if(distinct_visits & !visits_only) {
@@ -361,8 +363,8 @@ check_fot_group <- function(fot_tbl,
         filter(!!sym(colname_string) > time_start,
                !!sym(colname_string) <= time_end) %>%
         mutate(time_start = ymd(time_start) + 1) %>%
-        group_by(site, time_start, time_end, check_name, check_desc,
-                 domain, database_version) %>%
+        group_by(check_type, database_version, site, check_name, check_desc,
+                 domain, time_end, time_start) %>%
         summarise(row_cts = sum(row_cts),
                   row_pts = sum(row_pts),
                   row_visits = sum(row_visits))
@@ -385,13 +387,20 @@ check_fot_group <- function(fot_tbl,
         filter(!!sym(colname_string) > time_start,
                !!sym(colname_string) <= time_end) %>%
         mutate(time_start = ymd(time_start) + 1) %>%
-        group_by(site, time_start, time_end, check_name, check_desc,
-                 domain, database_version) %>%
+        group_by(check_type, database_version, site, check_name, check_desc,
+                 domain, time_end, time_start) %>%
         summarise(row_cts = sum(row_cts),
                   row_pts = sum(row_pts))
     }
 
-    final_results[[paste0(n)]] = visit_cts_filter
+    fill_blanks <- visit_cts_filter %>%
+      distinct(check_type, database_version, site, check_name, check_desc,
+               domain, time_end, time_start) %>%
+      cross_join(time_frame)
+
+    final_results[[paste0(n)]] = visit_cts_filter %>%
+      full_join(fill_blanks) %>%
+      mutate(across(where(is.numeric), .fns = ~replace_na(.,0)))
 
   }
 
