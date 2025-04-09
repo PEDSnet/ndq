@@ -43,20 +43,27 @@ check_fot <- function(fot_tbl,
     num_mnths <- (interval(time_span[[1]], time_span[[2]]) %/% months(1))
 
     time_span_list_output <-
-      as.character(seq(as.Date(time_span[[1]]), length = num_mnths, by='months'))
+      as.character(seq(as.Date(time_span[[1]]), length = num_mnths,
+                       by=paste0(lookback_interval, ' months')))
 
     time_frame <- tibble(time_span_list_output) %>%
       rename('time_end' = 'time_span_list_output') %>%
-      mutate(time_start = as.Date(time_end) %m-% months(lookback_interval))
+      mutate(time_end = ceiling_date(ymd(time_end), 'month') - 1,
+             time_start = as.Date(time_end) %m-% months(lookback_interval),
+             time_start = ceiling_date(time_start, 'month') - 1) %>%
+      filter(time_start <= time_span[[2]])
   }else if(tolower(time_period) == 'year'){
     num_yrs <- (interval(time_span[[1]], time_span[[2]]) %/% years(1))
 
     time_span_list_output <-
-      as.character(seq(as.Date(time_span[[1]]), length = num_yrs, by='years'))
+      as.character(seq(as.Date(time_span[[1]]), length = num_yrs,
+                       by= paste0(lookback_interval, ' years')))
 
     time_frame <- tibble(time_span_list_output) %>%
       rename('time_end' = 'time_span_list_output') %>%
-      mutate(time_start = as.Date(time_end) %m-% years(lookback_interval))
+      mutate(time_end = ceiling_date(ymd(time_end), 'year') - 1,
+             time_start = as.Date(time_end) %m-% years(lookback_interval)) %>%
+      filter(time_start <= time_span[[2]])
   }
 
 
@@ -325,6 +332,16 @@ check_fot_group <- function(fot_tbl,
         mutate(check_name = n) %>%
         mutate(check_desc = d,
                domain = t)
+
+      visit_cts_filter <- visit_cts %>%
+        cross_join(time_frame) %>%
+        filter(!!sym(colname_string) > time_start,
+               !!sym(colname_string) <= time_end) %>%
+        mutate(time_start = ymd(time_start) + 1) %>%
+        group_by(site, time_start, time_end, check_name, check_desc,
+                 domain, database_version) %>%
+        summarise(row_visits = sum(row_visits))
+
     } else if(distinct_visits & !visits_only) {
       visit_cts <-
         visits_narrowed %>%
@@ -338,6 +355,18 @@ check_fot_group <- function(fot_tbl,
         mutate(check_name = n) %>%
         mutate(check_desc = d,
                domain = t)
+
+      visit_cts_filter <- visit_cts %>%
+        cross_join(time_frame) %>%
+        filter(!!sym(colname_string) > time_start,
+               !!sym(colname_string) <= time_end) %>%
+        mutate(time_start = ymd(time_start) + 1) %>%
+        group_by(site, time_start, time_end, check_name, check_desc,
+                 domain, database_version) %>%
+        summarise(row_cts = sum(row_cts),
+                  row_pts = sum(row_pts),
+                  row_visits = sum(row_visits))
+
     } else if(!distinct_visits & !visits_only) {
       visit_cts <-
         visits_narrowed %>%
@@ -350,14 +379,17 @@ check_fot_group <- function(fot_tbl,
         mutate(check_name = n) %>%
         mutate(check_desc = d,
                domain = t)
-    }
 
-    visit_cts_filter <- visit_cts %>%
-      cross_join(time_frame) %>%
-      filter(!!sym(colname_string) > time_start,
-             !!sym(colname_string) <= time_end) %>%
-      select(- !!sym(colname_string)) %>%
-      distinct() %>% mutate(time_start = ymd(time_start) + 1)
+      visit_cts_filter <- visit_cts %>%
+        cross_join(time_frame) %>%
+        filter(!!sym(colname_string) > time_start,
+               !!sym(colname_string) <= time_end) %>%
+        mutate(time_start = ymd(time_start) + 1) %>%
+        group_by(site, time_start, time_end, check_name, check_desc,
+                 domain, database_version) %>%
+        summarise(row_cts = sum(row_cts),
+                  row_pts = sum(row_pts))
+    }
 
     final_results[[paste0(n)]] = visit_cts_filter
 
