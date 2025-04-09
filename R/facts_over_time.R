@@ -405,7 +405,7 @@ check_fot_group <- function(fot_tbl,
       cross_join(time_cj)
 
     final_results[[paste0(n)]] = visit_cts_filter %>%
-      left_join(fill_blanks) %>%
+      right_join(fill_blanks) %>%
       mutate(across(where(is.numeric), .fns = ~replace_na(.,0)))
 
   }
