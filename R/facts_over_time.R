@@ -398,12 +398,12 @@ check_fot_group <- function(fot_tbl,
       full_join(time_frame)
 
     fill_blanks <- visit_cts_filter %>%
-      group_by(check_type, database_version, site, check_name, check_desc,
+      distinct(check_type, database_version, site, check_name, check_desc,
                domain) %>%
       cross_join(time_cj)
 
     final_results[[paste0(n)]] = visit_cts_filter %>%
-      left_join(fill_blanks) %>%
+      full_join(fill_blanks) %>%
       mutate(across(where(is.numeric), .fns = ~replace_na(.,0)))
 
   }
