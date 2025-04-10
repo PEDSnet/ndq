@@ -166,7 +166,7 @@ check_dc <- function(dc_tbl,
 
     cts
 
-    meta[[dc_tbl[[i]]$check_id]] <- tibble(check_name = cts[[i]]$check_name,
+    meta[[dc_tbl[[i]]$check_id]] <- tibble(check_name = paste0(check_string, '_', dc_tbl[[i]]$check_id),
                                            check_description = dc_tbl[[i]]$check_description,
                                            check_type = check_string,
                                            version_previous = prev_db_string,
