@@ -131,7 +131,7 @@ check_dc <- function(dc_tbl,
       }
 
     }else{
-      t <- dc_tbl[[i]]$check_domain
+      q <- paste0(check_string, '_', dc_tbl[[i]]$check_id)
 
       this_round_prev <-
         pick_schema(table = prev_rslt_tbl,
@@ -139,7 +139,7 @@ check_dc <- function(dc_tbl,
                     db = prev_db) %>%
         filter(site == site_nm,
                database_version == prev_db_string,
-               domain == t) %>%
+               check_name == q) %>%
         collect()
     }
 
