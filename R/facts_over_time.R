@@ -124,6 +124,7 @@ check_fot_loop <- function(fot_tbl,
   site_nm <- config('qry_site')
 
   time_tbls <- split(fot_tbl, seq(nrow(fot_tbl)))
+  time_frame <- split(time_frame, seq(nrow(time_frame)))
 
   final_results <- list()
 
@@ -132,8 +133,6 @@ check_fot_loop <- function(fot_tbl,
     cli::cli_inform(paste0('Starting ', time_tbls[[i]]$check_description))
 
     temp_results <- list()
-
-    time_frame <- split(time_frame, seq(nrow(time_frame)))
 
     for(k in 1:length(time_frame)) {
 
