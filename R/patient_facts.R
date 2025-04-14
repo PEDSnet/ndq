@@ -145,8 +145,8 @@ check_pf <- function(pf_tbl,
           fact_pts = total_pts - no_fact_pts,
           fact_visits_prop = round(1.00 - no_fact_visits_prop, 2),
           fact_pts_prop = round(1.00 - no_fact_pts_prop, 2)
-        ) %>% mutate(check_name=paste0(check_string, '_', chk_nm),
-                     visit_type = k)
+        ) %>% mutate(visit_type = k,
+                     check_name=paste0(check_string, '_', chk_nm, '_', visit_type))
 
       all_tbls[[chk_nm]] <- cts_combined
     }
