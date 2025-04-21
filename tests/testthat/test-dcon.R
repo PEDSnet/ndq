@@ -1,8 +1,8 @@
 
 dcon_test <- tibble('cohort_id' = c('htn_dx', 'op_visit'),
                     'check_id' = c('htn_dx_op_visit', 'htn_dx_op_visit'),
-                    'check_description' = c('hypertension diagnosis + outpatient visit',
-                                            'hypertension diagnosis + outpatient visit'),
+                    'cohort_description' = c('hypertension diagnosis',
+                                            'outpatient visit'),
                     'schema' = c('cdm', 'cdm'),
                     'table' = c('condition_occurrence', 'visit_occurrence'),
                     'date_field' = c('condition_start_date', 'visit_start_date'),
@@ -79,8 +79,8 @@ test_that('check_dcon', {
 
   dcon_test2 <- tibble('cohort_id' = c('htn_dx', 'op_visit'),
                       'check_id' = c('htn_dx_op_visit', 'htn_dx_op_visit'),
-                      'check_description' = c('hypertension diagnosis + outpatient visit',
-                                              'hypertension diagnosis + outpatient visit'),
+                      'cohort_description' = c('hypertension diagnosis',
+                                              'outpatient visit'),
                       'schema' = c('cdm', 'cdm'),
                       'table' = c('condition_occurrence', 'visit_occurrence'),
                       'date_field' = c('condition_start_date', 'visit_start_date'),
@@ -122,9 +122,11 @@ test_that('process_dcon', {
   dcon_opt <- check_dcon(dcon_tbl = dcon_test,
                           omop_or_pcornet = 'omop')
 
-  DBI::dbWriteTable(conn, 'dcon_output', dcon_opt)
+  DBI::dbWriteTable(conn, 'dcon_output', dcon_opt[[1]])
 
-  expect_no_error(process_dcon(dcon_results = dcon_opt,
+  print(dcon_opt[[2]])
+
+  expect_no_error(process_dcon(dcon_results = dcon_opt[[1]],
                                rslt_source = 'local'))
   expect_no_error(process_dcon(dcon_results = 'dcon_output',
                                rslt_source = 'remote'))

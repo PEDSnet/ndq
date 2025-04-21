@@ -24,8 +24,9 @@ accepted values are \code{patient} or \code{visit}}
 \item{check_string}{the abbreviated name of the check; defaults to \code{dcon}}
 }
 \value{
-one dataframe with counts for the patients/visits in the first cohort,
-the patients/visits in the second cohort, and the patients/visits in both
+a list with two dataframes:
+1. counts for the patients/visits in the first cohort, the patients/visits in the second cohort, and the patients/visits in both
+2. metadata information about each of the cohorts for which counts were computed
 }
 \description{
 Given the details of a pair of clinical events, this function

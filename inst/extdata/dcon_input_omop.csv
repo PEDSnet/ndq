@@ -1,5 +1,5 @@
-cohort_id,check_id,check_description,schema,table,date_field,concept_field,conceptset_name,filter_logic,time_between_events
-asthma_dx,asthma_dx_broncho_rx,asthma diagnosis and bronchodilator (albuterol) prescription,cdm,condition_occurrence,condition_start_date,condition_concept_id,dx_asthma,NA,90
-broncho_rx,asthma_dx_broncho_rx,asthma diagnosis and bronchodilator (albuterol) prescription,cdm,drug_exposure,drug_exposure_start_date,drug_concept_id,rx_albuterol,NA,90
-IP_visits,IP_visits_IP_conds,IP visits and IP condition headers,cdm,visit_occurrence,visit_start_date,NA,NA,visit_concept_id == 9201,NA
-IP_conds,IP_visits_IP_conds,IP visits and IP condition headers,cdm,condition_occurrence,condition_start_date,NA,NA,"condition_type_concept_id %in% c(2000000092,2000000093, 2000000094,2000000098, 2000000099,2000000100)",NA
+cohort_id,check_id,cohort_description,schema,table,date_field,concept_field,conceptset_name,filter_logic,time_between_events
+asthma_dx,asthma_dx_broncho_rx,asthma diagnosis,cdm,condition_occurrence,condition_start_date,condition_concept_id,dx_asthma,NA,90
+broncho_rx,asthma_dx_broncho_rx,bronchodilator (albuterol) prescription,cdm,drug_exposure,drug_exposure_start_date,drug_concept_id,rx_albuterol,NA,90
+IP_visits,IP_visits_IP_conds,IP visits,cdm,visit_occurrence,visit_start_date,NA,NA,visit_concept_id == 9201,NA
+IP_conds,IP_visits_IP_conds,IP condition headers,cdm,condition_occurrence,condition_start_date,NA,NA,"condition_type_concept_id %in% c(2000000092,2000000093, 2000000094,2000000098, 2000000099,2000000100)",NA

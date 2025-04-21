@@ -225,8 +225,8 @@
 #' A dataframe or CSV file with 10 columns
 #' \describe{
 #'   \item{cohort_id}{A short string describing the event in that row of the input file}
-#'   \item{check_id}{A short string "code" used to identify the specific check (ex: cancer_oncologists, htn_dx_antihtn_rx). There should always be **TWO rows with the SAME check_id**, with each row representing one of the two input cohorts.}
-#'   \item{check_description}{A longer description of the check (ex: cancer diagnoses and oncology specialist visits, hypertension diagnoses and antihypertensive prescriptions)}
+#'   \item{check_id}{A short string "code" used to identify the specific check (ex: cancer_oncologists). There should always be **TWO rows with the SAME check_id**, with each row representing one of the two input cohorts.}
+#'   \item{cohort_description}{A longer description of the cohort (ex: cancer diagnoses, oncology specialist visits)}
 #'   \item{schema}{The schema where the data is kept. Use `cdm` to use the pre-configured `cdm_schema`, `result` to use the preconfigured `results_schema`, or input the exact name of the schema.}
 #'   \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 #'   \item{date_field}{The date field to be used when time_between_events is not null to determine the length of time between each event occurrence}

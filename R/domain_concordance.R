@@ -16,8 +16,9 @@
 #'                      accepted values are `patient` or `visit`
 #' @param check_string the abbreviated name of the check; defaults to `dcon`
 #'
-#' @return one dataframe with counts for the patients/visits in the first cohort,
-#'         the patients/visits in the second cohort, and the patients/visits in both
+#' @return a list with two dataframes:
+#'         1. counts for the patients/visits in the first cohort, the patients/visits in the second cohort, and the patients/visits in both
+#'         2. metadata information about each of the cohorts for which counts were computed
 #'
 #' @export
 #'
@@ -31,6 +32,7 @@ check_dcon<- function(dcon_tbl,
   conc_tbls <- dplyr::group_split(dcon_tbl %>% collect() %>% group_by(check_id))
 
   final <- list()
+  meta <- list()
 
   for(k in 1:length(conc_tbls)) {
 
@@ -160,7 +162,7 @@ check_dcon<- function(dcon_tbl,
     }
 
     nm <- conc_tbls[[k]]$check_id %>% unique()
-    d <- conc_tbls[[k]]$check_description %>% unique()
+    d <- paste0(conc_tbls[[k]]$cohort_description[1], ' and ', conc_tbls[[k]]$cohort_description[2])
 
     final_tbls <-
       reduce(.x=cohort_list_cts,
@@ -170,14 +172,25 @@ check_dcon<- function(dcon_tbl,
       mutate(check_name=paste0(check_string, '_', nm),
              check_desc=d) %>% collect()
 
+    meta_tbl <- tibble(check_type = c(compute_level, compute_level),
+                       check_name = c(final_tbls$check_name[1], final_tbls$check_name[2]),
+                       cohort = c(final_tbls$cohort[1], final_tbls$cohort[2]),
+                       cohort_label = c(conc_tbls[[k]]$cohort_description[1], conc_tbls[[k]]$cohort_description[2]))
+
     final[[k]] <- final_tbls
+    meta[[k]] <- meta_tbl
 
   }
 
   final_red <- purrr::reduce(.x = final,
                              .f = dplyr::union)
+  meta_red <- purrr::reduce(.x = meta,
+                            .f = dplyr::union)
 
-  return(final_red)
+  opt <- list('dcon_output' = final_red,
+              'dcon_meta' = meta_red)
+
+  return(opt)
 
 }
 
