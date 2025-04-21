@@ -143,13 +143,20 @@ check_dcon<- function(dcon_tbl,
     cohort_list <- list('cohort_1' = cohort_1,
                         'cohort_2' = cohort_2,
                         'combined' = combined)
+
+    cohort_map <- tibble('cohort' = c('cohort_1', 'cohort_2', 'combined'),
+                         'cohort_label' = c(conc_tbls[[k]]$cohort_id[1],
+                                            conc_tbls[[k]]$cohort_id[2],
+                                            'combined'))
+
+
     cohort_list_cts <- list()
 
     for(i in 1:length(cohort_list)) {
 
       string_nm <- names(cohort_list[i])
-      cohort_nm <- cohort_list[[i]] %>% select(cohort_label) %>%
-        distinct() %>% collect() %>% pull()
+      cohort_nm <- cohort_map %>% filter(cohort %in% string_nm) %>%
+        distinct(cohort_label) %>% pull()
 
       final_cts <- cohort_list[[i]] %>%
         summarise(value=n_distinct(col_nm)) %>%
