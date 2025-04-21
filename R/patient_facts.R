@@ -131,20 +131,18 @@ check_pf <- function(pf_tbl,
         left_join(missed_visits) %>%
         # left_join(missed_pts) %>%
         mutate(
-          no_fact_visits_prop = round(
-            no_fact_visits / total_visits, 2
-          ),
-          no_fact_pts_prop = round(
-            no_fact_pts / total_pts, 2
-          )
+          no_fact_visits_prop = ifelse(total_visits == 0, NA,
+                                       round(no_fact_visits / total_visits, 2)),
+          no_fact_pts_prop = ifelse(total_pts == 0, NA,
+                                    round(no_fact_pts / total_pts, 2))
         )  %>%
         add_meta(check_lib=check_string) %>%
         mutate_if(., is.numeric, ~replace(., is.na(.), 0)) %>%
         mutate(
           fact_visits = total_visits - no_fact_visits,
           fact_pts = total_pts - no_fact_pts,
-          fact_visits_prop = round(1.00 - no_fact_visits_prop, 2),
-          fact_pts_prop = round(1.00 - no_fact_pts_prop, 2)
+          fact_visits_prop = ifelse(total_visits == 0, NA, round(1.00 - no_fact_visits_prop, 2)),
+          fact_pts_prop = ifelse(total_pts == 0, NA, round(1.00 - no_fact_pts_prop, 2))
         ) %>% mutate(visit_type = k,
                      check_name=paste0(check_string, '_', chk_nm, '_', visit_type))
 
