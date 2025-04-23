@@ -97,7 +97,7 @@ check_pf <- function(pf_tbl,
 
       visit_tbl_all_name <-
         visit_tbl_all %>%
-        mutate(check_description = check_description_name)
+        mutate(check_desc = check_description_name)
 
       missed_visits <-
         visit_tbl_filt %>%
@@ -105,9 +105,9 @@ check_pf <- function(pf_tbl,
                !!sym(visit_col)) %>%
         anti_join(tbl_use,
                   by=visit_col) %>%
-        mutate(check_description = check_description_name) %>%
+        mutate(check_desc = check_description_name) %>%
         group_by(
-          check_description
+          check_desc
         ) %>%
         summarise(
           no_fact_visits = n(),
@@ -191,7 +191,7 @@ process_pf <- function(pf_results,
   db_version<-config('current_version')
 
   pf_totals <- pf_int %>%
-    group_by(check_description, check_name, visit_type) %>%
+    group_by(check_desc, check_name, visit_type) %>%
     summarise(no_fact_visits=sum(no_fact_visits),
               no_fact_pts=sum(no_fact_pts),
               total_visits=sum(total_visits),
@@ -211,6 +211,6 @@ process_pf <- function(pf_results,
   # have to collect to bind rows since total columns may be missing site-specific things (e.g. thresholds)
   bind_rows(pf_int, pf_totals)%>%
     mutate(check_name_app=paste0(check_name, "_visits"),
-           check_desc_neat=str_remove(check_description, "visits_with_|_visits"))
+           check_desc_neat=str_remove(check_desc, "visits_with_|_visits"))
 
 }
