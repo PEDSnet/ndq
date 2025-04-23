@@ -182,3 +182,107 @@ output_tbl_append <- function(data, name = NA, local = FALSE,
 
 
 }
+
+
+#' Create informational metadata file
+#'
+#' @param check_tbls a list of table names from which the list of executed
+#'                   checks should be extracted
+#' @param metadata_file if one exists, a previously generated metadata file
+#'                      to append to. the function will also highlight new
+#'                      checks that will need to be described
+#' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
+#'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
+#' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
+#'                      of these files. If the results are local or remote, leave NULL
+#'
+#' @returns a dataframe with all executed checks from the input tables
+#'
+#'          if a metadate file is provided, it will include all information from this
+#'          file in addition to newly added checks that need additional metadata added
+#'
+#'          if a metadata file is NOT provided, it will include all checks with some
+#'          metadata pulled from the tables themselves and other fields left blank for the
+#'          user to fill in
+#'
+#' @export
+#'
+create_check_metadata <- function(check_tbls,
+                                  metadata_file = NULL,
+                                  rslt_source = 'remote',
+                                  csv_rslt_path = NULL){
+
+  check_list <- list()
+
+  for(i in 1:length(check_tbls)){
+
+    if(tolower(rslt_source) == 'remote'){
+      tbl_load <- results_tbl(check_tbls[[i]]) %>%
+        collect()
+    }else if(tolower(rslt_source) == 'csv'){
+      tbl_load <- readr::read_csv(paste0(csv_rslt_path, check_tbls[[i]]))
+      collect()
+    }else if(tolower(rslt_source) == 'local'){
+      tbl_load <- check_tbls[[i]] %>%
+        collect()
+    }else{cli::cli_abort('Incorrect input for rslt_source. Please set the rslt_source to either local, csv, or remote')}
+
+    if(!is.null(metadata_file)){
+
+      cts <- tbl_load %>% distinct(check_type) %>% pull()
+
+      tbl_cks <- tbl_load %>%
+        distinct(check_type, check_name)
+
+      meta_final <- metadata_file %>%
+        filter(check_type == cts) %>%
+        full_join(tbl_cks)
+
+      check_list[[i]] <- meta_final
+
+    }else{
+
+      cts <- tbl_load %>% distinct(check_type) %>% pull()
+
+      if(cts == 'dc'){sc <- c('check_type', 'domain')}else if(cts %in% c('dcon', 'bmc')){sc <- c('check_type', 'check_desc')
+      }else if(cts == 'ecp'){sc <- c('check_type', 'check_type')}else if(cts == 'fot'){sc <- c('domain', 'check_desc')
+      }else if(cts == 'mf'){sc <- c('domain', 'measure')}else if(cts == 'pf'){sc <- c('visit_type', 'check_desc')
+      }else if(cts == 'uc'){sc <- c('check_type', 'measure')}else if(cts %in% c('vc', 'vs')){sc <- c('table_application', 'measurement_column')}
+
+      meta_final <- tbl_load %>%
+        mutate(check_domain = !!sym(sc[1]),
+               check_domain = ifelse(check_domain == check_type, NA, check_domain),
+               check_application = !!sym(sc[2]),
+               check_application = ifelse(check_application == check_type, NA, check_application),
+               full_description = NA) %>%
+        distinct(check_type, check_name, check_domain, check_application, full_description)
+
+      check_list[[i]] <- meta_final
+
+    }
+
+  }
+
+  meta_reduce <- purrr::reduce(.x = check_list,
+                               .f = dplyr::union)
+
+  if(!is.null(metadata_file)){
+    meta_message <- meta_reduce %>%
+      filter(is.na(full_description)) %>%
+      distinct(check_name)
+
+    meta_string <- meta_message %>% pull(check_name)
+    meta_string <- paste(meta_string, collapse = ', ')
+
+    meta_n <- meta_message %>% summarise(n = n()) %>% pull(n)
+
+    cli::cli_inform(cli::col_cyan(paste0('There are ', meta_n, ' new checks to be described: ', meta_string)))
+  }else{
+    meta_n <- meta_reduce %>% summarise(n = n()) %>% pull(n)
+
+    cli::cli_inform(cli::col_cyan(paste0("A new metadata reference file has been created with ", meta_n, " checks ready for describing.")))
+  }
+
+  return(meta_reduce)
+
+}
