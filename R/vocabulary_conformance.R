@@ -40,7 +40,7 @@ check_vc <- function(vc_tbl,
     input_list <- list()
 
     values <- vocabvals[[i]]$acceptable_vocabularies %>%
-      gsub(" ", "", .) %>%
+      gsub(", ", ",", .) %>%
       # str_split(', ') %>%
       str_split(',') %>% unlist()
 
