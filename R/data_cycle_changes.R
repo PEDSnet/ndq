@@ -87,13 +87,13 @@ check_dc <- function(dc_tbl,
     if(pid_check){
       this_round_current <- this_round_current %>%
         summarise(total_ct=n(),
-                  total_pt_ct=n_distinct(!!sym(pt_col))) %>%
+                  total_pt_ct=as.numeric(n_distinct(!!sym(pt_col)))) %>%
         collect() %>%
         mutate(database_version=current_db_string)
     }else{
       this_round_current <- this_round_current %>%
         summarise(total_ct=n(),
-                  total_pt_ct=0) %>%
+                  total_pt_ct=as.numeric(0)) %>%
         collect() %>%
         mutate(database_version=current_db_string)
     }
@@ -119,13 +119,13 @@ check_dc <- function(dc_tbl,
       if(pid_check){
         this_round_prev <- this_round_prev %>%
           summarise(total_ct=n(),
-                    total_pt_ct=n_distinct(!!sym(pt_col))) %>%
+                    total_pt_ct=as.numeric(n_distinct(!!sym(pt_col)))) %>%
           collect() %>%
           mutate(database_version=prev_db_string)
       }else{
         this_round_prev <- this_round_prev %>%
           summarise(total_ct=n(),
-                    total_pt_ct=0) %>%
+                    total_pt_ct=as.numeric(0)) %>%
           collect() %>%
           mutate(database_version=prev_db_string)
       }
