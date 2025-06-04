@@ -80,7 +80,7 @@ check_uc <- function(uc_tbl,
       unmapped_vals <-
         tbl_use %>%
         add_site() %>% filter(site == site_nm) %>%
-        filter(.data[[colname]]  %in% unmapped_values)
+        filter(.data[[colname]]  %in% unmapped_values | is.na(.data[[colname]]))
 
       if(produce_mapped_list) {
 
@@ -180,7 +180,7 @@ check_uc_by_year <- function(uc_tbl,
     unmapped_vals <-
       tbl_use %>%
       add_site() %>% filter(site == site_nm) %>%
-      filter(.data[[colname]]  %in% unmapped_values)
+      filter(.data[[colname]]  %in% unmapped_values | is.na(.data[[colname]]))
 
     date_cols <-
       unmapped_vals %>%
