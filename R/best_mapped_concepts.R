@@ -11,6 +11,9 @@
 #'                see `?bmc_input_omop` or `?bmc_input_pcornet` for details
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
 #' @param concept_tbl the vocabulary table with concept information; defaults to `vocabulary.concept`
+#'
+#'                    if you do not have the OMOP vocabulary tables or would not like to use them, set this
+#'                    argument to NULL
 #' @param check_string string that contains a description of the table
 #'
 #' @return a list of two dataframes:
@@ -50,7 +53,7 @@ check_bmc <- function(bmc_tbl,
         add_site() %>% filter(site == site_nm)
     }
 
-    if(grepl('fips', fact_tbl_list_args[[i]]$table)){
+    if(is.null(concept_tbl)){
       xwalk <- tbl_use %>%
         rename(concept_type=!!sym(fact_tbl_list_args[[i]]$concept_field))
     }else{
@@ -58,7 +61,8 @@ check_bmc <- function(bmc_tbl,
         find_concept_names(fact_tbl = tbl_use,
                            omop_or_pcornet = omop_or_pcornet,
                            fact_concept_id = fact_tbl_list_args[[i]]$concept_field,
-                           concept_field = fact_tbl_list_args[[i]]$concept_table_field)
+                           concept_field = fact_tbl_list_args[[i]]$concept_table_field,
+                           concept_tbl = concept_tbl)
     }
 
 

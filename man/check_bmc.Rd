@@ -18,7 +18,11 @@ see \code{?bmc_input_omop} or \code{?bmc_input_pcornet} for details}
 
 \item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
 
-\item{concept_tbl}{the vocabulary table with concept information; defaults to \code{vocabulary.concept}}
+\item{concept_tbl}{the vocabulary table with concept information; defaults to \code{vocabulary.concept}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{               if you do not have the OMOP vocabulary tables or would not like to use them, set this
+               argument to NULL
+}\if{html}{\out{</div>}}}
 
 \item{check_string}{string that contains a description of the table}
 }
