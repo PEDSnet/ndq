@@ -8,6 +8,7 @@ check_vc(
   vc_tbl,
   omop_or_pcornet = "omop",
   check_string = "vc",
+  concept_tbl = vocabulary_tbl("concept"),
   null_values = c(44814650L, 0L, 44814653L, 44814649L)
 )
 }
@@ -19,6 +20,8 @@ check}
 
 \item{check_string}{an abbreviated identifier to identify all output from this module
 defaults to \code{vc}}
+
+\item{concept_tbl}{the OMOP concept tbl}
 
 \item{null_values}{a vector of NULL values (or other values that would not belong to accepted vocabularies
 but are broadly accepted) that should be excluded when identifying non-valueset concepts}

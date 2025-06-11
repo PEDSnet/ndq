@@ -71,7 +71,7 @@ check_uc <- function(uc_tbl,
         tbl_use %>%
         add_site() %>% filter(site == site_nm) %>%
         summarise(
-          total_rows = n()
+          total_rows = as.numeric(n())
         ) %>% collect()
 
 
@@ -89,7 +89,7 @@ check_uc <- function(uc_tbl,
         unmapped_db <-
           unmapped_vals %>%
           group_by(!! sym(concept_list[[i]]$source_value_field)) %>%
-          summarise(src_value_ct = n()) %>%
+          summarise(src_value_ct = as.numeric(n())) %>%
           ungroup() %>% filter(src_value_ct > 10) %>% collect() %>%
           pivot_longer(cols=!!sym(concept_list[[i]]$source_value_field),
                        names_to = 'src_value_name',
@@ -107,7 +107,7 @@ check_uc <- function(uc_tbl,
       total_unmapped <-
         unmapped_vals %>%
         summarise(
-          unmapped_rows = n()
+          unmapped_rows = as.numeric(n())
         ) %>% collect()
 
       unmapped_cts <-
@@ -118,7 +118,7 @@ check_uc <- function(uc_tbl,
         mutate(measure = concept_list[[i]]$check_description) %>%
         relocate(measure, .after = site) %>%
         mutate(
-          unmapped_prop = round(unmapped_rows / total_rows, 2)
+          unmapped_prop = round(as.numeric(unmapped_rows) / as.numeric(total_rows), 2)
         )
 
       check_concepts[[concept_list[[i]]$check_id]] <- unmapped_cts
@@ -211,7 +211,7 @@ check_uc_by_year <- function(uc_tbl,
       group_by(
         year_date
       ) %>% summarise(
-        total_row_ct = n()
+        total_row_ct = as.numeric(n())
       )%>% collect()
 
     date_col_grpd <-
@@ -220,7 +220,7 @@ check_uc_by_year <- function(uc_tbl,
       group_by(
         year_date
       ) %>% summarise(
-        total_unmapped_row_ct = n()
+        total_unmapped_row_ct = as.numeric(n())
       ) %>% collect() %>%
       inner_join(total_rows) %>%
       mutate(unmapped_description=concept_list[[i]]$check_description) %>%

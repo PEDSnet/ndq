@@ -58,14 +58,14 @@ check_mf_visitid <- function(mf_tbl,
     total_rows <-
       tbl_use %>%
       add_site() %>% filter(site == site_nm) %>%
-      summarise(total_ct = n()) %>%
+      summarise(total_ct = as.numeric(n())) %>%
       collect()
 
     total_visit_ids <-
       tbl_use %>%
       add_site() %>% filter(site == site_nm) %>%
       summarise(
-        total_visits=n_distinct(!!sym(visit_col))
+        total_visits=as.numeric(n_distinct(!!sym(visit_col)))
       ) %>% collect()
 
     tbl_visit_ids <-
@@ -87,8 +87,8 @@ check_mf_visitid <- function(mf_tbl,
     visit_summaries <-
       tbl_visit_ids %>%
       summarise(
-        missing_visits_total = n(),
-        missing_visits_distinct = n_distinct(!!sym(visit_col))
+        missing_visits_total = as.numeric(n()),
+        missing_visits_distinct = as.numeric(n_distinct(!!sym(visit_col)))
       ) %>% collect()
 
     visit_summaries_nas <-
@@ -96,7 +96,7 @@ check_mf_visitid <- function(mf_tbl,
       group_by(
         missing_flag
       ) %>% summarise(
-        total_ct = n()
+        total_ct = as.numeric(n())
       ) %>% collect()
 
     if(dim(visit_summaries_nas)[1] == 0) {
@@ -105,11 +105,11 @@ check_mf_visitid <- function(mf_tbl,
         visit_summaries_nas %>%
         add_row(
           missing_flag = 'visit_na',
-          total_ct = 0
+          total_ct = as.numeric(0)
         ) %>%
         add_row(
           missing_flag = 'visit_id',
-          total_ct = 0
+          total_ct = as.numeric(0)
         )
 
     } else if(dim(visit_summaries_nas)[1] == 1) {
@@ -119,13 +119,13 @@ check_mf_visitid <- function(mf_tbl,
           visit_summaries_nas %>%
           add_row(
             missing_flag = 'visit_id',
-            total_ct = 0
+            total_ct = as.numeric(0)
           ) } else {
             visit_summaries_nas_all <-
               visit_summaries_nas %>%
               add_row(
                 missing_flag = 'visit_na',
-                total_ct = 0
+                total_ct = as.numeric(0)
               )
           }
       visit_summaries_nas_all

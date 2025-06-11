@@ -10,6 +10,7 @@
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
 #' @param check_string an abbreviated identifier to identify all output from this module
 #'                     defaults to `vc`
+#' @param concept_tbl the OMOP concept tbl
 #' @param null_values a vector of NULL values (or other values that would not belong to accepted vocabularies
 #'                    but are broadly accepted) that should be excluded when identifying non-valueset concepts
 #'
@@ -25,6 +26,7 @@
 check_vc <- function(vc_tbl,
                      omop_or_pcornet = 'omop',
                      check_string='vc',
+                     concept_tbl = vocabulary_tbl('concept'),
                      null_values = c(44814650L,0L,44814653L,44814649L)) {
 
   site_nm <- config('qry_site')
@@ -78,7 +80,7 @@ check_vc <- function(vc_tbl,
       add_site() %>% filter(site == site_nm) %>%
       filter(! .data[[concept_id_fn]] %in% null_values) %>%
       inner_join(select(
-        vocabulary_tbl('concept'),
+        concept_tbl,
         concept_id, concept_name, vocabulary_id
       ), by = join_cols) %>%
       group_by(vocabulary_id) %>%
