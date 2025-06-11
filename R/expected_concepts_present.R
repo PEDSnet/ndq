@@ -67,7 +67,8 @@ check_ecp <- function(ecp_tbl,
     fact_pts <- tbl_use %>%
       add_site() %>% filter(site == site_nm) %>%
       inner_join(cohort_tbl) %>%
-      inner_join(load_codeset(ecp_list[[i]]$conceptset_name), by = join_cols) %>%
+      inner_join(load_codeset(ecp_list[[i]]$conceptset_name,
+                              indexes = NULL), by = join_cols) %>%
       summarise(concept_pt_ct = n_distinct(!!sym(pt_col))) %>% collect()
 
     pt_cohort <- ecp_list[[i]]$cohort_definition
