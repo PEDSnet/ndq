@@ -10,6 +10,8 @@
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
 #' @param check_string an abbreviated identifier to identify all output from this module
 #'                     defaults to `vs`
+#' @param concept_tbl a vocabulary table, like the OMOP concept table, with at least the concept column of interest (concept_id or concept_code),
+#'                    the concept name, and the vocabulary id
 #' @param null_values a vector of NULL values (or other values that are not part of the valueset but are broadly accepted)
 #'                    that should be excluded when identifying non-valueset concepts
 #'
@@ -24,6 +26,7 @@
 check_vs <- function(vs_tbl,
                      omop_or_pcornet = 'omop',
                      check_string = 'vs',
+                     concept_tbl = vocabulary_tbl('concept'),
                      null_values = c(44814650L,0L,44814653L,44814649L)) {
 
   site_nm <- config('qry_site')
@@ -43,11 +46,13 @@ check_vs <- function(vs_tbl,
     if(tolower(omop_or_pcornet) == 'omop'){
       join_cols <- set_names('concept_id', paste0(concept_id_fn))
       pt_col <- 'person_id'
+      concept_col <- 'concept_id'
     }else if(tolower(omop_or_pcornet) == 'pcornet'){
       join_cols <- set_names('concept_code', paste0(concept_id_fn))
       join_cols2 <- set_names('vocabulary_id', valuesets[[i]]$vocabulary_field)
       join_cols <- join_cols %>% append(join_cols2)
       pt_col <- 'patid'
+      concept_col <- 'concept_code'
     }else{cli::cli_abort('Invalid value for omop_or_pcornet. Please choose `omop` or `pcornet` as the CDM')}
 
     if(!is.na(valuesets[[i]]$filter_logic)){
@@ -68,20 +73,39 @@ check_vs <- function(vs_tbl,
                 total_pt_ct=n_distinct(!!sym(pt_col))) %>% collect_new() %>%
       add_meta(check_lib = check_string)
 
-    illegal_values <-
-      tbl_use %>%
-      add_site() %>% filter(site == site_nm) %>%
-      anti_join(codeset_round,
-                by = join_cols) %>%
-      filter(! .data[[concept_id_fn]] %in% null_values) %>%
-      group_by(!!! rlang::syms(concept_id_fn)) %>%
-      summarise(total_viol_ct = n(),
-                total_viol_pt_ct = n_distinct(!!sym(pt_col))) %>%
-      ungroup() %>%
-      inner_join(select(
-        vocabulary_tbl('concept'),
-        concept_id, concept_name, vocabulary_id
-      ), by = join_cols) %>% collect()
+    if(!is.null(concept_tbl)){
+      illegal_values <-
+        tbl_use %>%
+        add_site() %>% filter(site == site_nm) %>%
+        anti_join(codeset_round,
+                  by = join_cols) %>%
+        filter(! .data[[concept_id_fn]] %in% null_values) %>%
+        group_by(!!! rlang::syms(concept_id_fn)) %>%
+        summarise(total_viol_ct = n(),
+                  total_viol_pt_ct = n_distinct(!!sym(pt_col))) %>%
+        ungroup() %>%
+        inner_join(select(
+          concept_tbl,
+          !!sym(concept_col), concept_name, vocabulary_id
+        ), by = join_cols) %>% collect()
+    }else{
+      illegal_values <-
+        tbl_use %>%
+        add_site() %>% filter(site == site_nm) %>%
+        anti_join(codeset_round,
+                  by = join_cols) %>%
+        filter(! .data[[concept_id_fn]] %in% null_values) %>%
+        group_by(!!! rlang::syms(concept_id_fn)) %>%
+        summarise(total_viol_ct = n(),
+                  total_viol_pt_ct = n_distinct(!!sym(pt_col))) %>%
+        ungroup() %>% collect()
+
+      if(nrow(illegal_values) > 0){
+        illegal_values <- illegal_values %>%
+          mutate(concept_name = 'No vocabulary table',
+                 vocabulary_id = 'No vocabulary table')
+      }
+    }
 
 
     if(nrow(illegal_values) > 0){

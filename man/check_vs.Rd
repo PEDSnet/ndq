@@ -8,6 +8,7 @@ check_vs(
   vs_tbl,
   omop_or_pcornet = "omop",
   check_string = "vs",
+  concept_tbl = vocabulary_tbl("concept"),
   null_values = c(44814650L, 0L, 44814653L, 44814649L)
 )
 }
@@ -19,6 +20,9 @@ check}
 
 \item{check_string}{an abbreviated identifier to identify all output from this module
 defaults to \code{vs}}
+
+\item{concept_tbl}{a vocabulary table, like the OMOP concept table, with at least the concept column of interest (concept_id or concept_code),
+the concept name, and the vocabulary id}
 
 \item{null_values}{a vector of NULL values (or other values that are not part of the valueset but are broadly accepted)
 that should be excluded when identifying non-valueset concepts}

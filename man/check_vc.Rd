@@ -21,7 +21,8 @@ check}
 \item{check_string}{an abbreviated identifier to identify all output from this module
 defaults to \code{vc}}
 
-\item{concept_tbl}{the OMOP concept tbl}
+\item{concept_tbl}{a vocabulary table, like the OMOP concept table, with at least the concept column of interest (concept_id or concept_code),
+the concept name, and the vocabulary id}
 
 \item{null_values}{a vector of NULL values (or other values that would not belong to accepted vocabularies
 but are broadly accepted) that should be excluded when identifying non-valueset concepts}

@@ -10,7 +10,8 @@
 #' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
 #' @param check_string an abbreviated identifier to identify all output from this module
 #'                     defaults to `vc`
-#' @param concept_tbl the OMOP concept tbl
+#' @param concept_tbl a vocabulary table, like the OMOP concept table, with at least the concept column of interest (concept_id or concept_code),
+#'                    the concept name, and the vocabulary id
 #' @param null_values a vector of NULL values (or other values that would not belong to accepted vocabularies
 #'                    but are broadly accepted) that should be excluded when identifying non-valueset concepts
 #'

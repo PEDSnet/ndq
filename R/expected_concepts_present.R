@@ -45,7 +45,8 @@ check_ecp <- function(ecp_tbl,
 
     cohort_tbl <- pick_schema(schema = ecp_list[[i]]$cohort_schema,
                               table = ecp_list[[i]]$cohort_table,
-                              db = config('db_src'))
+                              db = config('db_src')) %>%
+      select(!!sym(pt_col))
 
     total_pts <- cohort_tbl %>%
       add_site() %>% filter(site == site_nm) %>%
