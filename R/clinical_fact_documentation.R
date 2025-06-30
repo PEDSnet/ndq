@@ -1,12 +1,12 @@
 
-#' Patient Facts
+#' Clinical Fact Documentation
 #'
 #' This function will identify visits that do not link to the user-specified
 #' facts. It will also compute the counts of patients who have at least one
 #' visit that does not link to the specified fact type.
 #'
-#' @param pf_tbl a table with information about the fact tables that should be
-#'               evaluated against the visit_tbl; see `?pf_input omop` or `?pf_input_pcornet`
+#' @param cfd_tbl a table with information about the fact tables that should be
+#'               evaluated against the visit_tbl; see `?cfd_input omop` or `?cfd_input_pcornet`
 #' @param visit_type_filter a string or vector of strings label to identify the
 #'                          visit type(s) for which you are executing the check
 #'                          (i.e. inpatient, c(inpatient, outpatient));
@@ -21,7 +21,7 @@
 #' @param visit_tbl the CDM table with visit information, that will be filtered to the visit
 #'                  type of interest based on the visit_type_tbl + visit_type_filter
 #' @param check_string an abbreviated identifier to identify all output from this module
-#'                     defaults to `pf`
+#'                     defaults to `cfd`
 #'
 #'
 #' @return tbl with visit_occurrences, and all columns in the original visit_occurrence table,
@@ -29,12 +29,12 @@
 #'
 #' @export
 #'
-check_pf <- function(pf_tbl,
-                     visit_type_filter,
-                     visit_type_tbl,
-                     omop_or_pcornet = 'omop',
-                     visit_tbl=cdm_tbl('visit_occurrence'),
-                     check_string='pf') {
+check_cfd <- function(cfd_tbl,
+                      visit_type_filter,
+                      visit_type_tbl,
+                      omop_or_pcornet = 'omop',
+                      visit_tbl=cdm_tbl('visit_occurrence'),
+                      check_string='cfd') {
 
   site_nm <- config('qry_site')
 
@@ -72,7 +72,7 @@ check_pf <- function(pf_tbl,
         total_pts = n_distinct(!!sym(pt_col))
       ) %>% ungroup() %>% collect()
 
-    fact_tbls <- split(pf_tbl, seq(nrow(pf_tbl)))
+    fact_tbls <- split(cfd_tbl, seq(nrow(cfd_tbl)))
 
     all_tbls <- list()
 
@@ -157,40 +157,40 @@ check_pf <- function(pf_tbl,
 }
 
 
-#' Patient Facts -- Processing
+#' Clinical Fact Documentation -- Processing
 #'
-#' Intakes the output of check_pf in order to apply additional processing. This
+#' Intakes the output of check_cfd in order to apply additional processing. This
 #' includes computing overall counts/proportions across all sites included in the input and tidying
 #' some of the descriptive metadata.
 #'
-#' @param pf_results table output by check_pf
+#' @param cfd_results table output by check_cfd
 #' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
 #'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
 #' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
 #'                      of these files. If the results are local or remote, leave NULL
 #'
-#' @return pf_output tbl with additional total counts
+#' @return cfd_output tbl with additional total counts
 #'
 #' @importFrom stringr str_remove
 #'
 #' @export
 #'
-process_pf <- function(pf_results,
-                       rslt_source = 'remote',
-                       csv_rslt_path = NULL) {
+process_cfd <- function(cfd_results,
+                        rslt_source = 'remote',
+                        csv_rslt_path = NULL) {
 
   if(tolower(rslt_source) == 'remote'){
-    pf_int <- results_tbl(pf_results) %>%
+    cfd_int <- results_tbl(cfd_results) %>%
       collect()
   }else if(tolower(rslt_source) == 'csv'){
-    pf_int <- readr::read_csv(paste0(csv_rslt_path, pf_results))
+    cfd_int <- readr::read_csv(paste0(csv_rslt_path, cfd_results))
   }else if(tolower(rslt_source) == 'local'){
-    pf_int <- pf_results %>% collect()
+    cfd_int <- cfd_results %>% collect()
   }else{cli::cli_abort('Incorrect input for rslt_source. Please set the rslt_source to either local, csv, or remote')}
 
   db_version<-config('current_version')
 
-  pf_totals <- pf_int %>%
+  cfd_totals <- cfd_int %>%
     group_by(check_desc, check_name, visit_type) %>%
     summarise(no_fact_visits=sum(no_fact_visits),
               no_fact_pts=sum(no_fact_pts),
@@ -200,7 +200,7 @@ process_pf <- function(pf_results,
               fact_pts=sum(fact_pts)) %>%
     ungroup()%>%
     mutate(site='total',
-           check_type='pf',
+           check_type='cfd',
            database_version=db_version)%>%
     mutate(no_fact_visits_prop=round(no_fact_visits/total_visits,2),
            no_fact_pts_prop=round(no_fact_pts/total_pts,2),
@@ -209,7 +209,7 @@ process_pf <- function(pf_results,
     collect()
 
   # have to collect to bind rows since total columns may be missing site-specific things (e.g. thresholds)
-  bind_rows(pf_int, pf_totals)%>%
+  bind_rows(cfd_int, cfd_totals)%>%
     mutate(check_name_app=paste0(check_name, "_visits"),
            check_desc_neat=str_remove(check_desc, "visits_with_|_visits"))
 

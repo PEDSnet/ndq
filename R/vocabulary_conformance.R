@@ -73,7 +73,7 @@ check_vc <- function(vc_tbl,
       add_site() %>% filter(site == site_nm) %>%
       summarise(total_denom_ct=n(),
                 total_pt_ct=n_distinct(!!sym(pt_col)),
-                total_concept_ct=n_distinct(!!sym(concept_id_fn))) %>% collect_new() %>%
+                total_concept_ct=n_distinct(!!sym(concept_id_fn))) %>% collect() %>%
       add_meta(check_lib = check_string)
 
     illegal_values <-
@@ -89,7 +89,7 @@ check_vc <- function(vc_tbl,
                 total_viol_pt_ct = n_distinct(!!sym(pt_col)),
                 total_viol_concept_ct = n_distinct(!!sym(concept_id_fn))) %>%
       ungroup() %>%
-      collect_new() %>%
+      collect() %>%
       add_meta(check_lib = check_string) %>%
       mutate(check_name = paste0(check_string, '_', vocabvals[[i]]$check_id),
              table_application = vocabvals[[i]]$table,

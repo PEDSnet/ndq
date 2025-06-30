@@ -165,7 +165,7 @@ find_concept_names <- function(fact_tbl,
                !!sym(concept_field)),
         by=c('concept_id')
       ) %>% rename(concept_type=!!sym(concept_field)) %>%
-      compute_new()
+      compute_new(name = 'temp_bmc')
   }else if(omop_or_pcornet == 'pcornet'){
     fact_tbl_new <- fact_tbl %>%
       rename(concept_id = !!sym(fact_concept_id)) %>%
@@ -175,7 +175,7 @@ find_concept_names <- function(fact_tbl,
                !!sym(concept_field)),
         by=c('concept_code' = 'concept_id')
       ) %>% rename(concept_type=!!sym(concept_field)) %>%
-      compute_new()
+      compute_new(name = 'temp_bmc')
   }
 
   return(fact_tbl_new)

@@ -70,7 +70,7 @@ check_vs <- function(vs_tbl,
       tbl_use %>%
       add_site() %>% filter(site == site_nm) %>%
       summarise(total_denom_ct=n(),
-                total_pt_ct=n_distinct(!!sym(pt_col))) %>% collect_new() %>%
+                total_pt_ct=n_distinct(!!sym(pt_col))) %>% collect() %>%
       add_meta(check_lib = check_string)
 
     if(!is.null(concept_tbl)){

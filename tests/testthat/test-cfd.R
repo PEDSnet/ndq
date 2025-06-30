@@ -1,12 +1,12 @@
 
 
-pf_test <- tibble('check_id' = c('co'),
+cfd_test <- tibble('check_id' = c('co'),
                   'check_description' = c('conditions'),
                   'schema' = c('cdm'),
                   'table' = c('condition_occurrence'),
                   'filter_logic' = c(NA))
 
-pf_visits <- tibble('visit_type' = 'outpatient',
+cfd_visits <- tibble('visit_type' = 'outpatient',
                     'visit_concept_id' = 9202)
 
 test_that('omop_or_pcornet limited inputs', {
@@ -25,14 +25,14 @@ test_that('omop_or_pcornet limited inputs', {
   config('current_version', '1')
   config('retain_intermediates', FALSE)
 
-  expect_error(check_pf(pf_tbl = pf_test,
+  expect_error(check_cfd(cfd_tbl = cfd_test,
                         visit_type_filter = c('all', 'outpatient'),
-                        visit_type_tbl = pf_visits,
+                        visit_type_tbl = cfd_visits,
                         omop_or_pcornet = 'test'))
 
 })
 
-test_that('check_pf', {
+test_that('check_cfd', {
 
   conn <- mk_testdb_omop()
 
@@ -48,23 +48,23 @@ test_that('check_pf', {
   config('current_version', '1')
   config('retain_intermediates', FALSE)
 
-  # print(check_pf(pf_tbl = pf_test,
+  # print(check_cfd(cfd_tbl = cfd_test,
   #          visit_type_string = 'all',
   #          omop_or_pcornet = 'omop'))
 
-  expect_no_error(check_pf(pf_tbl = pf_test,
+  expect_no_error(check_cfd(cfd_tbl = cfd_test,
                            visit_type_filter = c('all', 'outpatient'),
-                           visit_type_tbl = pf_visits,
+                           visit_type_tbl = cfd_visits,
                            omop_or_pcornet = 'omop'))
 
-  expect_no_error(check_pf(pf_tbl = pf_test %>% mutate(filter_logic = 'person_id %in% c(1,2,3)'),
+  expect_no_error(check_cfd(cfd_tbl = cfd_test %>% mutate(filter_logic = 'person_id %in% c(1,2,3)'),
                            visit_type_filter = c('all', 'outpatient'),
-                           visit_type_tbl = pf_visits,
+                           visit_type_tbl = cfd_visits,
                            omop_or_pcornet = 'omop'))
 })
 
 
-test_that('check_pf local', {
+test_that('check_cfd local', {
 
   conn <- mk_testdb_omop()
 
@@ -80,17 +80,17 @@ test_that('check_pf local', {
   config('current_version', '1')
   config('retain_intermediates', FALSE)
 
-  pf_opt <- check_pf(pf_tbl = pf_test,
+  cfd_opt <- check_cfd(cfd_tbl = cfd_test,
                      visit_type_filter = c('all', 'outpatient'),
-                     visit_type_tbl = pf_visits,
+                     visit_type_tbl = cfd_visits,
                      omop_or_pcornet = 'omop')
 
-  expect_no_error(process_pf(pf_results = pf_opt,
+  expect_no_error(process_cfd(cfd_results = cfd_opt,
                              rslt_source = 'local'))
 
 })
 
-test_that('check_pf remote', {
+test_that('check_cfd remote', {
 
   conn <- mk_testdb_omop()
 
@@ -106,14 +106,14 @@ test_that('check_pf remote', {
   config('current_version', '1')
   config('retain_intermediates', FALSE)
 
-  pf_opt <- check_pf(pf_tbl = pf_test,
+  cfd_opt <- check_cfd(cfd_tbl = cfd_test,
                      visit_type_filter = c('all', 'outpatient'),
-                     visit_type_tbl = pf_visits,
+                     visit_type_tbl = cfd_visits,
                      omop_or_pcornet = 'omop')
 
-  DBI::dbWriteTable(conn, 'pf_output', pf_opt)
+  DBI::dbWriteTable(conn, 'cfd_output', cfd_opt)
 
-  expect_no_error(process_pf(pf_results = 'pf_output',
+  expect_no_error(process_cfd(cfd_results = 'cfd_output',
                              rslt_source = 'remote'))
 
 })
