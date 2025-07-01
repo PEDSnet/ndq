@@ -118,7 +118,8 @@ check_uc <- function(uc_tbl,
         mutate(measure = concept_list[[i]]$check_description) %>%
         relocate(measure, .after = site) %>%
         mutate(
-          unmapped_prop = round(as.numeric(unmapped_rows) / as.numeric(total_rows), 2)
+          unmapped_prop = round(as.numeric(unmapped_rows) / as.numeric(total_rows), 2),
+          unmapped_prop = ifelse(is.na(unmapped_prop), 0, unmapped_prop)
         )
 
       check_concepts[[concept_list[[i]]$check_id]] <- unmapped_cts
