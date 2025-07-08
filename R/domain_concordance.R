@@ -96,10 +96,12 @@ check_dcon<- function(dcon_tbl,
 
     cohort_1 <- tbl_use_c1 %>% mutate(date1 = !!sym(c1_date),
                                       cohort_label = b1) %>%
-      add_site() %>% filter(site == site_nm) %>% compute_new(name = 'temp_c1')
+      add_site() %>% filter(site == site_nm) %>% compute_new(name = 'temp_c1',
+                                                             overwrite = TRUE)
     cohort_2 <- tbl_use_c2 %>% mutate(date2 = !!sym(c2_date),
                                       cohort_label = b2) %>%
-      add_site() %>% filter(site == site_nm) %>% compute_new(name = 'temp_c2')
+      add_site() %>% filter(site == site_nm) %>% compute_new(name = 'temp_c2',
+                                                             overwrite = TRUE)
 
     ## Combined cohort
     if(omop_or_pcornet == 'omop'){
