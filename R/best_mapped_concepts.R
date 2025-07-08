@@ -57,6 +57,7 @@ check_bmc <- function(bmc_tbl,
       xwalk <- tbl_use %>%
         rename(concept_type=!!sym(fact_tbl_list_args[[i]]$concept_field))
     }else{
+
       xwalk <-
         find_concept_names(fact_tbl = tbl_use,
                            omop_or_pcornet = omop_or_pcornet,
@@ -165,7 +166,7 @@ find_concept_names <- function(fact_tbl,
                !!sym(concept_field)),
         by=c('concept_id')
       ) %>% rename(concept_type=!!sym(concept_field)) %>%
-      compute_new(name = 'temp_bmc')
+      compute_new(name = 'temp_bmc', overwrite = TRUE)
   }else if(omop_or_pcornet == 'pcornet'){
     fact_tbl_new <- fact_tbl %>%
       rename(concept_id = !!sym(fact_concept_id)) %>%
@@ -175,7 +176,7 @@ find_concept_names <- function(fact_tbl,
                !!sym(concept_field)),
         by=c('concept_code' = 'concept_id')
       ) %>% rename(concept_type=!!sym(concept_field)) %>%
-      compute_new(name = 'temp_bmc')
+      compute_new(name = 'temp_bmc', overwrite = TRUE)
   }
 
   return(fact_tbl_new)
