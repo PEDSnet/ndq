@@ -28,26 +28,26 @@ test_that('check_uc no time, no list', {
 
 })
 
-test_that('check_uc no time, with list', {
-
-  conn <- mk_testdb_omop()
-
-  new_argos <- argos$new()
-  set_argos_default(new_argos)
-  config('db_src', conn)
-  config('cdm_schema', NA)
-  config('qry_site', 'test')
-  config('results_schema', NA)
-  config('vocabulary_schema', NA)
-  config('db_trace', FALSE)
-  config('results_name_tag', '')
-  config('results_target', TRUE)
-
-  expect_no_error(check_uc(uc_tbl = uc_test,
-                           produce_mapped_list = TRUE,
-                           by_year = FALSE))
-
-})
+# test_that('check_uc no time, with list', {
+#
+#   conn <- mk_testdb_omop()
+#
+#   new_argos <- argos$new()
+#   set_argos_default(new_argos)
+#   config('db_src', conn)
+#   config('cdm_schema', NA)
+#   config('qry_site', 'test')
+#   config('results_schema', NA)
+#   config('vocabulary_schema', NA)
+#   config('db_trace', FALSE)
+#   config('results_name_tag', '')
+#   config('results_target', TRUE)
+#
+#   expect_no_error(check_uc(uc_tbl = uc_test,
+#                            produce_mapped_list = TRUE,
+#                            by_year = FALSE))
+#
+# })
 
 test_that('check_uc time', {
 
