@@ -184,7 +184,7 @@ check_dcon<- function(dcon_tbl,
     meta_tbl <- tibble(check_type = c(compute_level, compute_level),
                        check_name = c(final_tbls$check_name[1], final_tbls$check_name[2]),
                        cohort = c(final_tbls$cohort[1], final_tbls$cohort[2]),
-                       cohort_label = c(conc_tbls[[k]]$cohort_description[1], conc_tbls[[k]]$cohort_description[2]))
+                       cohort_description = c(conc_tbls[[k]]$cohort_description[1], conc_tbls[[k]]$cohort_description[2]))
 
     final[[k]] <- final_tbls
     meta[[k]] <- meta_tbl
