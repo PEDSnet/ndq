@@ -282,10 +282,9 @@ process_dcon <- function(dcon_results,
     mutate(prop=case_when(is.na(prop)~0,
                           TRUE~prop))
 
-  cohort_maps <- dcon_int %>% distinct(check_type, check_name, cohort, cohort_label)
+  # cohort_maps <- dcon_int %>% distinct(check_type, check_name, cohort, cohort_label)
 
-  opt <- list('dcon_props' = dcon_tbl_pp %>% mutate(check_name_app=paste0(check_name,"_concordance")),
-              'dcon_cohort_map' = cohort_maps)
+  opt <-  dcon_tbl_pp %>% mutate(check_name_app=paste0(check_name,"_concordance"))
 
   return(opt)
 }
