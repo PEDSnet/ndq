@@ -306,6 +306,9 @@ process_bmc <- function(bmc_results,
 
   bmc_rolled <- bmc_rollup(bmc_output_pp = bmc_assigned)
 
-  return(bmc_rolled)
+  opt <- list('bmc_concepts_pp' = bmc_assigned,
+              'bmc_output_pp' = bmc_rolled)
+
+  return(opt)
 
 }
