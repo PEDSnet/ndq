@@ -35,12 +35,14 @@ summarize_large_n <- function(dq_output,
     if(check_string%in%c('vc','vs')){
       denoms <- dq_output %>% distinct(check_name, site, check_type,
                                        table_application,measurement_column,
-                                       total_denom_ct, site_anon, sitenum)
+                                       total_denom_ct, site_anon, sitenum) %>%
+        collect()
+
       total_viol<-dq_output%>%filter(!accepted_value)%>%
         group_by(check_name, site, check_type,
                  table_application,measurement_column, accepted_value) %>%
         summarise(tot_viol_ct = as.integer(sum(tot_ct)))%>%
-        ungroup()
+        ungroup() %>% collect()
 
       dq_output<-denoms%>%
         left_join(total_viol)%>%
