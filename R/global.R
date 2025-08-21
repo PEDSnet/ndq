@@ -8,7 +8,7 @@ utils::globalVariables(c('.', 'accepted_value', 'application', 'best_rows', 'che
                        'fact_pts', 'fact_visits', 'include', 'lag_1', 'lag_12', 'lag_1_plus', 'measure',
                        'measurement_column', 'missing_flag', 'missing_visits_distinct',
                        'missing_visits_total', 'time_end', 'time_start', 'no_fact_pts', 'no_fact_pts_prop',
-                       'no_fact_visits', 'no_fact_visits_prop', 'person_id', 'prop_total_change',
+                       'no_fact_visits', 'no_fact_visits_prop', 'person_id', 'patid', 'prop_total_change',
                        'prop_total_viol', 'rate_mult', 'row_ratio', 'site', 'src_value_ct',
                        'table_application', 'temp', 'this_round_pre', 'time_span', 'tot_ct',
                        'tot_dist_concept_ct', 'tot_prop', 'total_concept_ct', 'total_ct', 'total_denom_ct',

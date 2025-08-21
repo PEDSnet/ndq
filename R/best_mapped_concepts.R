@@ -159,6 +159,7 @@ find_concept_names <- function(fact_tbl,
 
   if(omop_or_pcornet == 'omop'){
     fact_tbl_new <- fact_tbl %>%
+      select(person_id, !!sym(fact_concept_id)) %>%
       rename(concept_id = !!sym(fact_concept_id)) %>%
       inner_join(
         select(concept_tbl,
@@ -169,6 +170,7 @@ find_concept_names <- function(fact_tbl,
       compute_new(name = 'temp_bmc', overwrite = TRUE)
   }else if(omop_or_pcornet == 'pcornet'){
     fact_tbl_new <- fact_tbl %>%
+      select(patid, !!sym(fact_concept_id)) %>%
       rename(concept_id = !!sym(fact_concept_id)) %>%
       inner_join(
         select(concept_tbl,
