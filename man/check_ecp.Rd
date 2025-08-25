@@ -25,3 +25,18 @@ This function will iterate through the provided input table to identify
 the count of patients who have the concept identified in the defined concept set
 and the proportion of patients who have the concept based on the defined cohort table.
 }
+\examples{
+# First create input file with desired checks to be executed
+# You can access examples for both OMOP & PCORnet here:
+ndq::ecp_input_omop
+ndq::ecp_input_pcornet
+
+# Use this as your input to the ECP function
+## To execute the check at the patient level:
+\dontrun{
+my_ecp_rslt <- check_ecp(ecp_tbl = ndq::ecp_input_omop,
+                         omop_or_pcornet = 'omop',
+                         check_string = 'ecp')
+}
+
+}

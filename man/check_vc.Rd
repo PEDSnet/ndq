@@ -37,3 +37,21 @@ This function will use the \code{vocabulary.concept} table to identify the vocab
 of each concept and determine how many rows comply with the standard vocabularies
 expected for that field and how many rows violate these expectations.
 }
+\examples{
+# First create input file with desired checks to be executed
+# You can access examples for both OMOP & PCORnet here:
+ndq::vc_input_omop
+ndq::vc_input_pcornet
+
+# Use this as your input to the vc function
+\dontrun{
+my_vc_rslt <- check_vc(vc_tbl = ndq::vc_input_omop,
+                       omop_or_pcornet = 'omop',
+                       concept_tbl = vocabulary_tbl("concept"), ## points to OHDSI concept table
+                       null_values = c(44814650L,0L,
+                                       44814653L,44814649L), ## ignored illegal vocabs
+                       check_string = 'vc')
+}
+
+
+}

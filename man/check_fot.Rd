@@ -51,3 +51,45 @@ This function will compute the number of rows, patients, and (optionally) visits
 the fact of interest within a specified time period. The user will supply the end points of the time span
 (i.e. January 2009 - January 2024) and the time period they wish to divide it by (i.e. month, year).
 }
+\examples{
+# First create input file with desired checks to be executed
+# You can access examples for both OMOP & PCORnet here:
+ndq::fot_input_omop
+ndq::fot_input_pcornet
+
+# Use this as your input to the FOT function
+## This check can be executed for different time period lengths, like...
+### Yearly
+\dontrun{
+my_fot_rslt <- check_fot(fot_tbl = ndq::fot_input_omop,
+                         omop_or_pcornet = 'omop',
+                         compute_method = 'loop', # use 'group' for high performant DBMSs
+                         time_span = list('2015-01-01', '2025-01-01'),
+                         time_period = 'year',
+                         lookback_interval = 1,
+                         check_string = 'fot')
+}
+
+### Monthly
+\dontrun{
+my_fot_rslt <- check_fot(fot_tbl = ndq::fot_input_omop,
+                         omop_or_pcornet = 'omop',
+                         compute_method = 'loop', # use 'group' for high performant DBMSs
+                         time_span = list('2015-01-01', '2025-01-01'),
+                         time_period = 'month',
+                         lookback_interval = 1,
+                         check_string = 'fot')
+}
+
+### Quarterly
+\dontrun{
+my_fot_rslt <- check_fot(fot_tbl = ndq::fot_input_omop,
+                         omop_or_pcornet = 'omop',
+                         compute_method = 'loop', # use 'group' for high performant DBMSs
+                         time_span = list('2015-01-01', '2025-01-01'),
+                         time_period = 'month',
+                         lookback_interval = 3,
+                         check_string = 'fot')
+}
+
+}

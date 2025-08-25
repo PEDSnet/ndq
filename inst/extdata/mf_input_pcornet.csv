@@ -1,0 +1,5 @@
+check_id,check_description,schema,table,filter_logic
+coied,conditions excluding problem list,cdm,diagnosis,
+admin,inpatient administrations,cdm,med_admin,
+rx,prescription,cdm,prescribing,
+pr,all procedures,cdm,procedures,

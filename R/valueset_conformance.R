@@ -23,6 +23,22 @@
 #'
 #' @export
 #'
+#' @examples
+#' # First create input file with desired checks to be executed
+#' # You can access examples for both OMOP & PCORnet here:
+#' ndq::vs_input_omop
+#' ndq::vs_input_pcornet
+#'
+#' # Use this as your input to the VS function
+#' \dontrun{
+#' my_vs_rslt <- check_vs(vs_tbl = ndq::vs_input_omop,
+#'                        omop_or_pcornet = 'omop',
+#'                        concept_tbl = vocabulary_tbl("concept"), ## points to OHDSI concept table
+#'                        null_values = c(44814650L,0L,
+#'                                        44814653L,44814649L), # ignored illegal values
+#'                        check_string = 'vs')
+#' }
+#'
 check_vs <- function(vs_tbl,
                      omop_or_pcornet = 'omop',
                      check_string = 'vs',
@@ -172,6 +188,30 @@ check_vs <- function(vs_tbl,
 #' - `vs_violations`: a dataframe with ONLY violating values that do not appear in the valueset
 #'
 #' @export
+#'
+#' @examples
+#' # This function should be run after check_vs has been executed for all
+#' # network institutions and results have been combined into a common table
+#'
+#' # Once the labels have been applied, the function can be executed
+#' ## When results are kept locally:
+#' \dontrun{
+#' my_vs_process <- process_vs(vs_results = my_vs_rslts,
+#'                             rslt_source = 'local')
+#' }
+#'
+#' ## When results are kept in CSV files:
+#' \dontrun{
+#' my_vs_process <- process_vs(vs_results = 'my_vs_rslts',
+#'                             rslt_source = 'csv',
+#'                             csv_rslt_path = 'path/to/my/results')
+#' }
+#'
+#' ## When results are kept on a remote database:
+#' \dontrun{
+#' my_vs_process <- process_vs(vs_results = 'my_vs_rslts',
+#'                             rslt_source = 'remote')
+#' }
 #'
 process_vs <-function(vs_results,
                       rslt_source = 'remote',

@@ -1,0 +1,5 @@
+check_id,check_description,schema,table,concept_field,concept_table_field,filter_logic
+rxnorm_di,inpatient admin,cdm,med_admin,medadmin_code,concept_class_id,
+rxnorm_dp,prescriptions,cdm,prescribing,rxnorm_cui,concept_class_id,
+race,race,cdm,demographic,race,concept_name,
+ethnicity,ethnicity,cdm,demographic,hispanic,concept_name,

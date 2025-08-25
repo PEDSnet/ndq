@@ -28,3 +28,28 @@ Intakes the output of check_vs in order to apply additional processing. This
 includes computing row and patient proportions and computing overall totals
 across all sites included in the input.
 }
+\examples{
+# This function should be run after check_vs has been executed for all
+# network institutions and results have been combined into a common table
+
+# Once the labels have been applied, the function can be executed
+## When results are kept locally:
+\dontrun{
+my_vs_process <- process_vs(vs_results = my_vs_rslts,
+                            rslt_source = 'local')
+}
+
+## When results are kept in CSV files:
+\dontrun{
+my_vs_process <- process_vs(vs_results = 'my_vs_rslts',
+                            rslt_source = 'csv',
+                            csv_rslt_path = 'path/to/my/results')
+}
+
+## When results are kept on a remote database:
+\dontrun{
+my_vs_process <- process_vs(vs_results = 'my_vs_rslts',
+                            rslt_source = 'remote')
+}
+
+}

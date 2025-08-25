@@ -14,7 +14,7 @@ A dataframe or CSV file with 7 columns
 \item{schema}{The schema where the data is kept. Use \code{cdm} to use the pre-configured \code{cdm_schema}, \code{result} to use the preconfigured \code{results_schema}, or input the exact name of the schema.}
 \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 \item{concept_field}{The *_concept_id field with the concepts that make up the valueset (ex: drug_concept_id, drug_source_concept_id)}
-\item{concept_table_field}{The field in OMOP's vocabulary concept table that should be used to identify the concept_ids in the concept_field (i.e. concept_name, concept_class_id)}
+\item{concept_table_field}{\strong{OPTIONAL} The field in OMOP's vocabulary concept table that should be used to identify the concept_ids in the concept_field (i.e. concept_name, concept_class_id); only needed if concept_tbl is not NULL}
 \item{filter_logic}{\strong{OPTIONAL} The logic that should be applied to the provided table in order to tailor the tables to the desired check assessment (ex: if you only want to assess prescription drugs)}
 }
 }

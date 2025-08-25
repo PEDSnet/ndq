@@ -36,3 +36,28 @@ includes computing the following cohort overlap counts and proportions:
 Note that cohort_1_in_2 and cohort_2_in_1 will have the same raw count, but different
 proportions since the denominator is different
 }
+\examples{
+# This function should be run after check_dcon has been executed for all
+# network institutions and results have been combined into a common table
+
+# Once the labels have been applied, the function can be executed
+## When results are kept locally:
+\dontrun{
+my_dcon_process <- process_dcon(dcon_results = my_dcon_rslts,
+                                rslt_source = 'local')
+}
+
+## When results are kept in CSV files:
+\dontrun{
+my_dcon_process <- process_dcon(dcon_results = 'my_dcon_rslts',
+                                rslt_source = 'csv',
+                                csv_rslt_path = 'path/to/my/results')
+}
+
+## When results are kept on a remote database:
+\dontrun{
+my_dcon_process <- process_dcon(dcon_results = 'my_dcon_rslts',
+                                rslt_source = 'remote')
+}
+
+}

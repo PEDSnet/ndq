@@ -17,6 +17,20 @@
 #'
 #' @export
 #'
+#' @examples
+#' # First create input file with desired checks to be executed
+#' # You can access examples for both OMOP & PCORnet here:
+#' ndq::ecp_input_omop
+#' ndq::ecp_input_pcornet
+#'
+#' # Use this as your input to the ECP function
+#' ## To execute the check at the patient level:
+#' \dontrun{
+#' my_ecp_rslt <- check_ecp(ecp_tbl = ndq::ecp_input_omop,
+#'                          omop_or_pcornet = 'omop',
+#'                          check_string = 'ecp')
+#' }
+#'
 check_ecp <- function(ecp_tbl,
                       omop_or_pcornet = 'omop',
                       check_string = 'ecp'){
@@ -111,6 +125,30 @@ check_ecp <- function(ecp_tbl,
 #' @returns same input table with additional check_name_app column to indicate application level
 #'
 #' @export
+#'
+#' @examples
+#' # This function should be run after check_ecp has been executed for all
+#' # network institutions and results have been combined into a common table
+#'
+#' # Once the labels have been applied, the function can be executed
+#' ## When results are kept locally:
+#' \dontrun{
+#' my_ecp_process <- process_ecp(ecp_results = my_ecp_rslts,
+#'                               rslt_source = 'local')
+#' }
+#'
+#' ## When results are kept in CSV files:
+#' \dontrun{
+#' my_ecp_process <- process_ecp(ecp_results = 'my_ecp_rslts',
+#'                               rslt_source = 'csv',
+#'                               csv_rslt_path = 'path/to/my/results')
+#' }
+#'
+#' ## When results are kept on a remote database:
+#' \dontrun{
+#' my_ecp_process <- process_ecp(ecp_results = 'my_ecp_rslts',
+#'                               rslt_source = 'remote')
+#' }
 #'
 process_ecp <- function(ecp_results,
                         rslt_source = 'remote',

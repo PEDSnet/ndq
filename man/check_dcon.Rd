@@ -36,3 +36,27 @@ define a time limitation for the combined cohort, so patients/visits will only
 count towards that cohort when the two events occur within a specified number of days
 of each other.
 }
+\examples{
+# First create input file with desired checks to be executed
+# You can access examples for both OMOP & PCORnet here:
+ndq::dcon_input_omop
+ndq::dcon_input_pcornet
+
+# Use this as your input to the DCON function
+## To execute the check at the patient level:
+\dontrun{
+my_dcon_rslt <- check_dcon(dcon_tbl = ndq::dcon_input_omop,
+                           compute_level = 'patient',
+                           omop_or_pcornet = 'omop',
+                           check_string = 'dcon')
+}
+
+## To execute the check at the visit level:
+\dontrun{
+my_dcon_rslt <- check_dcon(dcon_tbl = ndq::dcon_input_omop,
+                           compute_level = 'visit',
+                           omop_or_pcornet = 'omop',
+                           check_string = 'dcon')
+}
+
+}

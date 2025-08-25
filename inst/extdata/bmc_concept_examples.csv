@@ -1,0 +1,7 @@
+check_name,concept,include
+bmc_race,White,
+bmc_race,Black or African American,
+bmc_race,Unknown,0
+bmc_ethnicity,Hispanic,
+bmc_ethnicity,Non-Hispanic,
+bmc_ethnicity,Other,0

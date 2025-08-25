@@ -23,6 +23,21 @@
 #'
 #' @export
 #'
+#' @examples
+#' # First create input file with desired checks to be executed
+#' # You can access examples for both OMOP & PCORnet here:
+#' ndq::dp_input_omop
+#' ndq::dp_input_pcornet
+#'
+#' # Use this as your input to the DP function
+#' \dontrun{
+#' my_dp_rslt <- check_dp(dp_tbl = ndq::dp_input_omop,
+#'                        omop_or_pcornet = 'omop',
+#'                        visit_tbl = cdm_tbl('visit_occurrence'), ## table with visit/encounter dates
+#'                        dob_tbl = cdm_tbl('person'), ## table with dates of birth
+#'                        check_string = 'dp')
+#' }
+#'
 check_dp <- function(dp_tbl,
                      omop_or_pcornet = 'omop',
                      visit_tbl = cdm_tbl('visit_occurrence'),
@@ -156,6 +171,29 @@ check_dp <- function(dp_tbl,
 #' @returns same input table with additional check_name_app column to indicate application level
 #'
 #' @export
+#'
+#' @examples
+#' # This function should be run after check_dp has been executed for all
+#' # network institutions and results have been combined into a common table
+#'
+#' ## When results are kept locally:
+#' \dontrun{
+#' my_dp_process <- process_dp(dp_results = my_dp_rslts,
+#'                             rslt_source = 'local')
+#' }
+#'
+#' ## When results are kept in CSV files:
+#' \dontrun{
+#' my_dp_process <- process_dp(dp_results = 'my_dp_rslts',
+#'                             rslt_source = 'csv',
+#'                             csv_rslt_path = 'path/to/my/results')
+#' }
+#'
+#' ## When results are kept on a remote database:
+#' \dontrun{
+#' my_dp_process <- process_dp(dp_results = 'my_dp_rslts',
+#'                             rslt_source = 'remote')
+#' }
 #'
 process_dp <- function(dp_results,
                        rslt_source = 'remote',

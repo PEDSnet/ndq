@@ -23,3 +23,28 @@ Intakes the output of check_ecp in order to apply additional processing. This
 includes creating a new check_name_app column to specify that the check
 was computed at the person level.
 }
+\examples{
+# This function should be run after check_ecp has been executed for all
+# network institutions and results have been combined into a common table
+
+# Once the labels have been applied, the function can be executed
+## When results are kept locally:
+\dontrun{
+my_ecp_process <- process_ecp(ecp_results = my_ecp_rslts,
+                              rslt_source = 'local')
+}
+
+## When results are kept in CSV files:
+\dontrun{
+my_ecp_process <- process_ecp(ecp_results = 'my_ecp_rslts',
+                              rslt_source = 'csv',
+                              csv_rslt_path = 'path/to/my/results')
+}
+
+## When results are kept on a remote database:
+\dontrun{
+my_ecp_process <- process_ecp(ecp_results = 'my_ecp_rslts',
+                              rslt_source = 'remote')
+}
+
+}

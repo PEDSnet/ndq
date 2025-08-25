@@ -32,6 +32,34 @@
 #'
 #' @export
 #'
+#' @examples
+#' # First create input file with desired checks to be executed
+#' # You can access examples for both OMOP & PCORnet here:
+#' ndq::uc_input_omop
+#' ndq::uc_input_pcornet
+#'
+#' # Use this as your input to the UC function
+#' ## Overall
+#' \dontrun{
+#' my_uc_rslt <- check_uc(uc_tbl = ndq::uc_input_omop,
+#'                        by_year = FALSE,
+#'                        produce_mapped_list = TRUE, # list of unmapped source values
+#'                        unmapped_values = c(44814650L,0L,
+#'                                            44814653L, 44814649L) # will also check for NA by default
+#'                        omop_or_pcornet = 'omop',
+#'                        check_string = 'uc')
+#' }
+#'
+#' ## By Year
+#' \dontrun{
+#' my_uc_rslt <- check_uc(uc_tbl = ndq::uc_input_omop,
+#'                        by_year = TRUE,
+#'                        produce_mapped_list = FALSE, # not functionality for by year analysis
+#'                        unmapped_values = c(44814650L,0L,
+#'                                            44814653L, 44814649L) # will also check for NA by default
+#'                        omop_or_pcornet = 'omop',
+#'                        check_string = 'uc')
+#' }
 #'
 check_uc <- function(uc_tbl,
                      by_year = FALSE,
@@ -256,6 +284,30 @@ check_uc_by_year <- function(uc_tbl,
 #'         sites (not by_year)
 #'
 #' @export
+#'
+#' @examples
+#' # This function should be run after check_uc has been executed for all
+#' # network institutions and results have been combined into a common table
+#'
+#' # Once the labels have been applied, the function can be executed
+#' ## When results are kept locally:
+#' \dontrun{
+#' my_uc_process <- process_uc(uc_results = my_uc_rslts,
+#'                             rslt_source = 'local')
+#' }
+#'
+#' ## When results are kept in CSV files:
+#' \dontrun{
+#' my_uc_process <- process_uc(uc_results = 'my_uc_rslts',
+#'                             rslt_source = 'csv',
+#'                             csv_rslt_path = 'path/to/my/results')
+#' }
+#'
+#' ## When results are kept on a remote database:
+#' \dontrun{
+#' my_uc_process <- process_uc(uc_results = 'my_uc_rslts',
+#'                             rslt_source = 'remote')
+#' }
 #'
 process_uc <- function(uc_results,
                        rslt_source = 'remote',

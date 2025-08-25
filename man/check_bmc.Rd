@@ -39,3 +39,19 @@ This function will identify the existing concepts within the specified field
 so the user can assess which of these concepts are acceptable ("best") or should
 not be used in that field ("not best")
 }
+\examples{
+# First create input file with desired checks to be executed
+# You can access examples for both OMOP & PCORnet here:
+ndq::bmc_input_omop
+ndq::bmc_input_pcornet
+
+# Use this as your input to the BMC function
+\dontrun{
+my_bmc_rslt <- check_bmc(bmc_tbl = ndq::bmc_input_omop,
+                         omop_or_pcornet = 'omop',
+                         concept_tbl = vocabulary_tbl("concept"), ## points to OHDSI concept table
+                         check_string = 'bmc')
+}
+
+
+}

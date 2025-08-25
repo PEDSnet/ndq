@@ -23,6 +23,20 @@
 #'
 #' @export
 #'
+#' @examples
+#' # First create input file with desired checks to be executed
+#' # You can access examples for both OMOP & PCORnet here:
+#' ndq::mf_input_omop
+#' ndq::mf_input_pcornet
+#'
+#' # Use this as your input to the MF: Visit ID function
+#' \dontrun{
+#' my_mf_rslt <- check_mf(mf_tbl = ndq::mf_input_omop,
+#'                        omop_or_pcornet = 'omop',
+#'                        visit_tbl = cdm_tbl('visit_occurrence'), ## table with visit ID primary keys
+#'                        check_string = 'mf_visitid')
+#' }
+#'
 check_mf_visitid <- function(mf_tbl,
                              omop_or_pcornet = 'omop',
                              visit_tbl = cdm_tbl('visit_occurrence'),
@@ -179,6 +193,30 @@ check_mf_visitid <- function(mf_tbl,
 #' column
 #'
 #' @export
+#'
+#' @examples
+#' # This function should be run after check_mf_visitid has been executed for all
+#' # network institutions and results have been combined into a common table
+#'
+#' # Once the labels have been applied, the function can be executed
+#' ## When results are kept locally:
+#' \dontrun{
+#' my_mf_visitid_process <- process_mf_visitid(mf_visitid_results = my_mf_visitid_rslts,
+#'                                             rslt_source = 'local')
+#' }
+#'
+#' ## When results are kept in CSV files:
+#' \dontrun{
+#' my_mf_visitid_process <- process_mf_visitid(mf_visitid_results = 'my_mf_visitid_rslts',
+#'                                             rslt_source = 'csv',
+#'                                             csv_rslt_path = 'path/to/my/results')
+#' }
+#'
+#' ## When results are kept on a remote database:
+#' \dontrun{
+#' my_mf_visitid_process <- process_mf_visitid(mf_visitid_results = 'my_mf_visitid_rslts',
+#'                                             rslt_source = 'remote')
+#' }
 #'
 process_mf_visitid <- function(mf_visitid_results,
                                rslt_source = 'remote',

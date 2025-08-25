@@ -29,6 +29,47 @@
 #'
 #' @export
 #'
+#' @examples
+#' # First create input file with desired checks to be executed
+#' # You can access examples for both OMOP & PCORnet here:
+#' ndq::fot_input_omop
+#' ndq::fot_input_pcornet
+#'
+#' # Use this as your input to the FOT function
+#' ## This check can be executed for different time period lengths, like...
+#' ### Yearly
+#' \dontrun{
+#' my_fot_rslt <- check_fot(fot_tbl = ndq::fot_input_omop,
+#'                          omop_or_pcornet = 'omop',
+#'                          compute_method = 'loop', # use 'group' for high performant DBMSs
+#'                          time_span = list('2015-01-01', '2025-01-01'),
+#'                          time_period = 'year',
+#'                          lookback_interval = 1,
+#'                          check_string = 'fot')
+#' }
+#'
+#' ### Monthly
+#' \dontrun{
+#' my_fot_rslt <- check_fot(fot_tbl = ndq::fot_input_omop,
+#'                          omop_or_pcornet = 'omop',
+#'                          compute_method = 'loop', # use 'group' for high performant DBMSs
+#'                          time_span = list('2015-01-01', '2025-01-01'),
+#'                          time_period = 'month',
+#'                          lookback_interval = 1,
+#'                          check_string = 'fot')
+#' }
+#'
+#' ### Quarterly
+#' \dontrun{
+#' my_fot_rslt <- check_fot(fot_tbl = ndq::fot_input_omop,
+#'                          omop_or_pcornet = 'omop',
+#'                          compute_method = 'loop', # use 'group' for high performant DBMSs
+#'                          time_span = list('2015-01-01', '2025-01-01'),
+#'                          time_period = 'month',
+#'                          lookback_interval = 3,
+#'                          check_string = 'fot')
+#' }
+#'
 check_fot <- function(fot_tbl,
                       omop_or_pcornet = 'omop',
                       compute_method = 'loop',
@@ -584,6 +625,48 @@ add_fot_ratios <- function(fot_lib_output,
 #' @importFrom stats sd
 #'
 #' @export
+#'
+#' @examples
+#' # This function should be run after check_fot has been executed for all
+#' # network institutions and results have been combined into a common table
+#'
+#' # Once the labels have been applied, the function can be executed
+#' ## When results are kept locally:
+#' \dontrun{
+#' my_fot_process <- process_fot(fot_results = my_fot_rslts,
+#'                               target_col = 'row_cts',
+#'                               rslt_source = 'local')
+#' }
+#'
+#' ## When results are kept in CSV files:
+#' \dontrun{
+#' my_fot_process <- process_fot(fot_results = 'my_fot_rslts',
+#'                               target_col = 'row_cts',
+#'                               rslt_source = 'csv',
+#'                               csv_rslt_path = 'path/to/my/results')
+#' }
+#'
+#' ## When results are kept on a remote database:
+#' \dontrun{
+#' my_fot_process <- process_fot(fot_results = 'my_fot_rslts',
+#'                               target_col = 'row_cts',
+#'                               rslt_source = 'remote')
+#' }
+#'
+#' # You can also optionally compute patient incidence ratios. This computation will use
+#' # the patient count, regardless of what is specified in the `target_col` argument.
+#' # A column with the total patient count for that time period will need to be added to
+#' # the results output. It can reflect any patient cohort, so long as the column is called
+#' # `total_pt`. We recommend computing the denominator as part of the initial check_fot execution
+#' # and extracting the counts from the resulting output.
+#'
+#' \dontrun{
+#' my_fot_process <- process_fot(fot_results = 'my_fot_rslts',
+#'                               target_col = 'row_cts',
+#'                               add_ratios = TRUE,
+#'                               ratio_mult = 10000,
+#'                               rslt_source = 'remote')
+#' }
 #'
 process_fot <- function(fot_results,
                         target_col = 'row_cts',

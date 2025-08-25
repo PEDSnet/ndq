@@ -29,6 +29,27 @@
 #'
 #' @export
 #'
+#' @examples
+#' # First create input file with desired checks to be executed
+#' # You can access examples for both OMOP & PCORnet here:
+#' ndq::cfd_input_omop
+#' ndq::cfd_input_pcornet
+#'
+#' # Next define the visit types to be examined
+#' # You can access examples for both OMOP & PCORnet here:
+#' ndq::cfd_visit_types_omop
+#' ndq::cfd_visit_types_pcornet
+#'
+#' # Use this as your input to the CFD function
+#' \dontrun{
+#' my_cfd_rslt <- check_cfd(cfd_tbl = ndq::cfd_input_omop,
+#'                          visit_type_tbl = ndq::cfd_visit_types_omop,
+#'                          visit_type_filter = c('inpatient', 'outpatient'),
+#'                          omop_or_pcornet = 'omop',
+#'                          visit_tbl = cdm_tbl('visit_occurrence'),
+#'                          check_string = 'cfd')
+#' }
+#'
 check_cfd <- function(cfd_tbl,
                       visit_type_filter,
                       visit_type_tbl,
@@ -174,6 +195,30 @@ check_cfd <- function(cfd_tbl,
 #' @importFrom stringr str_remove
 #'
 #' @export
+#'
+#' @examples
+#' # This function should be run after check_cfd has been executed for all
+#' # network institutions and results have been combined into a common table
+#'
+#' ## When results are kept locally:
+#' \dontrun{
+#' my_cfd_process <- process_cfd(cfd_results = my_cfd_rslts,
+#'                               rslt_source = 'local')
+#' }
+#'
+#' ## When results are kept in CSV files:
+#' \dontrun{
+#' my_cfd_process <- process_cfd(cfd_results = 'my_cfd_rslts',
+#'                               rslt_source = 'csv',
+#'                               csv_rslt_path = 'path/to/my/results')
+#' }
+#'
+#' ## When results are kept on a remote database:
+#' \dontrun{
+#' my_cfd_process <- process_cfd(cfd_results = 'my_cfd_rslts',
+#'                               rslt_source = 'remote')
+#' }
+#'
 #'
 process_cfd <- function(cfd_results,
                         rslt_source = 'remote',

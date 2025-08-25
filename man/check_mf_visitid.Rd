@@ -37,3 +37,18 @@ is missing entirely (NULL). There may be cases where this is expected
 visit_occurrence_id/encounterid should be populated and exist as a primary key in the
 visit_occurrence/encounter table.
 }
+\examples{
+# First create input file with desired checks to be executed
+# You can access examples for both OMOP & PCORnet here:
+ndq::mf_input_omop
+ndq::mf_input_pcornet
+
+# Use this as your input to the MF: Visit ID function
+\dontrun{
+my_mf_rslt <- check_mf(mf_tbl = ndq::mf_input_omop,
+                       omop_or_pcornet = 'omop',
+                       visit_tbl = cdm_tbl('visit_occurrence'), ## table with visit ID primary keys
+                       check_string = 'mf_visitid')
+}
+
+}

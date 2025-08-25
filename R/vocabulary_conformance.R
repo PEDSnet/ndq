@@ -23,6 +23,22 @@
 #'
 #' @export
 #'
+#' @examples
+#' # First create input file with desired checks to be executed
+#' # You can access examples for both OMOP & PCORnet here:
+#' ndq::vc_input_omop
+#' ndq::vc_input_pcornet
+#'
+#' # Use this as your input to the vc function
+#' \dontrun{
+#' my_vc_rslt <- check_vc(vc_tbl = ndq::vc_input_omop,
+#'                        omop_or_pcornet = 'omop',
+#'                        concept_tbl = vocabulary_tbl("concept"), ## points to OHDSI concept table
+#'                        null_values = c(44814650L,0L,
+#'                                        44814653L,44814649L), ## ignored illegal vocabs
+#'                        check_string = 'vc')
+#' }
+#'
 #'
 check_vc <- function(vc_tbl,
                      omop_or_pcornet = 'omop',
@@ -125,7 +141,7 @@ check_vc <- function(vc_tbl,
 #' includes computing row and patient proportions and computing overall totals
 #' across all sites included in the input.
 #'
-#' @param vc_results the output of check_vs
+#' @param vc_results the output of check_vc
 #' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
 #'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
 #' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
@@ -137,6 +153,30 @@ check_vc <- function(vc_tbl,
 #' - `vc_violations`: a dataframe with ONLY violating vocabularies
 #'
 #' @export
+#'
+#' @examples
+#' # This function should be run after check_vc has been executed for all
+#' # network institutions and results have been combined into a common table
+#'
+#' # Once the labels have been applied, the function can be executed
+#' ## When results are kept locally:
+#' \dontrun{
+#' my_vc_process <- process_vc(vc_results = my_vc_rslts,
+#'                             rslt_source = 'local')
+#' }
+#'
+#' ## When results are kept in CSV files:
+#' \dontrun{
+#' my_vc_process <- process_vc(vc_results = 'my_vc_rslts',
+#'                             rslt_source = 'csv',
+#'                             csv_rslt_path = 'path/to/my/results')
+#' }
+#'
+#' ## When results are kept on a remote database:
+#' \dontrun{
+#' my_vc_process <- process_vc(vc_results = 'my_vc_rslts',
+#'                             rslt_source = 'remote')
+#' }
 #'
 process_vc <-function(vc_results,
                       rslt_source = 'remote',

@@ -28,3 +28,28 @@ Intakes the output of check_mf_visitid in order to apply additional processing.
 This includes computing proportions of missing visits and computing overall
 totals across all sites included in the input.
 }
+\examples{
+# This function should be run after check_mf_visitid has been executed for all
+# network institutions and results have been combined into a common table
+
+# Once the labels have been applied, the function can be executed
+## When results are kept locally:
+\dontrun{
+my_mf_visitid_process <- process_mf_visitid(mf_visitid_results = my_mf_visitid_rslts,
+                                            rslt_source = 'local')
+}
+
+## When results are kept in CSV files:
+\dontrun{
+my_mf_visitid_process <- process_mf_visitid(mf_visitid_results = 'my_mf_visitid_rslts',
+                                            rslt_source = 'csv',
+                                            csv_rslt_path = 'path/to/my/results')
+}
+
+## When results are kept on a remote database:
+\dontrun{
+my_mf_visitid_process <- process_mf_visitid(mf_visitid_results = 'my_mf_visitid_rslts',
+                                            rslt_source = 'remote')
+}
+
+}

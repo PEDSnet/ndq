@@ -34,3 +34,31 @@ Intakes the output of check_dc in order to apply additional processing. This
 includes computing percent change across data model versions and computing an
 overall set of counts/percent changes across all sites included in the input.
 }
+\examples{
+# This function should be run after check_dc has been executed for all
+# network institutions and results have been combined into a common table
+
+## When results are kept locally:
+\dontrun{
+my_dc_process <- process_dc(dc_ct_results = my_dc_cts,
+                            dc_meta_results = my_dc_meta,
+                            rslt_source = 'local')
+}
+
+## When results are kept in CSV files:
+\dontrun{
+my_dc_process <- process_dc(dc_ct_results = 'my_dc_cts',
+                            dc_meta_results = 'my_dc_meta',
+                            rslt_source = 'csv',
+                            csv_rslt_path = 'path/to/my/results')
+}
+
+## When results are kept on a remote database:
+\dontrun{
+my_dc_process <- process_dc(dc_ct_results = 'my_dc_cts',
+                            dc_meta_results = 'my_dc_meta',
+                            rslt_source = 'remote')
+}
+
+
+}

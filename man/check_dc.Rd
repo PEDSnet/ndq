@@ -57,3 +57,38 @@ assess changes across data extractions. If you have previously executed this fun
 you have the option to point to a previous result set instead of recomputing the
 counts from the CDM.
 }
+\examples{
+# First create input file with desired checks to be executed
+# You can access examples for both OMOP & PCORnet here:
+ndq::dc_input_omop
+ndq::dc_input_pcornet
+
+# Use this as your input to the DC function
+
+## If you would like to retrieve counts from a previous CDM instance,
+## configure the function like so:
+\dontrun{
+my_dc_rslt <- check_dc(dc_tbl = ndq::dc_input_omop,
+                       omop_or_pcornet = 'omop',
+                       prev_db_string = 'my_previous_data',
+                       current_db_string = 'my_current_data',
+                       prev_ct_src = 'cdm', ## looking in previous CDM instance
+                       prev_db = my_prev_db_connection,
+                       check_string = 'dc')
+}
+
+## If you would like to reference previously executed counts from a prior
+## run of check_dc, configure the function like so:
+\dontrun{
+my_dc_rslt <- check_dc(dc_tbl = ndq::dc_input_omop,
+                       omop_or_pcornet = 'omop',
+                       prev_db_string = 'my_previous_data',
+                       current_db_string = 'my_current_data',
+                       prev_ct_src = 'result', ## looking in previous results
+                       prev_db = my_prev_db_connection,
+                       prev_rslt_tbl = 'my_dc_rslt',
+                       prev_rslt_schema = 'my_previous_schema',
+                       check_string = 'dc')
+}
+
+}

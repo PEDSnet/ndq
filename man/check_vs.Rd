@@ -36,3 +36,20 @@ This function will intake a limited valueset that is expected to make up the
 entire contents of a field (minus the specified \code{null_values}) and identify
 if any non-permitted values exist in the field (and how often).
 }
+\examples{
+# First create input file with desired checks to be executed
+# You can access examples for both OMOP & PCORnet here:
+ndq::vs_input_omop
+ndq::vs_input_pcornet
+
+# Use this as your input to the VS function
+\dontrun{
+my_vs_rslt <- check_vs(vs_tbl = ndq::vs_input_omop,
+                       omop_or_pcornet = 'omop',
+                       concept_tbl = vocabulary_tbl("concept"), ## points to OHDSI concept table
+                       null_values = c(44814650L,0L,
+                                       44814653L,44814649L), # ignored illegal values
+                       check_string = 'vs')
+}
+
+}

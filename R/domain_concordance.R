@@ -22,6 +22,29 @@
 #'
 #' @export
 #'
+#' @examples
+#' # First create input file with desired checks to be executed
+#' # You can access examples for both OMOP & PCORnet here:
+#' ndq::dcon_input_omop
+#' ndq::dcon_input_pcornet
+#'
+#' # Use this as your input to the DCON function
+#' ## To execute the check at the patient level:
+#' \dontrun{
+#' my_dcon_rslt <- check_dcon(dcon_tbl = ndq::dcon_input_omop,
+#'                            compute_level = 'patient',
+#'                            omop_or_pcornet = 'omop',
+#'                            check_string = 'dcon')
+#' }
+#'
+#' ## To execute the check at the visit level:
+#' \dontrun{
+#' my_dcon_rslt <- check_dcon(dcon_tbl = ndq::dcon_input_omop,
+#'                            compute_level = 'visit',
+#'                            omop_or_pcornet = 'omop',
+#'                            check_string = 'dcon')
+#' }
+#'
 check_dcon<- function(dcon_tbl,
                       compute_level = 'patient',
                       omop_or_pcornet = 'omop',
@@ -231,6 +254,30 @@ check_dcon<- function(dcon_tbl,
 #'         the associated raw count (of patients or visits) and the associated proportion
 #'
 #' @export
+#'
+#' @examples
+#' # This function should be run after check_dcon has been executed for all
+#' # network institutions and results have been combined into a common table
+#'
+#' # Once the labels have been applied, the function can be executed
+#' ## When results are kept locally:
+#' \dontrun{
+#' my_dcon_process <- process_dcon(dcon_results = my_dcon_rslts,
+#'                                 rslt_source = 'local')
+#' }
+#'
+#' ## When results are kept in CSV files:
+#' \dontrun{
+#' my_dcon_process <- process_dcon(dcon_results = 'my_dcon_rslts',
+#'                                 rslt_source = 'csv',
+#'                                 csv_rslt_path = 'path/to/my/results')
+#' }
+#'
+#' ## When results are kept on a remote database:
+#' \dontrun{
+#' my_dcon_process <- process_dcon(dcon_results = 'my_dcon_rslts',
+#'                                 rslt_source = 'remote')
+#' }
 #'
 process_dcon <- function(dcon_results,
                          rslt_source = 'remote',

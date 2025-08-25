@@ -13,3 +13,19 @@ cfd_visit_types_omop <- tibble('visit_type' = c('inpatient', 'inpatient',
                                                      9203, 2000000048))
 
 usethis::use_data(cfd_visit_types_omop, overwrite = TRUE)
+
+## code to prepare `cfd_input_pcornet` dataset goes here
+
+cfd_input_pcornet <- readr::read_csv(paste0(system.file("extdata", package = 'ndq'), '/cfd_input_pcornet.csv'))
+
+usethis::use_data(cfd_input_pcornet, overwrite = TRUE)
+
+## code to prepare `cfd_visit_types_pcornet` dataset goes here
+cfd_visit_types_pcornet <- tibble('visit_type' = c('inpatient', 'inpatient',
+                                                'outpatient', 'outpatient',
+                                                'emergency', 'emergency'),
+                               'enc_type' = c('IP', 'EI',
+                                                      'AV', 'TH',
+                                                      'ED', 'EI'))
+
+usethis::use_data(cfd_visit_types_pcornet, overwrite = TRUE)

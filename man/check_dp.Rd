@@ -40,3 +40,19 @@ Implausibility is defined as a date that falls before the associated visit
 start date, after the associated visit end date, or before the patient's
 birth date.
 }
+\examples{
+# First create input file with desired checks to be executed
+# You can access examples for both OMOP & PCORnet here:
+ndq::dp_input_omop
+ndq::dp_input_pcornet
+
+# Use this as your input to the DP function
+\dontrun{
+my_dp_rslt <- check_dp(dp_tbl = ndq::dp_input_omop,
+                       omop_or_pcornet = 'omop',
+                       visit_tbl = cdm_tbl('visit_occurrence'), ## table with visit/encounter dates
+                       dob_tbl = cdm_tbl('person'), ## table with dates of birth
+                       check_string = 'dp')
+}
+
+}

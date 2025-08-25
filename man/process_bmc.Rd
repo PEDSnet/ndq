@@ -34,3 +34,36 @@ includes applying the user-specified best/not best labels that were added to
 the bmc_concepts output, then using those labels to compute proportions of
 best vs not best concept representation in each check.
 }
+\examples{
+# This function should be run after check_bmc has been executed for all
+# network institutions and results have been combined into a common table
+
+# All returned concepts should also be labelled to indicate whether they
+# should be included as a "best" concept or not:
+
+readr::read_csv(system.file('extdata', 'bmc_concept_examples.csv', package = 'ndq'))
+
+# Once the labels have been applied, the function can be executed
+## When results are kept locally:
+\dontrun{
+my_bmc_process <- process_bmc(bmc_results = my_bmc_rslts,
+                              bmc_concepts_labelled = my_bmc_concepts,
+                              rslt_source = 'local')
+}
+
+## When results are kept in CSV files:
+\dontrun{
+my_bmc_process <- process_bmc(bmc_results = 'my_bmc_rslts',
+                              bmc_concepts_labelled = 'my_bmc_concepts',
+                              rslt_source = 'csv',
+                              csv_rslt_path = 'path/to/my/results')
+}
+
+## When results are kept on a remote database:
+\dontrun{
+my_bmc_process <- process_bmc(bmc_results = 'my_bmc_rslts',
+                              bmc_concepts_labelled = 'my_bmc_concepts',
+                              rslt_source = 'remote')
+}
+
+}

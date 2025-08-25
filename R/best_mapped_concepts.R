@@ -25,6 +25,21 @@
 #'
 #' @export
 #'
+#' @examples
+#' # First create input file with desired checks to be executed
+#' # You can access examples for both OMOP & PCORnet here:
+#' ndq::bmc_input_omop
+#' ndq::bmc_input_pcornet
+#'
+#' # Use this as your input to the BMC function
+#' \dontrun{
+#' my_bmc_rslt <- check_bmc(bmc_tbl = ndq::bmc_input_omop,
+#'                          omop_or_pcornet = 'omop',
+#'                          concept_tbl = vocabulary_tbl("concept"), ## points to OHDSI concept table
+#'                          check_string = 'bmc')
+#' }
+#'
+#'
 check_bmc <- function(bmc_tbl,
                       omop_or_pcornet = 'omop',
                       concept_tbl = vocabulary_tbl('concept'),
@@ -283,6 +298,38 @@ bmc_rollup <- function(bmc_output_pp){
 #' @importFrom stringr str_wrap
 #'
 #' @export
+#'
+#' @examples
+#' # This function should be run after check_bmc has been executed for all
+#' # network institutions and results have been combined into a common table
+#'
+#' # All returned concepts should also be labelled to indicate whether they
+#' # should be included as a "best" concept or not:
+#'
+#' readr::read_csv(system.file('extdata', 'bmc_concept_examples.csv', package = 'ndq'))
+#'
+#' # Once the labels have been applied, the function can be executed
+#' ## When results are kept locally:
+#' \dontrun{
+#' my_bmc_process <- process_bmc(bmc_results = my_bmc_rslts,
+#'                               bmc_concepts_labelled = my_bmc_concepts,
+#'                               rslt_source = 'local')
+#' }
+#'
+#' ## When results are kept in CSV files:
+#' \dontrun{
+#' my_bmc_process <- process_bmc(bmc_results = 'my_bmc_rslts',
+#'                               bmc_concepts_labelled = 'my_bmc_concepts',
+#'                               rslt_source = 'csv',
+#'                               csv_rslt_path = 'path/to/my/results')
+#' }
+#'
+#' ## When results are kept on a remote database:
+#' \dontrun{
+#' my_bmc_process <- process_bmc(bmc_results = 'my_bmc_rslts',
+#'                               bmc_concepts_labelled = 'my_bmc_concepts',
+#'                               rslt_source = 'remote')
+#' }
 #'
 process_bmc <- function(bmc_results,
                         bmc_concepts_labelled,

@@ -1,0 +1,23 @@
+schema_current,table_current,schema_prev,table_prev,filter_logic,check_domain,check_id,check_description
+cdm,demographic,cdm,demographic,,person,pd,full person table
+cdm,diagnosis,cdm,diagnosis,,diagnosis,co,full diagnosis table
+cdm,encounter,cdm,encounter,,encounter,vi,full encounter table
+cdm,diagnosis,cdm,diagnosis,"enc_type %in% c('AV', 'TH')",diagnosis_outpatient,cop,outpatient diagnoses
+cdm,diagnosis,cdm,diagnosis,"enc_type %in% c('IP', 'IS', 'OS')",diagnosis_inpatient,ci,inpatient diagnoses
+cdm,diagnosis,cdm,diagnosis,"enc_type %in% c('ED', 'EI')",diagnosis_ed,ced,ed diagnoses
+cdm,diagnosis,cdm,diagnosis,"enc_type %in% c('AV', 'TH') & dx_origin == 'BI'",diagnosis_op_billing,cop_cb,outpatient billing diagnoses
+cdm,diagnosis,cdm,diagnosis,"enc_type %in% c('AV', 'TH') & dx_origin == 'OD'",diagnosis_op_order,cop_cc,outpatient ordered diagnoses
+cdm,diagnosis,cdm,diagnosis,"enc_type %in% c('IP', 'IS', 'OS') & dx_origin == 'OD'",diagnosis_ip_order,ci_cc,inpatient ordered diagnoses
+cdm,diagnosis,cdm,diagnosis,"enc_type %in% c('IP', 'IS', 'OS') & dx_origin == 'BI'",diagnosis_ip_billing,ci_cb,inpatient billing diagnoses
+cdm,encounter,cdm,encounter,enc_type == 'AV',visit_op_office,vo_office,outpatient office visits
+cdm,encounter,cdm,encounter,enc_type == 'TH',visit_op_telehealth,vo_th,outpatient telehealth visits
+cdm,encounter,cdm,encounter,enc_type == 'OA',visit_op_oa,vo_oa,outpatient other ambulatory visits
+cdm,encounter,cdm,encounter,enc_type == 'IP',visit_ip,vip,inpatient 9201 visits
+cdm,encounter,cdm,encounter,enc_type == 'EI',visit_edip,vip_ipcombined,ed to inpatient
+cdm,encounter,cdm,encounter,enc_type == 'OS',visit_ov,vob,observation visit types
+cdm,prescribing,cdm,prescribing,,drug_rx,dp,drug prescriptions
+cdm,med_admin,cdm,med_admin,,drug_ip,di,inpatient drug administrations
+cdm,procedures,cdm,procedures,px_origin == 'BI',procedures_billed,pb,billed procedures
+cdm,procedures,cdm,procedures,px_origin == 'OD',procedures_ordered,po,ordered procedures
+cdm,procedures,cdm,procedures,,procedures,pr,procedures
+cdm,provider,cdm,provider,,provider,pv,full provider table

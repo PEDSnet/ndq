@@ -47,3 +47,25 @@ This function will identify visits that do not link to the user-specified
 facts. It will also compute the counts of patients who have at least one
 visit that does not link to the specified fact type.
 }
+\examples{
+# First create input file with desired checks to be executed
+# You can access examples for both OMOP & PCORnet here:
+ndq::cfd_input_omop
+ndq::cfd_input_pcornet
+
+# Next define the visit types to be examined
+# You can access examples for both OMOP & PCORnet here:
+ndq::cfd_visit_types_omop
+ndq::cfd_visit_types_pcornet
+
+# Use this as your input to the CFD function
+\dontrun{
+my_cfd_rslt <- check_cfd(cfd_tbl = ndq::cfd_input_omop,
+                         visit_type_tbl = ndq::cfd_visit_types_omop,
+                         visit_type_filter = c('inpatient', 'outpatient'),
+                         omop_or_pcornet = 'omop',
+                         visit_tbl = cdm_tbl('visit_occurrence'),
+                         check_string = 'cfd')
+}
+
+}

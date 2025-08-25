@@ -25,3 +25,28 @@ Intakes the output of check_uc in order to apply additional processing. This
 includes either adding proportions (for by_year output) or computing overall
 totals across all sites included in the input (for not by_year output)
 }
+\examples{
+# This function should be run after check_uc has been executed for all
+# network institutions and results have been combined into a common table
+
+# Once the labels have been applied, the function can be executed
+## When results are kept locally:
+\dontrun{
+my_uc_process <- process_uc(uc_results = my_uc_rslts,
+                            rslt_source = 'local')
+}
+
+## When results are kept in CSV files:
+\dontrun{
+my_uc_process <- process_uc(uc_results = 'my_uc_rslts',
+                            rslt_source = 'csv',
+                            csv_rslt_path = 'path/to/my/results')
+}
+
+## When results are kept on a remote database:
+\dontrun{
+my_uc_process <- process_uc(uc_results = 'my_uc_rslts',
+                            rslt_source = 'remote')
+}
+
+}

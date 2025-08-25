@@ -57,3 +57,46 @@ month, the next month, and the same month in the previous year. The function can
 optionally compute a ratio given a \code{total_pt} column (added by the user) to be used as a
 denominator and a \code{ratio_mult} value to be used as a multiplier.
 }
+\examples{
+# This function should be run after check_fot has been executed for all
+# network institutions and results have been combined into a common table
+
+# Once the labels have been applied, the function can be executed
+## When results are kept locally:
+\dontrun{
+my_fot_process <- process_fot(fot_results = my_fot_rslts,
+                              target_col = 'row_cts',
+                              rslt_source = 'local')
+}
+
+## When results are kept in CSV files:
+\dontrun{
+my_fot_process <- process_fot(fot_results = 'my_fot_rslts',
+                              target_col = 'row_cts',
+                              rslt_source = 'csv',
+                              csv_rslt_path = 'path/to/my/results')
+}
+
+## When results are kept on a remote database:
+\dontrun{
+my_fot_process <- process_fot(fot_results = 'my_fot_rslts',
+                              target_col = 'row_cts',
+                              rslt_source = 'remote')
+}
+
+# You can also optionally compute patient incidence ratios. This computation will use
+# the patient count, regardless of what is specified in the `target_col` argument.
+# A column with the total patient count for that time period will need to be added to
+# the results output. It can reflect any patient cohort, so long as the column is called
+# `total_pt`. We recommend computing the denominator as part of the initial check_fot execution
+# and extracting the counts from the resulting output.
+
+\dontrun{
+my_fot_process <- process_fot(fot_results = 'my_fot_rslts',
+                              target_col = 'row_cts',
+                              add_ratios = TRUE,
+                              ratio_mult = 10000,
+                              rslt_source = 'remote')
+}
+
+}

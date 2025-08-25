@@ -1,0 +1,5 @@
+check_id,check_description,schema,table,filter_logic
+pr,procedures,cdm,procedures,
+co,diagnoses,cdm,diagnosis,
+rx,prescriptions,cdm,prescribing,
+admin,inpatient administrations,cdm,med_admin,

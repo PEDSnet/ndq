@@ -1,0 +1,8 @@
+check_id,check_description,schema,table,concept_field,source_value_field,date_field,filter_logic
+di,inpatient administrations,cdm,med_admin,medadmin_code,raw_medadmin_med_name,medadmin_start_date,
+dp,prescription drugs,cdm,prescribing,rxnorm_cui,raw_rx_med_name,rx_start_date,
+du,rx dose unit,cdm,prescribing,rx_dose_ordered_unit,raw_rx_dose_ordered_unit,rx_start_date,
+drt,rx route,cdm,prescribing,rx_route,raw_rx_route,rx_start_date,
+co,diagnoses,cdm,diagnosis,dx,raw_dx,admit_date,
+po,ordered procedures,cdm,procedures,px,raw_px,px_date,px_origin == 'OD'
+pb,billed procedures,cdm,procedures,px,raw_px,px_date,px_origin == 'BI'

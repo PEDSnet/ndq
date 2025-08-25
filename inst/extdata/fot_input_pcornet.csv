@@ -1,0 +1,22 @@
+check_id,check_description,schema,table,date_field,filter_logic
+vi,all visits,cdm,encounter,admit_date,
+vo_office,outpatient visits,cdm,encounter,admit_date,enc_type == 'AV'
+vo_th,telehealth visits,cdm,encounter,admit_date,enc_type == 'TH'
+vo_oa,other ambulatory visits,cdm,encounter,admit_date,enc_type == 'OA'
+vip,inpatient visits (9201 or 2000000048),cdm,encounter,admit_date,"enc_type %in% c('IP', 'EI')"
+ved,emergency department visits,cdm,encounter,admit_date,enc_type == 'ED'
+vob,observation visits,cdm,encounter,admit_date,enc_type == 'OS'
+co,all diagnoses,cdm,diagnosis,admit_date,
+dp,prescription drugs,cdm,prescribing,rx_start_date,
+ip,inpatient administration drugs,cdm,med_admin,medadmin_start_date,
+cop,outpatient conditions (primary and secondary),cdm,diagnosis,admit_date,enc_type == 'AV'
+ci,inpatient conditions (primary and secondary),cdm,diagnosis,admit_date,enc_type == 'IP'
+ced,ED conditions (primary and secondary),cdm,diagnosis,admit_date,enc_type == 'ED'
+cop_cb,outpatient billed conditions,cdm,diagnosis,admit_date,enc_type == 'AV' & dx_origin == 'BI'
+cop_cc,outpatient ordered conditions,cdm,diagnosis,admit_date,enc_type == 'AV' & dx_origin == 'OD'
+ci_cc,inpatient ordered conditions,cdm,diagnosis,admit_date,enc_type == 'IP' & dx_origin == 'OD'
+ci_cb,inpatient billed conditions,cdm,diagnosis,admit_date,enc_type == 'IP' & dx_origin == 'BI'
+ma_ht,height,cdm,vital,measure_date,!is.na(ht)
+ma_wt,weight,cdm,vital,measure_date,!is.na(wt)
+mv_sbp,systolic blood pressure,cdm,vital,measure_date,!is.na(systolic)
+mv_dbp,diastolic blood pressure,cdm,vital,measure_date,!is.na(diastolic)

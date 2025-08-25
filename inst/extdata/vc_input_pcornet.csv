@@ -1,0 +1,8 @@
+check_id,schema,table,acceptable_vocabularies,concept_field,filter_logic
+pr_cid,cdm,procedures,"ICD10CM,CPT4,ICD9CM,ICD10,ICD9,ICD10PCS,ICD9Proc,HCPCS,LOINC,NDC",px,
+im_dose,cdm,immunization,UCUM,vx_dose_unit,
+dt_cause_cid,cdm,death,"SNOMED, OMOP Extension",cause_concept_id,
+co_cid,cdm,diagnosis,"SNOMED,ICD9,ICD9CM,ICD10,ICD10CM",dx,
+dr_cid,cdm,prescribing,"RxNorm, RxNorm Extension, NDC",rxnorm_cui,
+im_cid,cdm,immunization,"CVX,NDC,CPT4,HCPCS,RxNorm,RxNorm Extension",vx_code,
+dr_dose,cdm,prescribing,UCUM,rx_dose_ordered_unit,

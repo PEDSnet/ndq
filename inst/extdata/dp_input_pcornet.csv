@@ -1,0 +1,5 @@
+check_id,check_description,schema,table,date_field,filter_logic
+pr,procedures,cdm,procedures,px_date,
+co,conditions,cdm,diagnosis,admit_date,
+rx,prescribed drugs,cdm,prescribing,rx_start_date,
+admin,inpatient administrations,cdm,med_admin,med_admin_start_date,

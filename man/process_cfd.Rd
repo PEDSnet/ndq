@@ -23,3 +23,28 @@ Intakes the output of check_cfd in order to apply additional processing. This
 includes computing overall counts/proportions across all sites included in the input and tidying
 some of the descriptive metadata.
 }
+\examples{
+# This function should be run after check_cfd has been executed for all
+# network institutions and results have been combined into a common table
+
+## When results are kept locally:
+\dontrun{
+my_cfd_process <- process_cfd(cfd_results = my_cfd_rslts,
+                              rslt_source = 'local')
+}
+
+## When results are kept in CSV files:
+\dontrun{
+my_cfd_process <- process_cfd(cfd_results = 'my_cfd_rslts',
+                              rslt_source = 'csv',
+                              csv_rslt_path = 'path/to/my/results')
+}
+
+## When results are kept on a remote database:
+\dontrun{
+my_cfd_process <- process_cfd(cfd_results = 'my_cfd_rslts',
+                              rslt_source = 'remote')
+}
+
+
+}

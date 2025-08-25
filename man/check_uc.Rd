@@ -49,3 +49,33 @@ with the fact type of interest. If produce_mapped_list is set to TRUE, a summary
 the source values associated with unmapped concepts will also be produced to help
 identify areas where mappings could potentially be improved.
 }
+\examples{
+# First create input file with desired checks to be executed
+# You can access examples for both OMOP & PCORnet here:
+ndq::uc_input_omop
+ndq::uc_input_pcornet
+
+# Use this as your input to the UC function
+## Overall
+\dontrun{
+my_uc_rslt <- check_uc(uc_tbl = ndq::uc_input_omop,
+                       by_year = FALSE,
+                       produce_mapped_list = TRUE, # list of unmapped source values
+                       unmapped_values = c(44814650L,0L,
+                                           44814653L, 44814649L) # will also check for NA by default
+                       omop_or_pcornet = 'omop',
+                       check_string = 'uc')
+}
+
+## By Year
+\dontrun{
+my_uc_rslt <- check_uc(uc_tbl = ndq::uc_input_omop,
+                       by_year = TRUE,
+                       produce_mapped_list = FALSE, # not functionality for by year analysis
+                       unmapped_values = c(44814650L,0L,
+                                           44814653L, 44814649L) # will also check for NA by default
+                       omop_or_pcornet = 'omop',
+                       check_string = 'uc')
+}
+
+}
