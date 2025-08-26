@@ -39,7 +39,7 @@ reference:
   contents:
   - attach_anon_id
   - create_check_metadata
-  - summarise_large_n
+  - summarize_large_n
 - title: Example Function Inputs
   desc: >
     Examples of all the tables that should be used as input to each of the
