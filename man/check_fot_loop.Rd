@@ -43,3 +43,4 @@ a dataframe with one row for each time period within the specified time span for
 \description{
 Facts Over Time (Original Postgres Implementation)
 }
+\keyword{internal}

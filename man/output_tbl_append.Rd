@@ -40,3 +40,4 @@ appended, if the table already existts.
 output table to database if it does not exist, or
 append it to an existing table with the same name if it does
 }
+\keyword{internal}

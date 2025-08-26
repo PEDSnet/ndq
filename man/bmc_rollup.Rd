@@ -18,3 +18,4 @@ check_desc,  count_best, include, total_rows, total_pts, best_row_prop, best_pts
 \description{
 Function to compute proportion of "best" based on output from bmc check
 }
+\keyword{internal}

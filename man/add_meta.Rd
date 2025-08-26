@@ -25,3 +25,4 @@ add_meta(
 \description{
 add check name, db version, and site name to a given table
 }
+\keyword{internal}

@@ -1,4 +1,61 @@
 url: https://pedsnet.github.io/ndq/
 template:
   bootstrap: 5
+reference:
+- title: Data Quality Checks
+  desc: >
+    The primary functions used to execute each data quality analysis
+  contents:
+  - check_bmc
+  - check_cfd
+  - check_dc
+  - check_dcon
+  - check_dp
+  - check_ecp
+  - check_fot
+  - check_mf_visitid
+  - starts_with("check_uc")
+  - check_vc
+  - check_vs
+- title: Data Quality Processing
+  desc: >
+    Post-processing functions to be applied to output after the primary
+    analyses have been executed on all network institutions.
+  contents:
+  - process_bmc
+  - process_cfd
+  - process_dc
+  - process_dcon
+  - process_dp
+  - process_ecp
+  - process_fot
+  - process_mf_visitid
+  - starts_with("process_uc")
+  - process_vc
+  - process_vs
+- title: Helper Functions
+  desc: >
+    Miscellaneous helper functions to supplement the analyses
+  contents:
+  - attach_anon_id
+  - create_check_metadata
+  - summarise_large_n
+- title: Example Function Inputs
+  desc: >
+    Examples of all the tables that should be used as input to each of the
+    `check_*` functions. There are specific examples for both OMOP and PCORnet
+    configurations.
+  contents:
+  - starts_with("bmc_input")
+  - starts_with("cfd_input")
+  - starts_with("dc_input")
+  - starts_with("dcon_input")
+  - starts_with("dp_input")
+  - starts_with("ecp_input")
+  - starts_with("fot_input")
+  - starts_with("mf_visitid_input")
+  - starts_with("uc_input")
+  - starts_with("vc_input")
+  - starts_with("vs_input")
+
 

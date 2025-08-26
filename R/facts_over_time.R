@@ -154,6 +154,8 @@ check_fot <- function(fot_tbl,
 #' - if visits_only = FALSE and distinct_visits = TRUE, will produce counts of patients, rows, and visits for the check + time period
 #' - if visits_only = FALSE and distinct_visits = FALSE, will produce counts of patients and rows for the check + time period
 #'
+#' @keywords internal
+#'
 check_fot_loop <- function(fot_tbl,
                            time_frame,
                            omop_or_pcornet = 'omop',
@@ -302,6 +304,8 @@ check_fot_loop <- function(fot_tbl,
 #' - if visits_only = FALSE and distinct_visits = FALSE, will produce counts of patients and rows for the check + time period
 #'
 #' @importFrom tidyr replace_na
+#'
+#' @keywords internal
 #'
 check_fot_group <- function(fot_tbl,
                             omop_or_pcornet = 'omop',

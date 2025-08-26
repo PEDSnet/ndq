@@ -165,6 +165,8 @@ check_bmc <- function(bmc_tbl,
 #'
 #' @return the provided fact_tbl with additional information from the specified concept_field
 #'
+#' @keywords internal
+#'
 find_concept_names <- function(fact_tbl,
                                omop_or_pcornet,
                                fact_concept_id,
@@ -211,6 +213,8 @@ find_concept_names <- function(fact_tbl,
 #' @returns a dataframe with the include designations attached to all concepts; also checks
 #'          to ensure no additional values are present
 #'
+#' @keywords internal
+#'
 bmc_assign <- function(bmc_output,
                        conceptset){
 
@@ -236,6 +240,8 @@ bmc_assign <- function(bmc_output,
 #' should be in the "best" category
 #' @return table with the cols: site, check_type, database_version, check_name,
 #' check_desc,  count_best, include, total_rows, total_pts, best_row_prop, best_pts_prop
+#'
+#' @keywords internal
 #'
 bmc_rollup <- function(bmc_output_pp){
   # find proportions of best mapped for each site

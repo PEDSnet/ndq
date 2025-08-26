@@ -38,6 +38,8 @@ pick_schema <- function(schema,
 #' @return a pivoted version of the input table with dummy rows added for checks
 #'         that did not return any violations
 #'
+#' @keywords internal
+#'
 create_vc_vs_output <- function(tbl_list,
                                 check_string='vc') {
 
@@ -71,6 +73,8 @@ create_vc_vs_output <- function(tbl_list,
 #' @param site_nm the name of the site; defaults to
 #' `config('site')`
 #'
+#' @keywords internal
+#'
 add_meta <- function(tbl_meta,
                      check_lib,
                      version=config('current_version'),
@@ -98,6 +102,8 @@ add_meta <- function(tbl_meta,
 #'
 #' @return an integer representing the difference (in days) between the two provided
 #' dates
+#'
+#' @keywords internal
 #'
 calc_days_between_dates <-
   function(date_col_1, date_col_2, db = config("db_src")) {
@@ -150,7 +156,8 @@ calc_days_between_dates <-
 #' @return The table as it exists on the databse, with the new data
 #' appended, if the table already existts.
 #'
-
+#' @keywords internal
+#'
 output_tbl_append <- function(data, name = NA, local = FALSE,
                               file = base::ifelse(config('results_target') == 'file',
                                                   TRUE, FALSE),

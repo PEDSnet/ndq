@@ -25,3 +25,4 @@ Adapted for sql dialects for Postgres and MS SQL.
 \details{
 Should always be wrapped by sql()
 }
+\keyword{internal}
