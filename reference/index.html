@@ -32,9 +32,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="data-quality-checks">Data Quality Checks<a class="anchor" aria-label="anchor" href="#data-quality-checks"></a></h2>
 
-
+      <div class="section-desc"><p>The primary functions used to execute each data quality analysis</p></div>
 
 
     </div><div class="section level2">
@@ -43,72 +43,6 @@
 
 
       <dl><dt>
-
-          <code><a href="add_meta.html">add_meta()</a></code>
-
-        </dt>
-        <dd>add check name, db version, and site name to a given table</dd>
-      </dl><dl><dt>
-
-          <code><a href="attach_anon_id.html">attach_anon_id()</a></code>
-
-        </dt>
-        <dd>Add anonymized site identifier to all tables</dd>
-      </dl><dl><dt>
-
-          <code><a href="bmc_assign.html">bmc_assign()</a></code>
-
-        </dt>
-        <dd>assign "best" "not best" labels to concepts</dd>
-      </dl><dl><dt>
-
-          <code><a href="bmc_input_omop.html">bmc_input_omop</a></code>
-
-        </dt>
-        <dd>Best Mapped Concepts Input File (OMOP)</dd>
-      </dl><dl><dt>
-
-          <code><a href="bmc_input_pcornet.html">bmc_input_pcornet</a></code>
-
-        </dt>
-        <dd>Best Mapped Concepts Input File (PCORnet)</dd>
-      </dl><dl><dt>
-
-          <code><a href="bmc_rollup.html">bmc_rollup()</a></code>
-
-        </dt>
-        <dd>Function to compute proportion of "best" based on output from bmc check</dd>
-      </dl><dl><dt>
-
-          <code><a href="calc_days_between_dates.html">calc_days_between_dates()</a></code>
-
-        </dt>
-        <dd>Calculate Date Differences in Multiple SQL Backends</dd>
-      </dl><dl><dt>
-
-          <code><a href="cfd_input_omop.html">cfd_input_omop</a></code>
-
-        </dt>
-        <dd>Clinical Fact Documentation Input File (OMOP)</dd>
-      </dl><dl><dt>
-
-          <code><a href="cfd_input_pcornet.html">cfd_input_pcornet</a></code>
-
-        </dt>
-        <dd>Clinical Fact Documentation Input File (PCORnet)</dd>
-      </dl><dl><dt>
-
-          <code><a href="cfd_visit_types_omop.html">cfd_visit_types_omop</a></code>
-
-        </dt>
-        <dd>Clinical Fact Documentation Visit Type Input File (OMOP)</dd>
-      </dl><dl><dt>
-
-          <code><a href="cfd_visit_types_pcornet.html">cfd_visit_types_pcornet</a></code>
-
-        </dt>
-        <dd>Clinical Fact Documentation Visit Type Input File (PCORnet)</dd>
-      </dl><dl><dt>
 
           <code><a href="check_bmc.html">check_bmc()</a></code>
 
@@ -152,18 +86,6 @@
         <dd>Facts Over Time</dd>
       </dl><dl><dt>
 
-          <code><a href="check_fot_group.html">check_fot_group()</a></code>
-
-        </dt>
-        <dd>Facts Over Time (Trino/Snowflake Implementation)</dd>
-      </dl><dl><dt>
-
-          <code><a href="check_fot_loop.html">check_fot_loop()</a></code>
-
-        </dt>
-        <dd>Facts Over Time (Original Postgres Implementation)</dd>
-      </dl><dl><dt>
-
           <code><a href="check_mf_visitid.html">check_mf_visitid()</a></code>
 
         </dt>
@@ -192,103 +114,18 @@
 
         </dt>
         <dd>Valueset Conformance</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="data-quality-processing">Data Quality Processing<a class="anchor" aria-label="anchor" href="#data-quality-processing"></a></h2>
 
-          <code><a href="create_check_metadata.html">create_check_metadata()</a></code>
+      <div class="section-desc"><p>Post-processing functions to be applied to output after the primary analyses have been executed on all network institutions.</p></div>
 
-        </dt>
-        <dd>Create informational metadata file</dd>
-      </dl><dl><dt>
 
-          <code><a href="create_vc_vs_output.html">create_vc_vs_output()</a></code>
+    </div><div class="section level2">
 
-        </dt>
-        <dd>Additional processing for VS &amp; VC checks</dd>
-      </dl><dl><dt>
 
-          <code><a href="dc_input_omop.html">dc_input_omop</a></code>
 
-        </dt>
-        <dd>Data Cycle Changes Input File (OMOP)</dd>
-      </dl><dl><dt>
 
-          <code><a href="dc_input_pcornet.html">dc_input_pcornet</a></code>
-
-        </dt>
-        <dd>Data Cycle Changes Input File (PCORnet)</dd>
-      </dl><dl><dt>
-
-          <code><a href="dcon_input_omop.html">dcon_input_omop</a></code>
-
-        </dt>
-        <dd>Domain Concordance Input File (OMOP)</dd>
-      </dl><dl><dt>
-
-          <code><a href="dcon_input_pcornet.html">dcon_input_pcornet</a></code>
-
-        </dt>
-        <dd>Domain Concordance Input File (PCORnet)</dd>
-      </dl><dl><dt>
-
-          <code><a href="dp_input_omop.html">dp_input_omop</a></code>
-
-        </dt>
-        <dd>Date Plausibility Input File (OMOP)</dd>
-      </dl><dl><dt>
-
-          <code><a href="dp_input_pcornet.html">dp_input_pcornet</a></code>
-
-        </dt>
-        <dd>Date Plausibility Input File (PCORnet)</dd>
-      </dl><dl><dt>
-
-          <code><a href="ecp_input_omop.html">ecp_input_omop</a></code>
-
-        </dt>
-        <dd>Expected Concepts Present Input File (OMOP)</dd>
-      </dl><dl><dt>
-
-          <code><a href="ecp_input_pcornet.html">ecp_input_pcornet</a></code>
-
-        </dt>
-        <dd>Expected Concepts Present Input File (PCORnet)</dd>
-      </dl><dl><dt>
-
-          <code><a href="find_concept_names.html">find_concept_names()</a></code>
-
-        </dt>
-        <dd>Find concept names for existing concept_ids</dd>
-      </dl><dl><dt>
-
-          <code><a href="fot_input_omop.html">fot_input_omop</a></code>
-
-        </dt>
-        <dd>Facts Over Time Input File (OMOP)</dd>
-      </dl><dl><dt>
-
-          <code><a href="fot_input_pcornet.html">fot_input_pcornet</a></code>
-
-        </dt>
-        <dd>Facts Over Time Input File (PCORnet)</dd>
-      </dl><dl><dt>
-
-          <code><a href="mf_input_omop.html">mf_input_omop</a></code>
-
-        </dt>
-        <dd>Missing Field: Visit ID Input File (OMOP)</dd>
-      </dl><dl><dt>
-
-          <code><a href="mf_input_pcornet.html">mf_input_pcornet</a></code>
-
-        </dt>
-        <dd>Missing Field: Visit ID Input File (PCORnet)</dd>
-      </dl><dl><dt>
-
-          <code><a href="output_tbl_append.html">output_tbl_append()</a></code>
-
-        </dt>
-        <dd>output table to database if it does not exist, or append it to an existing table with the same name if it does</dd>
-      </dl><dl><dt>
+      <dl><dt>
 
           <code><a href="process_bmc.html">process_bmc()</a></code>
 
@@ -354,12 +191,154 @@
 
         </dt>
         <dd>Valueset Conformance – Processing</dd>
+      </dl></div><div class="section level2">
+      <h2 id="helper-functions">Helper Functions<a class="anchor" aria-label="anchor" href="#helper-functions"></a></h2>
+
+      <div class="section-desc"><p>Miscellaneous helper functions to supplement the analyses</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="attach_anon_id.html">attach_anon_id()</a></code>
+
+        </dt>
+        <dd>Add anonymized site identifier to all tables</dd>
+      </dl><dl><dt>
+
+          <code><a href="create_check_metadata.html">create_check_metadata()</a></code>
+
+        </dt>
+        <dd>Create informational metadata file</dd>
       </dl><dl><dt>
 
           <code><a href="summarize_large_n.html">summarize_large_n()</a></code>
 
         </dt>
         <dd>Add summary columns for a large N of sites</dd>
+      </dl></div><div class="section level2">
+      <h2 id="example-function-inputs">Example Function Inputs<a class="anchor" aria-label="anchor" href="#example-function-inputs"></a></h2>
+
+      <div class="section-desc"><p>Examples of all the tables that should be used as input to each of the <code>check_*</code> functions. There are specific examples for both OMOP and PCORnet configurations.</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="bmc_input_omop.html">bmc_input_omop</a></code>
+
+        </dt>
+        <dd>Best Mapped Concepts Input File (OMOP)</dd>
+      </dl><dl><dt>
+
+          <code><a href="bmc_input_pcornet.html">bmc_input_pcornet</a></code>
+
+        </dt>
+        <dd>Best Mapped Concepts Input File (PCORnet)</dd>
+      </dl><dl><dt>
+
+          <code><a href="cfd_input_omop.html">cfd_input_omop</a></code>
+
+        </dt>
+        <dd>Clinical Fact Documentation Input File (OMOP)</dd>
+      </dl><dl><dt>
+
+          <code><a href="cfd_input_pcornet.html">cfd_input_pcornet</a></code>
+
+        </dt>
+        <dd>Clinical Fact Documentation Input File (PCORnet)</dd>
+      </dl><dl><dt>
+
+          <code><a href="cfd_visit_types_omop.html">cfd_visit_types_omop</a></code>
+
+        </dt>
+        <dd>Clinical Fact Documentation Visit Type Input File (OMOP)</dd>
+      </dl><dl><dt>
+
+          <code><a href="cfd_visit_types_pcornet.html">cfd_visit_types_pcornet</a></code>
+
+        </dt>
+        <dd>Clinical Fact Documentation Visit Type Input File (PCORnet)</dd>
+      </dl><dl><dt>
+
+          <code><a href="dc_input_omop.html">dc_input_omop</a></code>
+
+        </dt>
+        <dd>Data Cycle Changes Input File (OMOP)</dd>
+      </dl><dl><dt>
+
+          <code><a href="dc_input_pcornet.html">dc_input_pcornet</a></code>
+
+        </dt>
+        <dd>Data Cycle Changes Input File (PCORnet)</dd>
+      </dl><dl><dt>
+
+          <code><a href="dcon_input_omop.html">dcon_input_omop</a></code>
+
+        </dt>
+        <dd>Domain Concordance Input File (OMOP)</dd>
+      </dl><dl><dt>
+
+          <code><a href="dcon_input_pcornet.html">dcon_input_pcornet</a></code>
+
+        </dt>
+        <dd>Domain Concordance Input File (PCORnet)</dd>
+      </dl><dl><dt>
+
+          <code><a href="dp_input_omop.html">dp_input_omop</a></code>
+
+        </dt>
+        <dd>Date Plausibility Input File (OMOP)</dd>
+      </dl><dl><dt>
+
+          <code><a href="dp_input_pcornet.html">dp_input_pcornet</a></code>
+
+        </dt>
+        <dd>Date Plausibility Input File (PCORnet)</dd>
+      </dl><dl><dt>
+
+          <code><a href="ecp_input_omop.html">ecp_input_omop</a></code>
+
+        </dt>
+        <dd>Expected Concepts Present Input File (OMOP)</dd>
+      </dl><dl><dt>
+
+          <code><a href="ecp_input_pcornet.html">ecp_input_pcornet</a></code>
+
+        </dt>
+        <dd>Expected Concepts Present Input File (PCORnet)</dd>
+      </dl><dl><dt>
+
+          <code><a href="fot_input_omop.html">fot_input_omop</a></code>
+
+        </dt>
+        <dd>Facts Over Time Input File (OMOP)</dd>
+      </dl><dl><dt>
+
+          <code><a href="fot_input_pcornet.html">fot_input_pcornet</a></code>
+
+        </dt>
+        <dd>Facts Over Time Input File (PCORnet)</dd>
+      </dl><dl><dt>
+
+          <code><a href="mf_input_omop.html">mf_input_omop</a></code>
+
+        </dt>
+        <dd>Missing Field: Visit ID Input File (OMOP)</dd>
+      </dl><dl><dt>
+
+          <code><a href="mf_input_pcornet.html">mf_input_pcornet</a></code>
+
+        </dt>
+        <dd>Missing Field: Visit ID Input File (PCORnet)</dd>
       </dl><dl><dt>
 
           <code><a href="uc_input_omop.html">uc_input_omop</a></code>
@@ -397,7 +376,8 @@
         </dt>
         <dd>Valueset Conformance Input File (PCORnet)</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
