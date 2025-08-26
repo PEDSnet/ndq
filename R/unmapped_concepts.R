@@ -43,9 +43,9 @@
 #' \dontrun{
 #' my_uc_rslt <- check_uc(uc_tbl = ndq::uc_input_omop,
 #'                        by_year = FALSE,
-#'                        produce_mapped_list = TRUE, # list of unmapped source values
+#'                        produce_mapped_list = TRUE,
 #'                        unmapped_values = c(44814650L,0L,
-#'                                            44814653L, 44814649L) # will also check for NA by default
+#'                                            44814653L, 44814649L),
 #'                        omop_or_pcornet = 'omop',
 #'                        check_string = 'uc')
 #' }
@@ -54,9 +54,9 @@
 #' \dontrun{
 #' my_uc_rslt <- check_uc(uc_tbl = ndq::uc_input_omop,
 #'                        by_year = TRUE,
-#'                        produce_mapped_list = FALSE, # not functionality for by year analysis
+#'                        produce_mapped_list = FALSE,
 #'                        unmapped_values = c(44814650L,0L,
-#'                                            44814653L, 44814649L) # will also check for NA by default
+#'                                            44814653L, 44814649L),
 #'                        omop_or_pcornet = 'omop',
 #'                        check_string = 'uc')
 #' }
