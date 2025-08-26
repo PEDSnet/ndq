@@ -1,5 +1,5 @@
-cohort_id,check_id,cohort_description,schema,table,date_field,concept_field,conceptset_name,filter_logic,time_between_events
-asthma_dx,asthma_dx_broncho_rx,asthma diagnosis,cdm,diagnosis,admit_date,dx,dx_asthma,,90
-broncho_rx,asthma_dx_broncho_rx,bronchodilator (albuterol) prescription,cdm,prescribing,rx_start_date,rxnorm_cui,rx_albuterol,,90
-IP_visits,IP_visits_IP_conds,IP visits,cdm,encounter,admit_date,,,enc_type == 'IP',
-IP_conds,IP_visits_IP_conds,IP condition headers,cdm,diagnosis,admit_date,,,enc_type == 'IP',
+cohort_id,check_id,cohort_description,schema,table,date_field,vocabulary_field,concept_field,conceptset_name,filter_logic,time_between_events
+asthma_dx,asthma_dx_broncho_rx,asthma diagnosis,cdm,diagnosis,admit_date,dx_type,dx,dx_asthma,,90
+broncho_rx,asthma_dx_broncho_rx,bronchodilator (albuterol) prescription,cdm,prescribing,rx_start_date,,rxnorm_cui,rx_albuterol,,90
+IP_visits,IP_visits_IP_conds,IP visits,cdm,encounter,admit_date,,,,enc_type == 'IP',
+IP_conds,IP_visits_IP_conds,IP condition headers,cdm,diagnosis,admit_date,dx_type,,,enc_type == 'IP',

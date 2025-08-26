@@ -1,6 +1,6 @@
-check_id,cohort_definition,cohort_schema,cohort_table,schema,table,concept_field,conceptset_name,filter_logic
-hemoglobin,All patients in CDM person table,cdm,demographic,cdm,lab_result_cm,lab_loinc,hemoglobin,
-sodium,All patients in CDM person table,cdm,demographic,cdm,lab_result_cm,lab_loinc,sodium,
-flu,All patients in CDM person table,cdm,demographic,cdm,lab_result_cm,lab_loinc,influenza,
-height,All patients in CDM person table,cdm,demographic,cdm,lab_result_cm,lab_loinc,height,
-weight,All patients in CDM person table,cdm,demographic,cdm,lab_result_cm,lab_loinc,weight,
+check_id,cohort_definition,cohort_schema,cohort_table,schema,table,concept_field,vocabulary_field,conceptset_name,filter_logic
+hemoglobin,All patients in CDM person table,cdm,demographic,cdm,lab_result_cm,lab_loinc,,hemoglobin,
+sodium,All patients in CDM person table,cdm,demographic,cdm,lab_result_cm,lab_loinc,,sodium,
+flu,All patients in CDM person table,cdm,demographic,cdm,lab_result_cm,lab_loinc,,influenza,
+height,All patients in CDM person table,cdm,demographic,cdm,lab_result_cm,lab_loinc,,height,
+weight,All patients in CDM person table,cdm,demographic,cdm,lab_result_cm,lab_loinc,,weight,

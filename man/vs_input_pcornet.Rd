@@ -14,6 +14,7 @@ A dataframe or CSV file with 6 columns
 \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 \item{valueset_name}{The name of the CSV file (stored in the pre-defined file subdirectory) defining the acceptable values for the valueset}
 \item{concept_field}{The *_concept_id field with the concepts that make up the valueset (ex: race, hispanic)}
+\item{vocabulary_field}{Typically only relevant for diagnoses and procedures, the field where the code vocabulary is kept (i.e. dx_type, px_type)}
 \item{filter_logic}{\strong{OPTIONAL} The logic that should be applied to the provided table in order to tailor the tables to the desired check assessment (ex: if you only want to evaluate the valueset for billed conditions)}
 }
 }

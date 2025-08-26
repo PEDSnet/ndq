@@ -127,6 +127,7 @@
 #'   \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 #'   \item{valueset_name}{The name of the CSV file (stored in the pre-defined file subdirectory) defining the acceptable values for the valueset}
 #'   \item{concept_field}{The *_concept_id field with the concepts that make up the valueset (ex: race, hispanic)}
+#'   \item{vocabulary_field}{Typically only relevant for diagnoses and procedures, the field where the code vocabulary is kept (i.e. dx_type, px_type)}
 #'   \item{filter_logic}{**OPTIONAL** The logic that should be applied to the provided table in order to tailor the tables to the desired check assessment (ex: if you only want to evaluate the valueset for billed conditions)}
 #' }
 #'
@@ -237,6 +238,7 @@
 #'   \item{schema}{The schema where the data is kept. Use `cdm` to use the pre-configured `cdm_schema`, `result` to use the preconfigured `results_schema`, or input the exact name of the schema.}
 #'   \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 #'   \item{concept_field}{The *_concept_id field with the concepts that make up the valueset (ex: rxnorm_cui, raw_rxnorm_cui)}
+#'   \item{vocabulary_field}{Typically only relevant for diagnoses and procedures, the field where the code vocabulary is kept (i.e. dx_type, px_type)}
 #'   \item{conceptset_name}{The string name of the concept set that will identify the concepts of interest, as it appears in the predefined file_subdirectory}
 #'   \item{filter_logic}{**OPTIONAL** The logic that should be applied to the provided table in order to tailor the tables to the desired check assessment (ex: if you only want to identify billed diagnoses for hypertension)}
 #' }
@@ -469,6 +471,7 @@
 #'   \item{schema}{The schema where the data is kept. Use `cdm` to use the pre-configured `cdm_schema`, `result` to use the preconfigured `results_schema`, or input the exact name of the schema.}
 #'   \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 #'   \item{date_field}{The date field to be used when time_between_events is not null to determine the length of time between each event occurrence}
+#'   \item{vocabulary_field}{Typically only relevant for diagnoses and procedures, the field where the code vocabulary is kept (i.e. dx_type, px_type)}
 #'   \item{concept_field}{The field with the concept codes that make up the valueset (ex: dx, provider_specialty_primary)}
 #'   \item{conceptset_name}{**OPTIONAL** The string name of the concept set that will identify the concepts of interest, as it appears in the predefined file_subdirectory}
 #'   \item{filter_logic}{**OPTIONAL** The logic that should be applied to the provided table in order to tailor the tables to the desired check assessment (ex: if you only want to assess billed diagnoses)}

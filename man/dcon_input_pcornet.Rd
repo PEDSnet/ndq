@@ -15,6 +15,7 @@ A dataframe or CSV file with 10 columns
 \item{schema}{The schema where the data is kept. Use \code{cdm} to use the pre-configured \code{cdm_schema}, \code{result} to use the preconfigured \code{results_schema}, or input the exact name of the schema.}
 \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 \item{date_field}{The date field to be used when time_between_events is not null to determine the length of time between each event occurrence}
+\item{vocabulary_field}{Typically only relevant for diagnoses and procedures, the field where the code vocabulary is kept (i.e. dx_type, px_type)}
 \item{concept_field}{The field with the concept codes that make up the valueset (ex: dx, provider_specialty_primary)}
 \item{conceptset_name}{\strong{OPTIONAL} The string name of the concept set that will identify the concepts of interest, as it appears in the predefined file_subdirectory}
 \item{filter_logic}{\strong{OPTIONAL} The logic that should be applied to the provided table in order to tailor the tables to the desired check assessment (ex: if you only want to assess billed diagnoses)}

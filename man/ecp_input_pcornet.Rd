@@ -16,6 +16,7 @@ A dataframe or CSV file with 9 columns
 \item{schema}{The schema where the data is kept. Use \code{cdm} to use the pre-configured \code{cdm_schema}, \code{result} to use the preconfigured \code{results_schema}, or input the exact name of the schema.}
 \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 \item{concept_field}{The *_concept_id field with the concepts that make up the valueset (ex: rxnorm_cui, raw_rxnorm_cui)}
+\item{vocabulary_field}{Typically only relevant for diagnoses and procedures, the field where the code vocabulary is kept (i.e. dx_type, px_type)}
 \item{conceptset_name}{The string name of the concept set that will identify the concepts of interest, as it appears in the predefined file_subdirectory}
 \item{filter_logic}{\strong{OPTIONAL} The logic that should be applied to the provided table in order to tailor the tables to the desired check assessment (ex: if you only want to identify billed diagnoses for hypertension)}
 }
