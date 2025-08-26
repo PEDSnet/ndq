@@ -3,3 +3,4 @@
 LICENSE
 ^data-raw$
 ^cran-comments\.md$
+^\.github$
