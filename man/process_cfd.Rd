@@ -7,21 +7,36 @@
 process_cfd(cfd_results, rslt_source = "remote", csv_rslt_path = NULL)
 }
 \arguments{
-\item{cfd_results}{table output by check_cfd}
+\item{cfd_results}{\emph{tabular input} || \strong{required}
 
-\item{rslt_source}{the location of the results. acceptable values are \code{local} (stored as a dataframe in the R environment),
-\code{csv} (stored as CSV files), or \code{remote} (stored on a remote DBMS); defaults to remote}
+The tabular output of \code{check_cfd}. This table should include results for all
+institutions that should be included in the computation of overall / "network level"
+statistics.}
 
-\item{csv_rslt_path}{if the results have been stored as CSV files, the path to the location
-of these files. If the results are local or remote, leave NULL}
+\item{rslt_source}{\emph{string} || defaults to \code{remote}
+
+A string that identifies the location of the \code{cfd_results} table.
+Acceptable values are
+\itemize{
+\item \code{local} - table is stored as a dataframe in the local R environment
+\item \code{csv} - table is stored as a CSV file
+\item \code{remote} - table is stored on a remote database
+}}
+
+\item{csv_rslt_path}{\emph{string} || defaults to \code{NULL}
+
+If \code{rslt_source} has been set to \code{csv}, this parameter should indicate the path to
+the result file(s). Otherwise, this parameter can be left as \code{NULL}}
 }
 \value{
-cfd_output tbl with additional total counts
+This function will return all columns from the \code{cfd_results} input with
+additional rows where site = \code{total} that reflect the combined results of
+all institutions provided in the input data.
 }
 \description{
-Intakes the output of check_cfd in order to apply additional processing. This
-includes computing overall counts/proportions across all sites included in the input and tidying
-some of the descriptive metadata.
+Intakes the combined output of \code{check_cfd} from all relevant institutions in order
+to apply additional processing. It will compute overall counts/proportions across all
+sites included in the input and tidy some of the descriptive metadata.
 }
 \examples{
 # This function should be run after check_cfd has been executed for all

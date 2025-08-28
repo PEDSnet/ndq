@@ -19,14 +19,14 @@ check_cfd(
 The primary input table that contains descriptive information about the checks
 to be executed by the function. It should include definitions for the clinical fact
 types that should be evaluated against the visit_tbl.
-see \verb{?cfd_input omop} or \code{?cfd_input_pcornet} for examples of the input structure}
+see \code{?cfd_input_omop} or \code{?cfd_input_pcornet} for examples of the input structure}
 
 \item{visit_type_filter}{\emph{string / vector} || \strong{required}
 
 A string or vector of strings that specifies the visit type(s) the function
-should limit to for the analysis (i.e. inpatient, c(inpatient, outpatient)).
+should limit to for the analysis (i.e. \code{inpatient}, \code{c(inpatient, outpatient)}).
 If \code{all} is included as a visit type, all available visit types will be pulled
-from the \code{visit_tbl} (not just what was defined in the visit_type_tbl) to capture
+from the \code{visit_tbl} (not just what was defined in the \code{visit_type_tbl}) to capture
 the full array of visits.}
 
 \item{visit_type_tbl}{\emph{tabular input} || \strong{required}
@@ -55,9 +55,9 @@ at least one occurrence of the fact type of interest. It will also include the c
 and proportion of patients that are associated with these visits.
 }
 \description{
-This function will identify visits that do not link to the user-specified
-facts. It will also compute the counts of patients who have at least one
-visit that does not link to the specified fact type.
+This function will identify visits that both do and do not link to at least one occurrence of the
+user-specified clinical facts. It will also compute the counts of patients are associated with
+these visits.
 }
 \examples{
 # First create input file with desired checks to be executed

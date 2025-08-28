@@ -1,16 +1,16 @@
 
 #' Clinical Fact Documentation
 #'
-#' This function will identify visits that do not link to the user-specified
-#' facts. It will also compute the counts of patients who have at least one
-#' visit that does not link to the specified fact type.
+#' This function will identify visits that both do and do not link to at least one occurrence of the
+#' user-specified clinical facts. It will also compute the counts of patients are associated with
+#' these visits.
 #'
 #' @param cfd_tbl *tabular input* || **required**
 #'
 #'  The primary input table that contains descriptive information about the checks
 #'  to be executed by the function. It should include definitions for the clinical fact
 #'  types that should be evaluated against the visit_tbl.
-#'  see `?cfd_input omop` or `?cfd_input_pcornet` for examples of the input structure
+#'  see `?cfd_input_omop` or `?cfd_input_pcornet` for examples of the input structure
 #'
 #' @param visit_type_tbl *tabular input* || **required**
 #'
@@ -25,9 +25,9 @@
 #' @param visit_type_filter *string / vector* || **required**
 #'
 #'  A string or vector of strings that specifies the visit type(s) the function
-#'  should limit to for the analysis (i.e. inpatient, c(inpatient, outpatient)).
+#'  should limit to for the analysis (i.e. `inpatient`, `c(inpatient, outpatient)`).
 #'  If `all` is included as a visit type, all available visit types will be pulled
-#'  from the `visit_tbl` (not just what was defined in the visit_type_tbl) to capture
+#'  from the `visit_tbl` (not just what was defined in the `visit_type_tbl`) to capture
 #'  the full array of visits.
 #'
 #' @param visit_tbl *tabular input* || defaults to `cdm_tbl('visit_occurrence')`
@@ -199,17 +199,33 @@ check_cfd <- function(cfd_tbl,
 
 #' Clinical Fact Documentation -- Processing
 #'
-#' Intakes the output of check_cfd in order to apply additional processing. This
-#' includes computing overall counts/proportions across all sites included in the input and tidying
-#' some of the descriptive metadata.
+#' Intakes the combined output of `check_cfd` from all relevant institutions in order
+#' to apply additional processing. It will compute overall counts/proportions across all
+#' sites included in the input and tidy some of the descriptive metadata.
 #'
-#' @param cfd_results table output by check_cfd
-#' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
-#'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
-#' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
-#'                      of these files. If the results are local or remote, leave NULL
+#' @param cfd_results *tabular input* || **required**
 #'
-#' @return cfd_output tbl with additional total counts
+#'  The tabular output of `check_cfd`. This table should include results for all
+#'  institutions that should be included in the computation of overall / "network level"
+#'  statistics.
+#'
+#' @param rslt_source *string* || defaults to `remote`
+#'
+#'  A string that identifies the location of the `cfd_results` table.
+#'  Acceptable values are
+#'  - `local` - table is stored as a dataframe in the local R environment
+#'  - `csv` - table is stored as a CSV file
+#'  - `remote` - table is stored on a remote database
+#'
+#' @param csv_rslt_path *string* || defaults to `NULL`
+#'
+#'  If `rslt_source` has been set to `csv`, this parameter should indicate the path to
+#'  the result file(s). Otherwise, this parameter can be left as `NULL`
+#'
+#' @return
+#'  This function will return all columns from the `cfd_results` input with
+#'  additional rows where site = `total` that reflect the combined results of
+#'  all institutions provided in the input data.
 #'
 #' @importFrom stringr str_remove
 #'

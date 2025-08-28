@@ -1,6 +1,7 @@
 url: https://pedsnet.github.io/ndq/
 template:
   bootstrap: 5
+  light-switch: true
 reference:
 - title: Data Quality Checks
   desc: >
