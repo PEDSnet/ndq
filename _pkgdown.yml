@@ -14,7 +14,7 @@ reference:
   - check_ecp
   - check_fot
   - check_mf_visitid
-  - starts_with("check_uc")
+  - check_uc
   - check_vc
   - check_vs
 - title: Data Quality Processing
@@ -30,7 +30,7 @@ reference:
   - process_ecp
   - process_fot
   - process_mf_visitid
-  - starts_with("process_uc")
+  - process_uc
   - process_vc
   - process_vs
 - title: Helper Functions

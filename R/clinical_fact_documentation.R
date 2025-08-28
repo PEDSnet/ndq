@@ -5,27 +5,46 @@
 #' facts. It will also compute the counts of patients who have at least one
 #' visit that does not link to the specified fact type.
 #'
-#' @param cfd_tbl a table with information about the fact tables that should be
-#'               evaluated against the visit_tbl; see `?cfd_input omop` or `?cfd_input_pcornet`
-#' @param visit_type_filter a string or vector of strings label to identify the
-#'                          visit type(s) for which you are executing the check
-#'                          (i.e. inpatient, c(inpatient, outpatient));
+#' @param cfd_tbl *tabular input* || **required**
 #'
-#'                          if `all` is included as a visit type, all available
-#'                          visit types will be pulled from the visit_tbl
-#'                          (not just the visit_type_tbl) to capture the full array of visits.
-#' @param visit_type_tbl a table with mappings from the visit type string label to the
-#'                       visit_concept_ids / enc_types that represent it. Multiple rows
-#'                       should be included for multiple mappings.
-#' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param visit_tbl the CDM table with visit information, that will be filtered to the visit
-#'                  type of interest based on the visit_type_tbl + visit_type_filter
-#' @param check_string an abbreviated identifier to identify all output from this module
-#'                     defaults to `cfd`
+#'  The primary input table that contains descriptive information about the checks
+#'  to be executed by the function. It should include definitions for the clinical fact
+#'  types that should be evaluated against the visit_tbl.
+#'  see `?cfd_input omop` or `?cfd_input_pcornet` for examples of the input structure
+#'
+#' @param visit_type_tbl *tabular input* || **required**
+#'
+#'  A table with mappings that link visit_concept_ids / enc_types to a broader
+#'  string descriptor (i.e. inpatient). Multiple rows should be included if
+#'  multiple IDs should be mapped to the same string label.
+#'
+#' @param omop_or_pcornet *string* || defaults to `omop`
+#'
+#'  A string, either `omop` or `pcornet`, indicating the CDM format of the data
+#'
+#' @param visit_type_filter *string / vector* || **required**
+#'
+#'  A string or vector of strings that specifies the visit type(s) the function
+#'  should limit to for the analysis (i.e. inpatient, c(inpatient, outpatient)).
+#'  If `all` is included as a visit type, all available visit types will be pulled
+#'  from the `visit_tbl` (not just what was defined in the visit_type_tbl) to capture
+#'  the full array of visits.
+#'
+#' @param visit_tbl *tabular input* || defaults to `cdm_tbl('visit_occurrence')`
+#'
+#'  The CDM table with the visits to be used in the analysis. Typically, this will
+#'  be either the OMOP `visit_occurrence` or PCORnet `encounter` table
+#'
+#' @param check_string *string* || defaults to `cfd`
+#'
+#'  An abbreviated identifier that will be used to label all output from this module
 #'
 #'
-#' @return tbl with visit_occurrences, and all columns in the original visit_occurrence table,
-#'        for which there are no facts in the `fact_tbls`
+#' @return
+#'  A summary table that, for each provided clinical fact and visit type combination,
+#'  will include the count and proportion of visits that are and are not linked to
+#'  at least one occurrence of the fact type of interest. It will also include the count
+#'  and proportion of patients that are associated with these visits.
 #'
 #' @export
 #'

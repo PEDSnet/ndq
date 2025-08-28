@@ -14,33 +14,45 @@ check_cfd(
 )
 }
 \arguments{
-\item{cfd_tbl}{a table with information about the fact tables that should be
-evaluated against the visit_tbl; see \verb{?cfd_input omop} or \code{?cfd_input_pcornet}}
+\item{cfd_tbl}{\emph{tabular input} || \strong{required}
 
-\item{visit_type_filter}{a string or vector of strings label to identify the
-visit type(s) for which you are executing the check
-(i.e. inpatient, c(inpatient, outpatient));
+The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for the clinical fact
+types that should be evaluated against the visit_tbl.
+see \verb{?cfd_input omop} or \code{?cfd_input_pcornet} for examples of the input structure}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{                     if `all` is included as a visit type, all available
-                     visit types will be pulled from the visit_tbl
-                     (not just the visit_type_tbl) to capture the full array of visits.
-}\if{html}{\out{</div>}}}
+\item{visit_type_filter}{\emph{string / vector} || \strong{required}
 
-\item{visit_type_tbl}{a table with mappings from the visit type string label to the
-visit_concept_ids / enc_types that represent it. Multiple rows
-should be included for multiple mappings.}
+A string or vector of strings that specifies the visit type(s) the function
+should limit to for the analysis (i.e. inpatient, c(inpatient, outpatient)).
+If \code{all} is included as a visit type, all available visit types will be pulled
+from the \code{visit_tbl} (not just what was defined in the visit_type_tbl) to capture
+the full array of visits.}
 
-\item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
+\item{visit_type_tbl}{\emph{tabular input} || \strong{required}
 
-\item{visit_tbl}{the CDM table with visit information, that will be filtered to the visit
-type of interest based on the visit_type_tbl + visit_type_filter}
+A table with mappings that link visit_concept_ids / enc_types to a broader
+string descriptor (i.e. inpatient). Multiple rows should be included if
+multiple IDs should be mapped to the same string label.}
 
-\item{check_string}{an abbreviated identifier to identify all output from this module
-defaults to \code{cfd}}
+\item{omop_or_pcornet}{\emph{string} || defaults to \code{omop}
+
+A string, either \code{omop} or \code{pcornet}, indicating the CDM format of the data}
+
+\item{visit_tbl}{\emph{tabular input} || defaults to \code{cdm_tbl('visit_occurrence')}
+
+The CDM table with the visits to be used in the analysis. Typically, this will
+be either the OMOP \code{visit_occurrence} or PCORnet \code{encounter} table}
+
+\item{check_string}{\emph{string} || defaults to \code{cfd}
+
+An abbreviated identifier that will be used to label all output from this module}
 }
 \value{
-tbl with visit_occurrences, and all columns in the original visit_occurrence table,
-for which there are no facts in the \code{fact_tbls}
+A summary table that, for each provided clinical fact and visit type combination,
+will include the count and proportion of visits that are and are not linked to
+at least one occurrence of the fact type of interest. It will also include the count
+and proportion of patients that are associated with these visits.
 }
 \description{
 This function will identify visits that do not link to the user-specified

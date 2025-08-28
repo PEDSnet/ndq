@@ -177,6 +177,8 @@ check_uc <- function(uc_tbl,
 #'         of unmapped values, and some additional descriptive metadata for each check stratified by each year
 #'         present in the fact table
 #'
+#' @keywords internal
+#'
 #'
 check_uc_by_year <- function(uc_tbl,
                              unmapped_values = c(44814650L,0L,

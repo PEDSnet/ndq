@@ -28,3 +28,4 @@ present in the fact table
 This function will evaluate the count and proportion of unmapped concepts associated
 with the fact type of interest, stratified by year.
 }
+\keyword{internal}
