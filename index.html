@@ -32,6 +32,12 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/database_connection.html">Database Connection &amp; Environment Setup</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -47,19 +53,128 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="network-data-quality">Network Data Quality<a class="anchor" aria-label="anchor" href="#network-data-quality"></a>
+<div class="page-header"><h1 id="network-data-quality-ndq">Network Data Quality (NDQ)<a class="anchor" aria-label="anchor" href="#network-data-quality-ndq"></a>
 </h1></div>
 <!-- badges: start -->
 
+<!-- badges: end -->
+<p>The Network Data Quality (NDQ) package contains several data quality modules intended to evaluate the overall condition of the data in a clinical research network. These modules, which cover a broad range of data quality domains from conformance to plausibility, are flexible and can be configured to execute checks specific to desired use cases in both the OMOP and PCORnet common data models (CDMs).</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of this package like so:</p>
+<p>You can install the development version of this package from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'PEDSnet/ndq'</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'PEDSnet/ndq'</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+<h2 id="current-functionality">Current Functionality<a class="anchor" aria-label="anchor" href="#current-functionality"></a>
+</h2>
+<p>The package currently (as of 09/2025) contains 10 distinct analysis types that can be configured to run innumerable data quality checks. See the table below for a list of the current offerings.</p>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="8%">
+<col width="67%">
+<col width="23%">
+</colgroup>
+<thead><tr class="header">
+<th>Analysis Type</th>
+<th>Description</th>
+<th>Functions</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Data Cycle Changes</td>
+<td>Computes row &amp; patient counts in the specified tables for both the current data model version and a previous data model version in order to assess changes across data extractions.</td>
+<td>
+<p><a href="https://pedsnet.github.io/ndq/reference/check_dc.html">check_dc</a></p>
+<p><a href="https://pedsnet.github.io/ndq/reference/process_dc.html">process_dc</a></p>
+</td>
+</tr>
+<tr class="even">
+<td>Domain Concordance</td>
+<td>Given the details of a pair of clinical events, this function will determine the count of patients OR visits that meet criteria for the first event, the second event, and both events.</td>
+<td>
+<p><a href="https://pedsnet.github.io/ndq/reference/check_dcon.html">check_dcon</a></p>
+<p><a href="https://pedsnet.github.io/ndq/reference/process_dcon.html">process_dcon</a></p>
+</td>
+</tr>
+<tr class="odd">
+<td>Date Plausibility</td>
+<td>Identifies the proportion of rows in each fact type that have an implausible date, where implausibility is defined as a date that falls before the associated visit start date, after the associated visit end date, or before the patient’s birth date.</td>
+<td>
+<p><a href="https://pedsnet.github.io/ndq/reference/check_dp.html">check_dp</a></p>
+<p><a href="https://pedsnet.github.io/ndq/reference/process_dp.html">process_dp</a></p>
+</td>
+</tr>
+<tr class="even">
+<td>Best Mapped Concepts</td>
+<td>Identifies the existing concepts within the specified field so the user can assess which of these concepts are acceptable (“best”) or should not be used in that field (“not best”).</td>
+<td>
+<p><a href="https://pedsnet.github.io/ndq/reference/check_bmc.html">check_bmc</a></p>
+<p><a href="https://pedsnet.github.io/ndq/reference/process_bmc.html">process_bmc</a></p>
+</td>
+</tr>
+<tr class="odd">
+<td>Expected Concepts Present</td>
+<td>Identifies the count of patients who have at least one occurrence of the concept defined in the associated concept set and the proportion of patients who have the concept based on the user-provided denominator cohort.</td>
+<td>
+<p><a href="https://pedsnet.github.io/ndq/reference/check_ecp.html">check_ecp</a></p>
+<p><a href="https://pedsnet.github.io/ndq/reference/process_ecp.html">process_ecp</a></p>
+</td>
+</tr>
+<tr class="even">
+<td>Clinical Fact Documentation</td>
+<td>Identifies visits that do and do not link to at least one of each user-specified clinical fact type. Will also compute the counts of patients who have at least one visit that does / does not link to the specified fact type.</td>
+<td>
+<p><a href="https://pedsnet.github.io/ndq/reference/check_cfd.html">check_cfd</a></p>
+<p><a href="https://pedsnet.github.io/ndq/reference/process_cfd.html">process_cfd</a></p>
+</td>
+</tr>
+<tr class="odd">
+<td>Missing Field: Visit ID</td>
+<td>Checks to see if the <code>visit_occurrence_id</code>/<code>encounterid</code> in a given fact table also exists in the <code>visit_occurrence</code>/<code>encounter</code> table and identify cases where the ID is missing entirely (NULL).</td>
+<td>
+<p><a href="https://pedsnet.github.io/ndq/reference/check_mf_visitid.html">check_mf_visitid</a></p>
+<p><a href="https://pedsnet.github.io/ndq/reference/process_mf_visitid.html">process_mf_visitid</a></p>
+</td>
+</tr>
+<tr class="even">
+<td>Unmapped Concepts</td>
+<td>Evaluates the count and proportion of unmapped concepts associated with the fact type of interest. Can also be executed longitudinally by year.</td>
+<td>
+<p><a href="https://pedsnet.github.io/ndq/reference/check_uc.html">check_uc</a></p>
+<p><a href="https://pedsnet.github.io/ndq/reference/process_uc.html">process_uc</a></p>
+</td>
+</tr>
+<tr class="odd">
+<td>Valueset Conformance</td>
+<td>Intakes a limited valueset that is expected to make up the entire contents of a field (minus the specified <code>null_values</code>) and identifies if any non-permitted values exist in the field (and how often).</td>
+<td>
+<p><a href="https://pedsnet.github.io/ndq/reference/check_vs.html">check_vs</a></p>
+<p><a href="https://pedsnet.github.io/ndq/reference/process_vs.html">process_vs</a></p>
+</td>
+</tr>
+<tr class="even">
+<td>Vocabulary Conformance</td>
+<td>Use a provided vocabulary definition table to identify the vocabulary of each concept and determine how many rows comply with the standard vocabularies expected for that field.</td>
+<td>
+<p><a href="https://pedsnet.github.io/ndq/reference/check_vc.html">check_vc</a></p>
+<p><a href="https://pedsnet.github.io/ndq/reference/process_vc.html">process_vc</a></p>
+</td>
+</tr>
+<tr class="odd">
+<td>Facts Over Time</td>
+<td>Computes the number of rows, patients, and (optionally) visits associated with the fact of interest within a specified time period.</td>
+<td>
+<p><a href="https://pedsnet.github.io/ndq/reference/check_fot.html">check_fot</a></p>
+<p><a href="https://pedsnet.github.io/ndq/reference/process_fot.html">process_fot</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level2">
+<h2 id="example-usage">Example Usage<a class="anchor" aria-label="anchor" href="#example-usage"></a>
 </h2>
 <p>To see a sample repository where these functions have been executed, see <a href="https://github.com/PEDSnet/pedsnet_ndq" class="external-link">PEDSnet NDQ</a>.</p>
 </div>
@@ -68,7 +183,7 @@
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/PEDSnet/ndq/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/PEDSnet/ndq" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/PEDSnet/ndq/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 

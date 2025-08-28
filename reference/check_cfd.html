@@ -20,6 +20,10 @@ visit that does not link to the specified fact type."></head><body>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/database_connection.html">Database Connection &amp; Environment Setup</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -60,43 +64,51 @@ visit that does not link to the specified fact type.</p>
 
 
 <dl><dt id="arg-cfd-tbl">cfd_tbl<a class="anchor" aria-label="anchor" href="#arg-cfd-tbl"></a></dt>
-<dd><p>a table with information about the fact tables that should be
-evaluated against the visit_tbl; see <code>?cfd_input omop</code> or <code><a href="cfd_input_pcornet.html">?cfd_input_pcornet</a></code></p></dd>
+<dd><p><em>tabular input</em> || <strong>required</strong></p>
+<p>The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for the clinical fact
+types that should be evaluated against the visit_tbl.
+see <code>?cfd_input omop</code> or <code><a href="cfd_input_pcornet.html">?cfd_input_pcornet</a></code> for examples of the input structure</p></dd>
 
 
 <dt id="arg-visit-type-filter">visit_type_filter<a class="anchor" aria-label="anchor" href="#arg-visit-type-filter"></a></dt>
-<dd><p>a string or vector of strings label to identify the
-visit type(s) for which you are executing the check
-(i.e. inpatient, c(inpatient, outpatient));</p>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>                     <span class="cf">if</span> <span class="st">`</span><span class="at">all</span><span class="st">`</span> is included as a visit type, all available</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                     visit types will be pulled from the visit_tbl</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>                     (not just the visit_type_tbl) to capture the full array of visits.</span></code></pre><p></p></div></dd>
+<dd><p><em>string / vector</em> || <strong>required</strong></p>
+<p>A string or vector of strings that specifies the visit type(s) the function
+should limit to for the analysis (i.e. inpatient, c(inpatient, outpatient)).
+If <code>all</code> is included as a visit type, all available visit types will be pulled
+from the <code>visit_tbl</code> (not just what was defined in the visit_type_tbl) to capture
+the full array of visits.</p></dd>
 
 
 <dt id="arg-visit-type-tbl">visit_type_tbl<a class="anchor" aria-label="anchor" href="#arg-visit-type-tbl"></a></dt>
-<dd><p>a table with mappings from the visit type string label to the
-visit_concept_ids / enc_types that represent it. Multiple rows
-should be included for multiple mappings.</p></dd>
+<dd><p><em>tabular input</em> || <strong>required</strong></p>
+<p>A table with mappings that link visit_concept_ids / enc_types to a broader
+string descriptor (i.e. inpatient). Multiple rows should be included if
+multiple IDs should be mapped to the same string label.</p></dd>
 
 
 <dt id="arg-omop-or-pcornet">omop_or_pcornet<a class="anchor" aria-label="anchor" href="#arg-omop-or-pcornet"></a></dt>
-<dd><p>string indicating the CDM format of the data; defaults to <code>omop</code></p></dd>
+<dd><p><em>string</em> || defaults to <code>omop</code></p>
+<p>A string, either <code>omop</code> or <code>pcornet</code>, indicating the CDM format of the data</p></dd>
 
 
 <dt id="arg-visit-tbl">visit_tbl<a class="anchor" aria-label="anchor" href="#arg-visit-tbl"></a></dt>
-<dd><p>the CDM table with visit information, that will be filtered to the visit
-type of interest based on the visit_type_tbl + visit_type_filter</p></dd>
+<dd><p><em>tabular input</em> || defaults to <code>cdm_tbl('visit_occurrence')</code></p>
+<p>The CDM table with the visits to be used in the analysis. Typically, this will
+be either the OMOP <code>visit_occurrence</code> or PCORnet <code>encounter</code> table</p></dd>
 
 
 <dt id="arg-check-string">check_string<a class="anchor" aria-label="anchor" href="#arg-check-string"></a></dt>
-<dd><p>an abbreviated identifier to identify all output from this module
-defaults to <code>cfd</code></p></dd>
+<dd><p><em>string</em> || defaults to <code>cfd</code></p>
+<p>An abbreviated identifier that will be used to label all output from this module</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>tbl with visit_occurrences, and all columns in the original visit_occurrence table,
-for which there are no facts in the <code>fact_tbls</code></p>
+    <p>A summary table that, for each provided clinical fact and visit type combination,
+will include the count and proportion of visits that are and are not linked to
+at least one occurrence of the fact type of interest. It will also include the count
+and proportion of patients that are associated with these visits.</p>
     </div>
 
     <div class="section level2">
