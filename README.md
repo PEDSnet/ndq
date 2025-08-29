@@ -1,4 +1,4 @@
-# Network Data Quality (NDQ)
+# Network Data Quality (NDQ) # ndq <a href="https://pedsnet.github.io/ndq/"><img src="man/figures/logo.png" align="right" height="139" alt="ndq website" /></a>
 
 <!-- badges: start -->
 
@@ -21,7 +21,7 @@ remotes::install_github('PEDSnet/ndq')
 The package currently (as of 09/2025) contains 10 distinct analysis types that can be configured to run innumerable data quality checks. See the table below for a list of the current offerings.
 
 | Analysis Type | Description | Functions |
-|:---|:---|:---|
+|:----------------|:---------------------|:--------------------------------|
 | Data Cycle Changes | Computes row & patient counts in the specified tables for both the current data model version and a previous data model version in order to assess changes across data extractions. | [check_dc](https://pedsnet.github.io/ndq/reference/check_dc.html) <br> [process_dc](https://pedsnet.github.io/ndq/reference/process_dc.html) |
 | Domain Concordance | Given the details of a pair of clinical events, this function will determine the count of patients OR visits that meet criteria for the first event, the second event, and both events. | [check_dcon](https://pedsnet.github.io/ndq/reference/check_dcon.html) <br> [process_dcon](https://pedsnet.github.io/ndq/reference/process_dcon.html) |
 | Date Plausibility | Identifies the proportion of rows in each fact type that have an implausible date, where implausibility is defined as a date that falls before the associated visit start date, after the associated visit end date, or before the patient's birth date. | [check_dp](https://pedsnet.github.io/ndq/reference/check_dp.html) <br> [process_dp](https://pedsnet.github.io/ndq/reference/process_dp.html) |
