@@ -1,4 +1,4 @@
-# Network Data Quality (NDQ) # ndq <a href="https://pedsnet.github.io/ndq/"><img src="man/figures/logo.png" align="right" height="139" alt="ndq website" /></a>
+# Network Data Quality (NDQ) <a href="https://pedsnet.github.io/ndq/"><img src="man/figures/logo.png" align="right" height="139" alt="ndq website" /></a>
 
 <!-- badges: start -->
 
