@@ -48,7 +48,7 @@ across all sites included in the input."></head><body>
     </div>
 
     <div class="ref-description section level2">
-    <p>Intakes the output of check_vs in order to apply additional processing. This
+    <p>Intakes the output of <code>check_vs</code> in order to apply additional processing. This
 includes computing row and patient proportions and computing overall totals
 across all sites included in the input.</p>
     </div>
@@ -63,25 +63,35 @@ across all sites included in the input.</p>
 
 
 <dl><dt id="arg-vs-results">vs_results<a class="anchor" aria-label="anchor" href="#arg-vs-results"></a></dt>
-<dd><p>the output of check_vs</p></dd>
+<dd><p><em>tabular input</em> || <strong>required</strong></p>
+<p>The tabular output of <code>check_vs</code>. This table should include results for all
+institutions that should be included in the computation of overall / "network level"
+statistics.</p></dd>
 
 
 <dt id="arg-rslt-source">rslt_source<a class="anchor" aria-label="anchor" href="#arg-rslt-source"></a></dt>
-<dd><p>the location of the results. acceptable values are <code>local</code> (stored as a dataframe in the R environment),
-<code>csv</code> (stored as CSV files), or <code>remote</code> (stored on a remote DBMS); defaults to remote</p></dd>
+<dd><p><em>string</em> || defaults to <code>remote</code></p>
+<p>A string that identifies the location of the <code>vs_results</code> table.
+Acceptable values are</p><ul><li><p><code>local</code> - table is stored as a dataframe in the local R environment</p></li>
+<li><p><code>csv</code> - table is stored as a CSV file</p></li>
+<li><p><code>remote</code> - table is stored on a remote database</p></li>
+</ul></dd>
 
 
 <dt id="arg-csv-rslt-path">csv_rslt_path<a class="anchor" aria-label="anchor" href="#arg-csv-rslt-path"></a></dt>
-<dd><p>if the results have been stored as CSV files, the path to the location
-of these files. If the results are local or remote, leave NULL</p></dd>
+<dd><p><em>string</em> || defaults to <code>NULL</code></p>
+<p>If <code>rslt_source</code> has been set to <code>csv</code>, this parameter should indicate the path to
+the result file(s). Otherwise, this parameter can be left as <code>NULL</code></p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>a list that contains two dataframes:</p><ul><li><p><code>vs_processed</code>: a dataframe with additional columns that include proportions of violations
-and the overall summary</p></li>
-<li><p><code>vs_violations</code>: a dataframe with ONLY violating values that do not appear in the valueset</p></li>
-</ul></div>
+    <p>This function will return a list that contains two dataframes:
+-<code>vs_processed</code>: The <code>vs_results</code> table with additional rows reflecting the overall / "network level"
+counts and a computed proportion of violating concepts
+-<code>vs_violations</code>: A table listing all of the violating values that exist in the data that
+do not comply with the provided valueset definition</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

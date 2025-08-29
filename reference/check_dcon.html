@@ -77,30 +77,37 @@ of each other.</p>
 
 
 <dl><dt id="arg-dcon-tbl">dcon_tbl<a class="anchor" aria-label="anchor" href="#arg-dcon-tbl"></a></dt>
-<dd><p>table describing each cohort pair that should be examined;
-there should be 2 rows per check, one for each cohort, with the same check_id
-see <code><a href="dcon_input_omop.html">?dcon_input_omop</a></code> or <code><a href="dcon_input_pcornet.html">?dcon_input_pcornet</a></code> for details</p></dd>
+<dd><p><em>tabular</em> || <strong>required</strong></p>
+<p>The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for each pair of cohorts,
+meaning there should be <strong>2 rows per check</strong>, one fo each cohort, with the same <code>check_id</code>.
+see <code><a href="dcon_input_omop.html">?dcon_input_omop</a></code> or <code><a href="dcon_input_pcornet.html">?dcon_input_pcornet</a></code> for examples of the input structure</p></dd>
 
 
 <dt id="arg-compute-level">compute_level<a class="anchor" aria-label="anchor" href="#arg-compute-level"></a></dt>
-<dd><p>string indicating the level at which the computation should be executed
-accepted values are <code>patient</code> or <code>visit</code></p></dd>
+<dd><p><em>string</em> || defaults to <code>patient</code></p>
+<p>A string indicating whether the analysis should be conducted at the <code>patient</code>
+or <code>visit</code> level</p></dd>
 
 
 <dt id="arg-omop-or-pcornet">omop_or_pcornet<a class="anchor" aria-label="anchor" href="#arg-omop-or-pcornet"></a></dt>
-<dd><p>string indicating the CDM format of the data; defaults to <code>omop</code></p></dd>
+<dd><p><em>string</em> || defaults to <code>omop</code></p>
+<p>A string, either <code>omop</code> or <code>pcornet</code>, indicating the CDM format of the data</p></dd>
 
 
 <dt id="arg-check-string">check_string<a class="anchor" aria-label="anchor" href="#arg-check-string"></a></dt>
-<dd><p>the abbreviated name of the check; defaults to <code>dcon</code></p></dd>
+<dd><p><em>string</em> || defaults to <code>dcon</code></p>
+<p>An abbreviated identifier that will be used to label all output from this module</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>a list with two dataframes:
-1. counts for the patients/visits in the first cohort, the patients/visits in the second cohort, and the patients/visits in both
-2. metadata information about each of the cohorts for which counts were computed</p>
-    </div>
+    <p>This function will return a list of two dataframes:</p><ul><li><p><code>dcon_output</code>: A table with counts of patients/visits in the first cohort,
+patients/visits in the second cohort, and patients/visits in both cohorts (who also
+meet the time limit criteria)</p></li>
+<li><p><code>dcon_meta</code>: A table with descriptive metadata about each of the cohorts for
+which counts were computed</p></li>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

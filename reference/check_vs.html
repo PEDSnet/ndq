@@ -58,9 +58,9 @@ if any non-permitted values exist in the field (and how often).</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_vs</span><span class="op">(</span></span>
 <span>  <span class="va">vs_tbl</span>,</span>
 <span>  omop_or_pcornet <span class="op">=</span> <span class="st">"omop"</span>,</span>
-<span>  check_string <span class="op">=</span> <span class="st">"vs"</span>,</span>
-<span>  concept_tbl <span class="op">=</span> <span class="fu">vocabulary_tbl</span><span class="op">(</span><span class="st">"concept"</span><span class="op">)</span>,</span>
-<span>  null_values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">44814650L</span>, <span class="fl">0L</span>, <span class="fl">44814653L</span>, <span class="fl">44814649L</span><span class="op">)</span></span>
+<span>  concept_tbl <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  null_values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">44814650L</span>, <span class="fl">0L</span>, <span class="fl">44814653L</span>, <span class="fl">44814649L</span><span class="op">)</span>,</span>
+<span>  check_string <span class="op">=</span> <span class="st">"vs"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -69,33 +69,42 @@ if any non-permitted values exist in the field (and how often).</p>
 
 
 <dl><dt id="arg-vs-tbl">vs_tbl<a class="anchor" aria-label="anchor" href="#arg-vs-tbl"></a></dt>
-<dd><p>a table with the table, field, and valueset information for each
-check</p></dd>
+<dd><p><em>tabular input</em> || <strong>required</strong></p>
+<p>The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for the fields and
+associated valuesets of interest.
+see <code><a href="vs_input_omop.html">?vs_input_omop</a></code> or <code><a href="vs_input_pcornet.html">?vs_input_pcornet</a></code> for examples of the input structure</p></dd>
 
 
 <dt id="arg-omop-or-pcornet">omop_or_pcornet<a class="anchor" aria-label="anchor" href="#arg-omop-or-pcornet"></a></dt>
-<dd><p>string indicating the CDM format of the data; defaults to <code>omop</code></p></dd>
-
-
-<dt id="arg-check-string">check_string<a class="anchor" aria-label="anchor" href="#arg-check-string"></a></dt>
-<dd><p>an abbreviated identifier to identify all output from this module
-defaults to <code>vs</code></p></dd>
+<dd><p>omop_or_pcornet <em>string</em> || defaults to <code>omop</code></p>
+<p>A string, either <code>omop</code> or <code>pcornet</code>, indicating the CDM format of the data</p></dd>
 
 
 <dt id="arg-concept-tbl">concept_tbl<a class="anchor" aria-label="anchor" href="#arg-concept-tbl"></a></dt>
-<dd><p>a vocabulary table, like the OMOP concept table, with at least the concept column of interest (concept_id or concept_code),
-the concept name, and the vocabulary id</p></dd>
+<dd><p><em>tabular input</em> || defaults to <code>NULL</code></p>
+<p>An optional parameter used to define a vocabulary table with concept definitions
+(for example, the OHDSI concept table). If left NULL, the concepts as they exist
+in the fact table will be returned to the user.</p></dd>
 
 
 <dt id="arg-null-values">null_values<a class="anchor" aria-label="anchor" href="#arg-null-values"></a></dt>
-<dd><p>a vector of NULL values (or other values that are not part of the valueset but are broadly accepted)
-that should be excluded when identifying non-valueset concepts</p></dd>
+<dd><p><em>string / vector</em> || defaults to 44814650, 0, 44814653, &amp; 44814649</p>
+<p>A string or vector listing the concept(s) that indicate a NULL value, which will be
+excluding when assessing for the presence of values not present in the valueset.</p></dd>
+
+
+<dt id="arg-check-string">check_string<a class="anchor" aria-label="anchor" href="#arg-check-string"></a></dt>
+<dd><p><em>string</em> || defaults to <code>vs</code></p>
+<p>An abbreviated identifier that will be used to label all output from this module</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>a dataframe with summary information about each value that does not
-appear in the valueset, or a row with dummy information if no violations are identified</p>
+    <p>This function will return a dataframe with summary information about each value
+that appears in the data but does not comply with the valueset definition. If no violations are
+identified for a particular check, a placeholder row will dummy information will be inserted
+instead.</p>
     </div>
 
     <div class="section level2">

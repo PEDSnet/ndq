@@ -79,57 +79,67 @@ counts from the CDM.</p>
 
 
 <dl><dt id="arg-dc-tbl">dc_tbl<a class="anchor" aria-label="anchor" href="#arg-dc-tbl"></a></dt>
-<dd><p>table with details of the CDM elements that should be tested in
-both the current and previous data model versions. see <code><a href="dc_input_omop.html">?dc_input_omop</a></code> or
-<code><a href="dc_input_pcornet.html">?dc_input_pcornet</a></code> for details</p></dd>
+<dd><p><em>tabular input</em> || <strong>required</strong></p>
+<p>The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for the CDM elements
+that should be compared between the current and previous data model versions.
+see <code><a href="dc_input_omop.html">?dc_input_omop</a></code> or <code><a href="dc_input_pcornet.html">?dc_input_pcornet</a></code> for examples of the input structure</p></dd>
 
 
 <dt id="arg-omop-or-pcornet">omop_or_pcornet<a class="anchor" aria-label="anchor" href="#arg-omop-or-pcornet"></a></dt>
-<dd><p>string indicating the CDM format of the data; defaults to <code>omop</code></p></dd>
+<dd><p><em>string</em> || defaults to <code>omop</code></p>
+<p>A string, either <code>omop</code> or <code>pcornet</code>, indicating the CDM format of the data</p></dd>
 
 
 <dt id="arg-prev-db-string">prev_db_string<a class="anchor" aria-label="anchor" href="#arg-prev-db-string"></a></dt>
-<dd><p>string label indicating the previous CDM version; if
-<code>prev_ct_src == 'result'</code>, ensure this matches the appropriate database
+<dd><p><em>string</em> || defaults to <code>v1</code></p>
+<p>A string label indicating the previous CDM version</p>
+<p>If <code>prev_ct_src</code> is set to <code>result</code>, make sure this matches the appropriate database
 label in the last set of results</p></dd>
 
 
 <dt id="arg-current-db-string">current_db_string<a class="anchor" aria-label="anchor" href="#arg-current-db-string"></a></dt>
-<dd><p>string label indicating the current CDM version</p></dd>
+<dd><p><em>string</em> || defaults to <code>v2</code></p>
+<p>A string label indicating the current CDM version</p></dd>
 
 
 <dt id="arg-prev-ct-src">prev_ct_src<a class="anchor" aria-label="anchor" href="#arg-prev-ct-src"></a></dt>
-<dd><p>a string indicating where the counts from the previous data model
-should be extracted: either <code>cdm</code> (to pull from the previous CDM instance)
-or <code>result</code> (to pull from a previous instance of <code>check_dc</code> output)</p></dd>
+<dd><p><em>string</em> || defaults to <code>cdm</code></p>
+<p>A string indicating the source from which  the counts from the previous data model
+should be extracted:</p><ul><li><p><code>cdm</code> will compute the counts based on the previous CDM tables</p></li>
+<li><p><code>result</code> will pull existing counts from a previous instance of <code>check_dc</code> output</p></li>
+</ul></dd>
 
 
 <dt id="arg-prev-db">prev_db<a class="anchor" aria-label="anchor" href="#arg-prev-db"></a></dt>
-<dd><p>the database connection to be used to access the previous CDM or result table(s);
-defaults to <code>config('db_src')</code></p></dd>
+<dd><p><em>database connection</em> || defaults to <code>config('db_src')</code></p>
+<p>A database connection object that will connect the function to the
+previous CDM instance or the defined result table</p></dd>
 
 
 <dt id="arg-prev-rslt-tbl">prev_rslt_tbl<a class="anchor" aria-label="anchor" href="#arg-prev-rslt-tbl"></a></dt>
-<dd><p>if <code>prev_ct_src = 'result'</code>, the name of the table where previous results
-are stored</p></dd>
+<dd><p><em>string</em> || defaults to <code>dc_output</code></p>
+<p>If <code>prev_ct_src</code> is set to <code>result</code>, this string should reflect name of
+the table where previous results are stored on the database</p></dd>
 
 
 <dt id="arg-prev-rslt-schema">prev_rslt_schema<a class="anchor" aria-label="anchor" href="#arg-prev-rslt-schema"></a></dt>
-<dd><p>if <code>prev_ct_src = 'result'</code>, the name of the schema where previous results
-are stored. defaults to <code>config('results_schema')</code></p></dd>
+<dd><p><em>string</em> || defaults to <code>config('results_schema')</code></p>
+<p>If <code>prev_ct_src</code> is set to <code>result</code>, this string should reflect name of
+the schema where previous results are stored on the database</p></dd>
 
 
 <dt id="arg-check-string">check_string<a class="anchor" aria-label="anchor" href="#arg-check-string"></a></dt>
-<dd><p>an abbreviated identifier to identify all output from this module
-defaults to <code>dc</code></p></dd>
+<dd><p><em>string</em> || defaults to <code>dc</code></p>
+<p>An abbreviated identifier that will be used to label all output from this module</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>a list with two dataframes:
-- <code>dc_cts</code>: dataframe containing the row and (where applicable) person counts for each table
-- <code>dc_meta</code>: the metadata associated with each input table that appears in <code>dc_cts</code></p>
-    </div>
+    <p>This function will return a list with two dataframes:</p><ul><li><p><code>dc_cts</code>: A table containing the row and (where applicable) person counts for each CDM
+element specified by the user</p></li>
+<li><p><code>dc_meta</code>: A table containing the metadata associated with each check that appears in <code>dc_cts</code></p></li>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

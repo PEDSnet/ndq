@@ -73,49 +73,64 @@ the fact of interest within a specified time period. The user will supply the en
 
 
 <dl><dt id="arg-fot-tbl">fot_tbl<a class="anchor" aria-label="anchor" href="#arg-fot-tbl"></a></dt>
-<dd><p>a table with information describing the fact tables that should be examined;
-see <code><a href="fot_input_omop.html">?fot_input_omop</a></code> or <code><a href="fot_input_pcornet.html">?fot_input_pcornet</a></code> for details</p></dd>
+<dd><p><em>tabular input</em> || <strong>required</strong></p>
+<p>The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for the clinical fact
+types that should be evaluated across the user-specified time span per each time period.
+see <code><a href="fot_input_omop.html">?fot_input_omop</a></code> or <code><a href="fot_input_pcornet.html">?fot_input_pcornet</a></code> for examples of the input structure</p></dd>
 
 
 <dt id="arg-omop-or-pcornet">omop_or_pcornet<a class="anchor" aria-label="anchor" href="#arg-omop-or-pcornet"></a></dt>
-<dd><p>string indicating the CDM format of the data; defaults to <code>omop</code></p></dd>
+<dd><p><em>string</em> || defaults to <code>omop</code></p>
+<p>A string, either <code>omop</code> or <code>pcornet</code>, indicating the CDM format of the data</p></dd>
 
 
 <dt id="arg-compute-method">compute_method<a class="anchor" aria-label="anchor" href="#arg-compute-method"></a></dt>
-<dd><p>a string input of either <code>loop</code> or <code>group</code>; controls whether the
-check is executed by looping through each time period or grouping by a date field</p></dd>
+<dd><p><em>string</em> || defaults to <code>loop</code></p>
+<p>A string, either <code>loop</code> or <code>group</code>, that controls whether the
+check is executed by looping through each time period or grouping by a date field to
+obtain counts. <code>group</code> is recommended for high performing database systems.</p></dd>
 
 
 <dt id="arg-time-span">time_span<a class="anchor" aria-label="anchor" href="#arg-time-span"></a></dt>
-<dd><p>a list that contains the start date and end date of the time span (i.e. list(2009-01-01, 2015-01-01))</p></dd>
+<dd><p><em>list (length 2)</em> || defaults to <code>list('2009-01-01', today())</code></p>
+<p>A list that contains the start date and end date of the total time period of interest</p></dd>
 
 
 <dt id="arg-time-period">time_period<a class="anchor" aria-label="anchor" href="#arg-time-period"></a></dt>
-<dd><p>string indicating the length of time that the time span should be divided into (i.e. months, years)</p></dd>
+<dd><p><em>string</em> || defaults to <code>month</code></p>
+<p>A string indicating the length of each time period that should be examined, like months or years</p></dd>
 
 
 <dt id="arg-lookback-interval">lookback_interval<a class="anchor" aria-label="anchor" href="#arg-lookback-interval"></a></dt>
-<dd><p>the number of time periods (defined in <code>time_period</code>) to look back in each interval
-(i.e. 1 year, 3 months); defaults to 1</p></dd>
+<dd><p><em>integer</em> || defaults to <code>1</code></p>
+<p>An integer indicating the number of time periods (defined in <code>time_period</code>) to look back in each interval.
+For example, a <code>time_period</code> of <code>month</code> and a <code>lookback_interval</code> of <code>3</code> would produce quarterly counts.</p></dd>
 
 
 <dt id="arg-check-string">check_string<a class="anchor" aria-label="anchor" href="#arg-check-string"></a></dt>
-<dd><p>the abbreviated name of the check; defaults to <code>fot</code></p></dd>
+<dd><p><em>string</em> || defaults to <code>fot</code></p>
+<p>An abbreviated identifier that will be used to label all output from this module</p></dd>
 
 
 <dt id="arg-visits-only">visits_only<a class="anchor" aria-label="anchor" href="#arg-visits-only"></a></dt>
-<dd><p>if TRUE, counts ONLY distinct visits and not patients or rows</p></dd>
+<dd><p><em>boolean</em> || defaults to FALSE</p>
+<p>If set to <code>TRUE</code>, then this function will only return visit counts and will not return patient
+or row counts. By default, visit, row, and patient counts are returned.</p></dd>
 
 
 <dt id="arg-distinct-visits">distinct_visits<a class="anchor" aria-label="anchor" href="#arg-distinct-visits"></a></dt>
-<dd><p>if TRUE, counts distinct visits as well as total counts and total patients</p></dd>
+<dd><p><em>boolean</em> || defaults to TRUE</p>
+<p>If set to <code>FALSE</code>, then this function will only return patient and row counts and will not return
+visit counts. By default, visit, row, and patient counts are returned.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>a dataframe with one row for each time period within the specified time span for each check;</p><ul><li><p>if visits_only = TRUE, will produce only counts of visits for the check + time period</p></li>
-<li><p>if visits_only = FALSE and distinct_visits = TRUE, will produce counts of patients, rows, and visits for the check + time period</p></li>
-<li><p>if visits_only = FALSE and distinct_visits = FALSE, will produce counts of patients and rows for the check + time period</p></li>
+    <p>This function will return a dataframe with one row for each time period within the
+specified time span for each check. Additionally:</p><ul><li><p>If <code>visits_only = TRUE</code>, only visit counts will be returned for the check + time period</p></li>
+<li><p>If <code>visits_only = FALSE</code> and <code>distinct_visits = TRUE</code>, patient, row, and visit counts will be returned for the check + time period</p></li>
+<li><p>If <code>visits_only = FALSE</code> and <code>distinct_visits = FALSE</code>, only patient and row counts will be returned for the check + time period</p></li>
 </ul></div>
 
     <div class="section level2">

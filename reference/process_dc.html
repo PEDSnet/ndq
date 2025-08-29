@@ -48,7 +48,7 @@ overall set of counts/percent changes across all sites included in the input."><
     </div>
 
     <div class="ref-description section level2">
-    <p>Intakes the output of check_dc in order to apply additional processing. This
+    <p>Intakes the output of <code>check_dc</code> in order to apply additional processing. This
 includes computing percent change across data model versions and computing an
 overall set of counts/percent changes across all sites included in the input.</p>
     </div>
@@ -68,30 +68,38 @@ overall set of counts/percent changes across all sites included in the input.</p
 
 
 <dl><dt id="arg-dc-ct-results">dc_ct_results<a class="anchor" aria-label="anchor" href="#arg-dc-ct-results"></a></dt>
-<dd><p>the name of the table output by check_dc labelled <code>dc_cts</code> that contains
-the previous and current data cycle counts</p></dd>
+<dd><p><em>tabular input</em> || <strong>required</strong></p>
+<p>The <code>dc_cts</code> output of <code>check_dc</code>. This table should include results for all
+institutions that should be included in the computation of overall / "network level"
+statistics.</p></dd>
 
 
 <dt id="arg-dc-meta-results">dc_meta_results<a class="anchor" aria-label="anchor" href="#arg-dc-meta-results"></a></dt>
-<dd><p>the name of the table output by check_dc labelled <code>dc_meta</code> that contains
-metadata associated with each executed check</p></dd>
+<dd><p><em>tabular input</em> || <strong>required</strong></p>
+<p>The <code>dc_meta</code> output of <code>check_dc</code></p></dd>
 
 
 <dt id="arg-rslt-source">rslt_source<a class="anchor" aria-label="anchor" href="#arg-rslt-source"></a></dt>
-<dd><p>the location of the results. acceptable values are <code>local</code> (stored as a dataframe in the R environment),
-<code>csv</code> (stored as CSV files), or <code>remote</code> (stored on a remote DBMS); defaults to remote</p></dd>
+<dd><p><em>string</em> || defaults to <code>remote</code></p>
+<p>A string that identifies the location of the <code>dc_results</code> table.
+Acceptable values are</p><ul><li><p><code>local</code> - table is stored as a dataframe in the local R environment</p></li>
+<li><p><code>csv</code> - table is stored as a CSV file</p></li>
+<li><p><code>remote</code> - table is stored on a remote database</p></li>
+</ul></dd>
 
 
 <dt id="arg-csv-rslt-path">csv_rslt_path<a class="anchor" aria-label="anchor" href="#arg-csv-rslt-path"></a></dt>
-<dd><p>if the results have been stored as CSV files, the path to the location
-of these files. If the results are local or remote, leave NULL</p></dd>
+<dd><p><em>string</em> || defaults to <code>NULL</code></p>
+<p>If <code>rslt_source</code> has been set to <code>csv</code>, this parameter should indicate the path to
+the result file(s). Otherwise, this parameter can be left as <code>NULL</code></p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>dc_ct_results tbl with totals and additional change in proportion
-and threshold columns; the dc_meta_results table remains unchanged, so the original
-version should be used where needed</p>
+    <p>This function will return the <code>dc_ct_results</code> table with overall / "network-wide" counts
+and the proportion change between the two data models</p>
+<p>The <code>dc_meta_results</code> table remains unchanged, so the original version returned by <code>check_dc</code>
+can be used if needed</p>
     </div>
 
     <div class="section level2">
