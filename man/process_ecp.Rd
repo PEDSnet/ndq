@@ -7,20 +7,34 @@
 process_ecp(ecp_results, rslt_source = "remote", csv_rslt_path = NULL)
 }
 \arguments{
-\item{ecp_results}{table output by check_ecp}
+\item{ecp_results}{\emph{tabular input} || \strong{required}
 
-\item{rslt_source}{the location of the results. acceptable values are \code{local} (stored as a dataframe in the R environment),
-\code{csv} (stored as CSV files), or \code{remote} (stored on a remote DBMS); defaults to remote}
+The tabular output of \code{check_ecp}. This table should include results for all
+institutions that should be included in the computation of overall / "network level"
+statistics.}
 
-\item{csv_rslt_path}{if the results have been stored as CSV files, the path to the location
-of these files. If the results are local or remote, leave NULL}
+\item{rslt_source}{\emph{string} || defaults to \code{remote}
+
+A string that identifies the location of the \code{ecp_results} table.
+Acceptable values are
+\itemize{
+\item \code{local} - table is stored as a dataframe in the local R environment
+\item \code{csv} - table is stored as a CSV file
+\item \code{remote} - table is stored on a remote database
+}}
+
+\item{csv_rslt_path}{\emph{string} || defaults to \code{NULL}
+
+If \code{rslt_source} has been set to \code{csv}, this parameter should indicate the path to
+the result file(s). Otherwise, this parameter can be left as \code{NULL}}
 }
 \value{
-same input table with additional check_name_app column to indicate application level
+This function will return the \code{ecp_results} table with and additional
+\code{check_name_app} column to indicate application level
 }
 \description{
-Intakes the output of check_ecp in order to apply additional processing. This
-includes creating a new check_name_app column to specify that the check
+Intakes the output of \code{check_ecp} in order to apply additional processing. This
+includes creating a new \code{check_name_app} column to specify that the check
 was computed at the person level.
 }
 \examples{

@@ -5,18 +5,38 @@
 #' entire contents of a field (minus the specified `null_values`) and identify
 #' if any non-permitted values exist in the field (and how often).
 #'
-#' @param vs_tbl a table with the table, field, and valueset information for each
-#'               check
-#' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param check_string an abbreviated identifier to identify all output from this module
-#'                     defaults to `vs`
-#' @param concept_tbl a vocabulary table, like the OMOP concept table, with at least the concept column of interest (concept_id or concept_code),
-#'                    the concept name, and the vocabulary id
-#' @param null_values a vector of NULL values (or other values that are not part of the valueset but are broadly accepted)
-#'                    that should be excluded when identifying non-valueset concepts
+#' @param vs_tbl *tabular input* || **required**
 #'
-#' @return a dataframe with summary information about each value that does not
-#'         appear in the valueset, or a row with dummy information if no violations are identified
+#'  The primary input table that contains descriptive information about the checks
+#'  to be executed by the function. It should include definitions for the fields and
+#'  associated valuesets of interest.
+#'  see `?vs_input_omop` or `?vs_input_pcornet` for examples of the input structure
+#'
+#' @param omop_or_pcornet omop_or_pcornet *string* || defaults to `omop`
+#'
+#'  A string, either `omop` or `pcornet`, indicating the CDM format of the data
+#'
+#' @param concept_tbl *tabular input* || defaults to `NULL`
+#'
+#'  An optional parameter used to define a vocabulary table with concept definitions
+#'  (for example, the OHDSI concept table). If left NULL, the concepts as they exist
+#'  in the fact table will be returned to the user.
+#'
+#' @param null_values *string / vector* || defaults to 44814650, 0, 44814653, & 44814649
+#'
+#'  A string or vector listing the concept(s) that indicate a NULL value, which will be
+#'  excluding when assessing for the presence of values not present in the valueset.
+#'
+#' @param check_string *string* || defaults to `vs`
+#'
+#'  An abbreviated identifier that will be used to label all output from this module
+#'
+#' @return
+#'
+#'  This function will return a dataframe with summary information about each value
+#'  that appears in the data but does not comply with the valueset definition. If no violations are
+#'  identified for a particular check, a placeholder row will dummy information will be inserted
+#'  instead.
 #'
 #' @importFrom rlang set_names
 #' @importFrom tidyr pivot_longer
@@ -41,9 +61,9 @@
 #'
 check_vs <- function(vs_tbl,
                      omop_or_pcornet = 'omop',
-                     check_string = 'vs',
-                     concept_tbl = vocabulary_tbl('concept'),
-                     null_values = c(44814650L,0L,44814653L,44814649L)) {
+                     concept_tbl = NULL,
+                     null_values = c(44814650L,0L,44814653L,44814649L),
+                     check_string = 'vs') {
 
   site_nm <- config('qry_site')
 
@@ -172,20 +192,36 @@ check_vs <- function(vs_tbl,
 
 #' Valueset Conformance -- Processing
 #'
-#' Intakes the output of check_vs in order to apply additional processing. This
+#' Intakes the output of `check_vs` in order to apply additional processing. This
 #' includes computing row and patient proportions and computing overall totals
 #' across all sites included in the input.
 #'
-#' @param vs_results the output of check_vs
-#' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
-#'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
-#' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
-#'                      of these files. If the results are local or remote, leave NULL
+#' @param vs_results *tabular input* || **required**
 #'
-#' @return a list that contains two dataframes:
-#' - `vs_processed`: a dataframe with additional columns that include proportions of violations
-#'                   and the overall summary
-#' - `vs_violations`: a dataframe with ONLY violating values that do not appear in the valueset
+#'  The tabular output of `check_vs`. This table should include results for all
+#'  institutions that should be included in the computation of overall / "network level"
+#'  statistics.
+#'
+#' @param rslt_source *string* || defaults to `remote`
+#'
+#'  A string that identifies the location of the `vs_results` table.
+#'  Acceptable values are
+#'  - `local` - table is stored as a dataframe in the local R environment
+#'  - `csv` - table is stored as a CSV file
+#'  - `remote` - table is stored on a remote database
+#'
+#' @param csv_rslt_path *string* || defaults to `NULL`
+#'
+#'  If `rslt_source` has been set to `csv`, this parameter should indicate the path to
+#'  the result file(s). Otherwise, this parameter can be left as `NULL`
+#'
+#' @return
+#'
+#'  This function will return a list that contains two dataframes:
+#'  -`vs_processed`: The `vs_results` table with additional rows reflecting the overall / "network level"
+#'  counts and a computed proportion of violating concepts
+#'  -`vs_violations`: A table listing all of the violating values that exist in the data that
+#'  do not comply with the provided valueset definition
 #'
 #' @export
 #'

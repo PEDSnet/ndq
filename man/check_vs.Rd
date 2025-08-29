@@ -7,29 +7,43 @@
 check_vs(
   vs_tbl,
   omop_or_pcornet = "omop",
-  check_string = "vs",
-  concept_tbl = vocabulary_tbl("concept"),
-  null_values = c(44814650L, 0L, 44814653L, 44814649L)
+  concept_tbl = NULL,
+  null_values = c(44814650L, 0L, 44814653L, 44814649L),
+  check_string = "vs"
 )
 }
 \arguments{
-\item{vs_tbl}{a table with the table, field, and valueset information for each
-check}
+\item{vs_tbl}{\emph{tabular input} || \strong{required}
 
-\item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
+The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for the fields and
+associated valuesets of interest.
+see \code{?vs_input_omop} or \code{?vs_input_pcornet} for examples of the input structure}
 
-\item{check_string}{an abbreviated identifier to identify all output from this module
-defaults to \code{vs}}
+\item{omop_or_pcornet}{omop_or_pcornet \emph{string} || defaults to \code{omop}
 
-\item{concept_tbl}{a vocabulary table, like the OMOP concept table, with at least the concept column of interest (concept_id or concept_code),
-the concept name, and the vocabulary id}
+A string, either \code{omop} or \code{pcornet}, indicating the CDM format of the data}
 
-\item{null_values}{a vector of NULL values (or other values that are not part of the valueset but are broadly accepted)
-that should be excluded when identifying non-valueset concepts}
+\item{concept_tbl}{\emph{tabular input} || defaults to \code{NULL}
+
+An optional parameter used to define a vocabulary table with concept definitions
+(for example, the OHDSI concept table). If left NULL, the concepts as they exist
+in the fact table will be returned to the user.}
+
+\item{null_values}{\emph{string / vector} || defaults to 44814650, 0, 44814653, & 44814649
+
+A string or vector listing the concept(s) that indicate a NULL value, which will be
+excluding when assessing for the presence of values not present in the valueset.}
+
+\item{check_string}{\emph{string} || defaults to \code{vs}
+
+An abbreviated identifier that will be used to label all output from this module}
 }
 \value{
-a dataframe with summary information about each value that does not
-appear in the valueset, or a row with dummy information if no violations are identified
+This function will return a dataframe with summary information about each value
+that appears in the data but does not comply with the valueset definition. If no violations are
+identified for a particular check, a placeholder row will dummy information will be inserted
+instead.
 }
 \description{
 This function will intake a limited valueset that is expected to make up the

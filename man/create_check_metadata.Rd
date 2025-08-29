@@ -12,30 +12,44 @@ create_check_metadata(
 )
 }
 \arguments{
-\item{check_tbls}{a list of table names from which the list of executed
-checks should be extracted}
+\item{check_tbls}{\emph{list} || \strong{required}
 
-\item{metadata_file}{if one exists, a previously generated metadata file
-to append to. the function will also highlight new
-checks that will need to be described}
+A list of table names from which the complete list of executed checks should be extracted}
 
-\item{rslt_source}{the location of the results. acceptable values are \code{local} (stored as a dataframe in the R environment),
-\code{csv} (stored as CSV files), or \code{remote} (stored on a remote DBMS); defaults to remote}
+\item{metadata_file}{\emph{tabular input} || defaults to \code{NULL}
 
-\item{csv_rslt_path}{if the results have been stored as CSV files, the path to the location
-of these files. If the results are local or remote, leave NULL}
+This parameter allows the user to insert a previously generated metadata file to which
+any new analysis should be appended. The function will also print a message in the console
+to highlight new checks that will need to be described more fully by the user}
+
+\item{rslt_source}{\emph{string} || defaults to \code{remote}
+
+A string that identifies the location of the tables listed in \code{check_tbls}.
+Acceptable values are
+\itemize{
+\item \code{local} - table is stored as a dataframe in the local R environment
+\item \code{csv} - table is stored as a CSV file
+\item \code{remote} - table is stored on a remote database
+}}
+
+\item{csv_rslt_path}{\emph{string} || defaults to \code{NULL}
+
+If \code{rslt_source} has been set to \code{csv}, this parameter should indicate the path to
+the result file(s). Otherwise, this parameter can be left as \code{NULL}}
 }
 \value{
-a dataframe with all executed checks from the input tables
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{     if a metadate file is provided, it will include all information from this
-     file in addition to newly added checks that need additional metadata added
-
-     if a metadata file is NOT provided, it will include all checks with some
-     metadata pulled from the tables themselves and other fields left blank for the
-     user to fill in
-}\if{html}{\out{</div>}}
+This function will return a dataframe with the names and other information related to
+executed checks from each of the provided \code{check_tbls}.
+\itemize{
+\item If a metadata file is provided, this table will include all information from this
+file in addition to newly added checks that need additional metadata added
+\item If a metadata file is NOT provided, it will include all checks with some
+metadata pulled from the tables themselves and other fields left blank for the
+user to fill in
+}
 }
 \description{
-Create informational metadata file
+This function will intake a list of result tables and extract relevant descriptive
+metadata. This is a convenience function to encourage robust documentation of the
+checks that are executed as part of a data quality assessment.
 }

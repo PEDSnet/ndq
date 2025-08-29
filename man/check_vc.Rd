@@ -13,29 +13,45 @@ check_vc(
 )
 }
 \arguments{
-\item{vc_tbl}{a table with the table, field, and vocabulary information for each
-check}
+\item{vc_tbl}{\emph{tabular input} || \strong{required}
 
-\item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
+The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for database table fields and
+the expected vocabularies for that field.
+see \code{?vc_input_omop} or \code{?vc_input_pcornet} for examples of the input structure}
 
-\item{check_string}{an abbreviated identifier to identify all output from this module
-defaults to \code{vc}}
+\item{omop_or_pcornet}{somop_or_pcornet \emph{string} || defaults to \code{omop}
 
-\item{concept_tbl}{a vocabulary table, like the OMOP concept table, with at least the concept column of interest (concept_id or concept_code),
-the concept name, and the vocabulary id}
+A string, either \code{omop} or \code{pcornet}, indicating the CDM format of the data}
 
-\item{null_values}{a vector of NULL values (or other values that would not belong to accepted vocabularies
-but are broadly accepted) that should be excluded when identifying non-valueset concepts}
+\item{check_string}{\emph{string} || defaults to \code{vc}
+
+An abbreviated identifier that will be used to label all output from this module}
+
+\item{concept_tbl}{\emph{tabular input} || defaults to \code{vocabulary_tbl('concept')}
+
+A vocabulary table with concept definitions (for example, the OHDSI concept table) that includes
+the vocabulary to which the concept belongs. This table should at a minimum have the columns:
+\code{concept_id}, \code{concept_name}, \code{vocabulary_id}}
+
+\item{null_values}{\emph{string / vector} || defaults to 44814650, 0, 44814653, & 44814649
+
+A string or vector listing the concept(s) that indicate a NULL value, which will be
+excluding when assessing for the presence of vocabularies not accepted in the field.}
 }
 \value{
-a dataframe with summary information about each vocabulary that appears in the field,
-with violations marked in a T/F field; vocabularies associated with the indicated
-null_values are ignored, so proportions may not add up to 1 as a result
+This function will return a table with summary information about each vocabulary that
+appears in the field, with violations marked in a T/F field. These summaries are computed at
+both the row and concept levels. This is to account for any cases where a large quantity of rows are
+in violation of the acceptable vocabularies, but it is made up of only 1-2 distinct concepts.
+
+Note that vocabularies associated with the indicated \code{null_values} are ignored, so proportions may
+not add up to 1 as a result.
 }
 \description{
-This function will use the \code{vocabulary.concept} table to identify the vocabulary
-of each concept and determine how many rows comply with the standard vocabularies
-expected for that field and how many rows violate these expectations.
+This function will use a provided table with concept to vocabulary mappings to
+identify the vocabulary of each concept and determine how many rows comply with
+the standard vocabularies expected for that field and how many rows violate these expectations.
 }
 \examples{
 # First create input file with desired checks to be executed

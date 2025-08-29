@@ -7,24 +7,36 @@
 process_vs(vs_results, rslt_source = "remote", csv_rslt_path = NULL)
 }
 \arguments{
-\item{vs_results}{the output of check_vs}
+\item{vs_results}{\emph{tabular input} || \strong{required}
 
-\item{rslt_source}{the location of the results. acceptable values are \code{local} (stored as a dataframe in the R environment),
-\code{csv} (stored as CSV files), or \code{remote} (stored on a remote DBMS); defaults to remote}
+The tabular output of \code{check_vs}. This table should include results for all
+institutions that should be included in the computation of overall / "network level"
+statistics.}
 
-\item{csv_rslt_path}{if the results have been stored as CSV files, the path to the location
-of these files. If the results are local or remote, leave NULL}
+\item{rslt_source}{\emph{string} || defaults to \code{remote}
+
+A string that identifies the location of the \code{vs_results} table.
+Acceptable values are
+\itemize{
+\item \code{local} - table is stored as a dataframe in the local R environment
+\item \code{csv} - table is stored as a CSV file
+\item \code{remote} - table is stored on a remote database
+}}
+
+\item{csv_rslt_path}{\emph{string} || defaults to \code{NULL}
+
+If \code{rslt_source} has been set to \code{csv}, this parameter should indicate the path to
+the result file(s). Otherwise, this parameter can be left as \code{NULL}}
 }
 \value{
-a list that contains two dataframes:
-\itemize{
-\item \code{vs_processed}: a dataframe with additional columns that include proportions of violations
-and the overall summary
-\item \code{vs_violations}: a dataframe with ONLY violating values that do not appear in the valueset
-}
+This function will return a list that contains two dataframes:
+-\code{vs_processed}: The \code{vs_results} table with additional rows reflecting the overall / "network level"
+counts and a computed proportion of violating concepts
+-\code{vs_violations}: A table listing all of the violating values that exist in the data that
+do not comply with the provided valueset definition
 }
 \description{
-Intakes the output of check_vs in order to apply additional processing. This
+Intakes the output of \code{check_vs} in order to apply additional processing. This
 includes computing row and patient proportions and computing overall totals
 across all sites included in the input.
 }

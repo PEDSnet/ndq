@@ -7,23 +7,36 @@
 process_uc(uc_results, rslt_source = "remote", csv_rslt_path = NULL)
 }
 \arguments{
-\item{uc_results}{the output of check_uc}
+\item{uc_results}{\emph{tabular input} || \strong{required}
 
-\item{rslt_source}{the location of the results. acceptable values are \code{local} (stored as a dataframe in the R environment),
-\code{csv} (stored as CSV files), or \code{remote} (stored on a remote DBMS); defaults to remote}
+The tabular output of \code{check_uc}. This table should include results for all
+institutions that should be included in the computation of overall / "network level"
+statistics.}
 
-\item{csv_rslt_path}{if the results have been stored as CSV files, the path to the location
-of these files. If the results are local or remote, leave NULL}
+\item{rslt_source}{\emph{string} || defaults to \code{remote}
+
+A string that identifies the location of the \code{uc_results} table.
+Acceptable values are
+\itemize{
+\item \code{local} - table is stored as a dataframe in the local R environment
+\item \code{csv} - table is stored as a CSV file
+\item \code{remote} - table is stored on a remote database
+}}
+
+\item{csv_rslt_path}{\emph{string} || defaults to \code{NULL}
+
+If \code{rslt_source} has been set to \code{csv}, this parameter should indicate the path to
+the result file(s). Otherwise, this parameter can be left as \code{NULL}}
 }
 \value{
-a table with either an additional column with unmapped proportions (by_year) or
-with additional rows that include total unmapped counts/proportions across all
-sites (not by_year)
+This function will return all columns from the \code{uc_results} input with either an
+additional column with unmapped proportions (by_year) or with additional rows that
+include total unmapped counts/proportions across all sites (not by_year)
 }
 \description{
-Intakes the output of check_uc in order to apply additional processing. This
-includes either adding proportions (for by_year output) or computing overall
-totals across all sites included in the input (for not by_year output)
+Intakes the output of \code{check_uc} in order to apply additional processing. This
+includes either adding proportions (for longitudinal output) or computing overall
+totals across all sites included in the input (for non-longitudinal output)
 }
 \examples{
 # This function should be run after check_uc has been executed for all

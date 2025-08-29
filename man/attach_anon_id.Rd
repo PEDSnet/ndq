@@ -2,23 +2,26 @@
 % Please edit documentation in R/site_anonymization.R
 \name{attach_anon_id}
 \alias{attach_anon_id}
-\title{Add anonymized site identifier to all tables}
+\title{Add an anonymized site identifier to all tables}
 \usage{
 attach_anon_id(all_sites_tbl, tbls_to_anon)
 }
 \arguments{
-\item{all_sites_tbl}{a tbl that contains a column called \code{site}
-with each of the sites that you want to mask
-in all the other tables}
+\item{all_sites_tbl}{\emph{tabular input} || \strong{required}
 
-\item{tbls_to_anon}{a \strong{NAMED} list of all of the tables that you want to add
-the masked site identifier column to}
+A reference table that contains a column called \code{site} with all of
+the sites that should be masked in each of the provided result tables}
+
+\item{tbls_to_anon}{\emph{named list} || \strong{required}
+
+A \strong{NAMED} list of all of the tables that should be anonymized}
 }
 \value{
-each of the original tables in \code{tbls_to_anon} with the original columns
-plus a column called \code{site_anon} with a masked identifier
+This function will return each of the original tables in \code{tbls_to_anon} with
+all the original columns plus a column called \code{site_anon} with a masked identifier
 that is consistent across all of the tables in \code{tbls_to_anon}
 }
 \description{
-Add anonymized site identifier to all tables
+This function will iterate through the provided list of result tables
+to apply consistent anonymization of site names across all output.
 }

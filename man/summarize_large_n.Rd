@@ -10,35 +10,52 @@ summarize_large_n(
   grp_vars,
   check_string,
   time = FALSE,
-  shape
+  shape = "wide"
 )
 }
 \arguments{
-\item{dq_output}{the output table from processing to which the columns
-should be added}
+\item{dq_output}{\emph{tabular output} || \strong{required}
 
-\item{num_col}{the numeric column to be used to compute the statistics}
+Any of the output tables that has been created by one of the \verb{check_*} functions
+and has also passed through the associated \verb{process_*} function}
 
-\item{grp_vars}{grouping variables for the computation}
+\item{num_col}{\emph{string} || \strong{required}
 
-\item{check_string}{string indicating the check type}
+A string indicating the name of the numeric column in the \code{dq_output} table
+that should be the basis for summary statistic computation}
 
-\item{time}{a logical indicating whether the check is time dependent}
+\item{grp_vars}{\emph{string / vector} || \strong{required}
 
-\item{shape}{'long' or 'wide' indicating whether summary statistics should be separate columns (wide)
-or assigned to separate rows, with the name of the summary statistic in the site column (long)}
+A string or vector listing the variables in \code{dq_output} that should be used
+for grouping when comparing summary statistics.}
+
+\item{check_string}{\emph{string} || \strong{required}
+
+A string that matches the check string originally input into the analysis}
+
+\item{time}{\emph{boolean} || defaults to \code{FALSE}
+
+A boolean indicating whether the check is time dependent. This should only
+apply for Facts Over Time output or Unmapped Concepts output in cases when it
+was computed longitudinally}
+
+\item{shape}{\emph{string} || defaults to \code{wide}
+
+A string, either \code{long} or \code{wide}, indicating whether summary statistics should be
+separate columns in the table (wide) or assigned to separate rows with the
+name of the summary statistic in the site column (long)}
 }
 \value{
-a dataframe with summary statistics for the numeric column
-provided. contains all columns from \code{dq_output} plus:
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{    if time = `TRUE`, the mean and median are returned.
-
-    if time = `FALSE`, the max, min, q1, q3, mean, and median are returned
-
-    These values are treated as "sites" to assist with Shiny implementation
-}\if{html}{\out{</div>}}
+This function will return the original \code{dq_output} table with the addition of
+summary statistics based on the numeric column provided. These will include:
+\itemize{
+\item If \code{time = TRUE}, the mean and median are returned.
+\item If \code{time = FALSE}, the max, min, q1, q3, mean, and median are returned
+}
 }
 \description{
-Add summary columns for a large N of sites
+For analyses that have a high volume of sites in the output, the standard, site-level
+results may be difficult to visualize on a plot. This function will compute high level summary
+statistics across all sites to provide another option for visualization. It will also
+allow for users to compare the site level output to the overall / "network-level" statistics.
 }

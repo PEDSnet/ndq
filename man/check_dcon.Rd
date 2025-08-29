@@ -12,21 +12,35 @@ check_dcon(
 )
 }
 \arguments{
-\item{dcon_tbl}{table describing each cohort pair that should be examined;
-there should be 2 rows per check, one for each cohort, with the same check_id
-see \code{?dcon_input_omop} or \code{?dcon_input_pcornet} for details}
+\item{dcon_tbl}{\emph{tabular} || \strong{required}
 
-\item{compute_level}{string indicating the level at which the computation should be executed
-accepted values are \code{patient} or \code{visit}}
+The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for each pair of cohorts,
+meaning there should be \strong{2 rows per check}, one fo each cohort, with the same \code{check_id}.
+see \code{?dcon_input_omop} or \code{?dcon_input_pcornet} for examples of the input structure}
 
-\item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
+\item{compute_level}{\emph{string} || defaults to \code{patient}
 
-\item{check_string}{the abbreviated name of the check; defaults to \code{dcon}}
+A string indicating whether the analysis should be conducted at the \code{patient}
+or \code{visit} level}
+
+\item{omop_or_pcornet}{\emph{string} || defaults to \code{omop}
+
+A string, either \code{omop} or \code{pcornet}, indicating the CDM format of the data}
+
+\item{check_string}{\emph{string} || defaults to \code{dcon}
+
+An abbreviated identifier that will be used to label all output from this module}
 }
 \value{
-a list with two dataframes:
-1. counts for the patients/visits in the first cohort, the patients/visits in the second cohort, and the patients/visits in both
-2. metadata information about each of the cohorts for which counts were computed
+This function will return a list of two dataframes:
+\itemize{
+\item \code{dcon_output}: A table with counts of patients/visits in the first cohort,
+patients/visits in the second cohort, and patients/visits in both cohorts (who also
+meet the time limit criteria)
+\item \code{dcon_meta}: A table with descriptive metadata about each of the cohorts for
+which counts were computed
+}
 }
 \description{
 Given the details of a pair of clinical events, this function

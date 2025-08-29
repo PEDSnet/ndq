@@ -7,23 +7,31 @@
 check_ecp(ecp_tbl, omop_or_pcornet = "omop", check_string = "ecp")
 }
 \arguments{
-\item{ecp_tbl}{table with information regarding the concepts and associated fact tables
-that should be evaluated, and the cohort that should be used to establish
-a patient denominator}
+\item{ecp_tbl}{\emph{tabular input} || \strong{required}
 
-\item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
+The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for the concepts
+that should be identified and the denominator cohort to be used for the computation.
+see \code{?ecp_input_omop} or \code{?ecp_input_pcornet} for examples of the input structure}
 
-\item{check_string}{an abbreviated identifier to identify all output from this module
-defaults to \code{ecp}}
+\item{omop_or_pcornet}{\emph{string} || defaults to \code{omop}
+
+A string, either \code{omop} or \code{pcornet}, indicating the CDM format of the data}
+
+\item{check_string}{\emph{string} || defaults to \code{ecp}
+
+An abbreviated identifier that will be used to label all output from this module}
 }
 \value{
-a table with the total patient count, the count of patients with a particular concept,
-the proportion of total patients with the concept, and relevant descriptive metadata
+This function will return a table with the total patient count, the count of
+patients with a particular concept, the proportion of total patients with the
+concept, plus some additional descriptive metadata
 }
 \description{
 This function will iterate through the provided input table to identify
-the count of patients who have the concept identified in the defined concept set
-and the proportion of patients who have the concept based on the defined cohort table.
+the count of patients who have the at least one occurrence of the concept defined in the
+user-provided concept set and the proportion of patients who have the concept
+based on the user-defined denominator cohort.
 }
 \examples{
 # First create input file with desired checks to be executed

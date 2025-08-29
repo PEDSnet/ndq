@@ -7,19 +7,39 @@
 #' start date, after the associated visit end date, or before the patient's
 #' birth date.
 #'
-#' @param dp_tbl table with information about the fact types that should
-#'               be evaluated in comparison to visit & birth dates
+#' @param dp_tbl *tabular input* || **required**
 #'
-#'               see ?ndq::dp_input_omop for more details
-#' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param visit_tbl the CDM table with visit identifiers and dates; defaults to `cdm_tbl(visit_occurrence)`
-#' @param dob_tbl the CDM table with patient identifiers and birth dates; defaults to `cdm_tbl(person)`
-#' @param check_string an abbreviated identifier to identify all output from this module
-#'                     defaults to `dp`
+#'  The primary input table that contains descriptive information about the checks
+#'  to be executed by the function. It should include definitions for the clinical fact
+#'  types that should be evaluated for date plausibility.
+#'  see `?dp_input_omop` or `?dp_input_pcornet` for examples of the input structure
 #'
-#' @returns a table with the count & proportion of rows with an implausible date value,
-#'          meaning that it fell before the associated visit start date, after the associated
-#'          visit end date, or before the patient birth date
+#' @param omop_or_pcornet *string* || defaults to `omop`
+#'
+#'  A string, either `omop` or `pcornet`, indicating the CDM format of the data
+#'
+#' @param visit_tbl *tabular input* || defaults to `cdm_tbl(visit_occurrence)`
+#'
+#'  A table with visit information, including identifiers that can link back to facts
+#'  and start & end dates. This argument will most likely be the `visit_occurrence` table for OMOP or
+#'  the `encounter` table for PCORnet. Custom tables with specific visit subsets
+#'  (i.e. a table with only nephrology specialist visits) can also be provided.
+#'
+#' @param dob_tbl *tabular input* || defaults to `cdm_tbl('person')`
+#'
+#'  A table with patient identifiers that can link back to facts and birth dates. This argument
+#'  will most likely be the `person` table for OMOP or the `demographic` table for PCORnet.
+#'
+#' @param check_string *string* || defaults to `dp`
+#'
+#'  An abbreviated identifier that will be used to label all output from this module
+#'
+#' @returns
+#'
+#'  This function will return a table with the count & proportion of rows with an
+#'  implausible date value, with one column for each of the 3 implausibility definitions.
+#'  These will indicate the proportion of facts falling before the associated visit start date,
+#'  after the associated visit end date, or before the patient birth date
 #'
 #' @export
 #'
@@ -158,17 +178,32 @@ check_dp <- function(dp_tbl,
 
 #' Date Plausibility -- Processing
 #'
-#' Intakes the output of check_dp in order to apply additional processing. This
-#' includes creating a new check_name_app column to specify that the check
+#' Intakes the output of `check_dp` in order to apply additional processing. This
+#' includes creating a new `check_name_app` column to specify that the check
 #' was computed at the row level.
 #'
-#' @param dp_results table output by check_dp
-#' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
-#'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
-#' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
-#'                      of these files. If the results are local or remote, leave NULL
+#' @param dp_results *tabular input* || **required**
 #'
-#' @returns same input table with additional check_name_app column to indicate application level
+#'  The tabular output of `check_dp`. This table should include results for all
+#'  institutions that should be included in the computation of overall / "network level"
+#'  statistics.
+#'
+#' @param rslt_source *string* || defaults to `remote`
+#'
+#'  A string that identifies the location of the `dp_results` table.
+#'  Acceptable values are
+#'  - `local` - table is stored as a dataframe in the local R environment
+#'  - `csv` - table is stored as a CSV file
+#'  - `remote` - table is stored on a remote database
+#'
+#' @param csv_rslt_path *string* || defaults to `NULL`
+#'
+#'  If `rslt_source` has been set to `csv`, this parameter should indicate the path to
+#'  the result file(s). Otherwise, this parameter can be left as `NULL`
+#'
+#' @returns
+#'  This function will return the `dp_results` table with additional
+#'  `check_name_app` column to indicate application level
 #'
 #' @export
 #'

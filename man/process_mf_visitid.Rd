@@ -11,20 +11,33 @@ process_mf_visitid(
 )
 }
 \arguments{
-\item{mf_visitid_results}{output of check_mf_visitid}
+\item{mf_visitid_results}{\emph{tabular input} || \strong{required}
 
-\item{rslt_source}{the location of the results. acceptable values are \code{local} (stored as a dataframe in the R environment),
-\code{csv} (stored as CSV files), or \code{remote} (stored on a remote DBMS); defaults to remote}
+The tabular output of \code{check_mf_visitid}. This table should include results for all
+institutions that should be included in the computation of overall / "network level"
+statistics.}
 
-\item{csv_rslt_path}{if the results have been stored as CSV files, the path to the location
-of these files. If the results are local or remote, leave NULL}
+\item{rslt_source}{\emph{string} || defaults to \code{remote}
+
+A string that identifies the location of the \code{mf_visitid_results} table.
+Acceptable values are
+\itemize{
+\item \code{local} - table is stored as a dataframe in the local R environment
+\item \code{csv} - table is stored as a CSV file
+\item \code{remote} - table is stored on a remote database
+}}
+
+\item{csv_rslt_path}{\emph{string} || defaults to \code{NULL}
+
+If \code{rslt_source} has been set to \code{csv}, this parameter should indicate the path to
+the result file(s). Otherwise, this parameter can be left as \code{NULL}}
 }
 \value{
-mf_visitid tbl with additional domain, total_ct, and proportion
-column
+This function will return the \code{mf_visitid_results} table with the addition
+of a column that reflects proportion of missing visits
 }
 \description{
-Intakes the output of check_mf_visitid in order to apply additional processing.
+Intakes the output of \code{check_mf_visitid} in order to apply additional processing.
 This includes computing proportions of missing visits and computing overall
 totals across all sites included in the input.
 }

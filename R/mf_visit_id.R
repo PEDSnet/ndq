@@ -1,25 +1,38 @@
 
 #' Missing Field: Visit ID
 #'
-#' This function will check to see if the visit_occurrence_id/encounterid in a given fact table
-#' also exists in the visit_occurrence/encoubter table and identify cases where the visit_occurrence_id/encounterid
-#' is missing entirely (NULL). There may be cases where this is expected
+#' This function will check to see if the `visit_occurrence_id`/`encounterid` in a given fact table
+#' also exists in the `visit_occurrence`/`encounter` table and identify cases where these IDs
+#' are missing entirely (NULL). There may be cases where this is expected
 #' (for example, immunizations imported from an external registry) but generally the
-#' visit_occurrence_id/encounterid should be populated and exist as a primary key in the
-#' visit_occurrence/encounter table.
+#' `visit_occurrence_id`/`encounterid` should be populated and exist as a primary key in the
+#' `visit_occurrence`/`encounter` table.
 #'
-#' @param mf_tbl a table with information about the tables that should be cross
-#'               checked against the visit_tbl to ensure the visit_occurrence_id / encounterid
-#'               exists as a primary key
-#' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param visit_tbl the CDM visit_occurrence / encounter table that contains the visit ID primary key
-#' @param check_string an abbreviated identifier to identify all output from this module
-#'                     defaults to `mf_visitid`
+#' @param mf_tbl *tabular input* || **required**
 #'
-#' @return a table summarizing the total number of visits in the fact table, the number of NULL visits,
-#'         and the number of visits that cannot link back to the visit table. has columns: measure,
-#'         total_visits, missing_visits_total, missing_visits_distinct, visit_na, total_id, check_name,
-#'         database_version,site
+#'  The primary input table that contains descriptive information about the checks
+#'  to be executed by the function. It should include definitions for the clinical fact
+#'  types with visit IDs that should be evaluated against the visit_tbl.
+#'  see `?mf_visitid_input_omop` or `?mf_visitid_input_pcornet` for examples of the input structure
+#'
+#' @param omop_or_pcornet *string* || defaults to `omop`
+#'
+#'  A string, either `omop` or `pcornet`, indicating the CDM format of the data
+#'
+#' @param visit_tbl *tabular input* || defaults to `cdm_tbl('visit_occurrence')`
+#'
+#'  The CDM table with the visit primary key IDs. Typically, this will
+#'  be either the OMOP `visit_occurrence` or PCORnet `encounter` table
+#'
+#' @param check_string *string* || defaults to `mf_visitid`
+#'
+#'  An abbreviated identifier that will be used to label all output from this module
+#'
+#' @return
+#'
+#'  This function will return a table summarizing the total number of visits in the fact table,
+#'  the number of NULL visit IDs, and the number of visits that do not have an associated entry
+#'  in the visit table
 #'
 #' @export
 #'
@@ -179,18 +192,33 @@ check_mf_visitid <- function(mf_tbl,
 
 #' Missing Field: Visit ID -- Processing
 #'
-#' Intakes the output of check_mf_visitid in order to apply additional processing.
+#' Intakes the output of `check_mf_visitid` in order to apply additional processing.
 #' This includes computing proportions of missing visits and computing overall
 #' totals across all sites included in the input.
 #'
-#' @param mf_visitid_results output of check_mf_visitid
-#' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
-#'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
-#' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
-#'                      of these files. If the results are local or remote, leave NULL
+#' @param mf_visitid_results *tabular input* || **required**
 #'
-#' @return mf_visitid tbl with additional domain, total_ct, and proportion
-#' column
+#'  The tabular output of `check_mf_visitid`. This table should include results for all
+#'  institutions that should be included in the computation of overall / "network level"
+#'  statistics.
+#'
+#' @param rslt_source *string* || defaults to `remote`
+#'
+#'  A string that identifies the location of the `mf_visitid_results` table.
+#'  Acceptable values are
+#'  - `local` - table is stored as a dataframe in the local R environment
+#'  - `csv` - table is stored as a CSV file
+#'  - `remote` - table is stored on a remote database
+#'
+#' @param csv_rslt_path *string* || defaults to `NULL`
+#'
+#'  If `rslt_source` has been set to `csv`, this parameter should indicate the path to
+#'  the result file(s). Otherwise, this parameter can be left as `NULL`
+#'
+#' @return
+#'
+#'  This function will return the `mf_visitid_results` table with the addition
+#'  of a column that reflects proportion of missing visits
 #'
 #' @export
 #'

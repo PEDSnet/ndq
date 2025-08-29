@@ -7,29 +7,59 @@
 #' you have the option to point to a previous result set instead of recomputing the
 #' counts from the CDM.
 #'
-#' @param dc_tbl table with details of the CDM elements that should be tested in
-#'               both the current and previous data model versions. see `?dc_input_omop` or
-#'               `?dc_input_pcornet` for details
-#' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param prev_db_string string label indicating the previous CDM version; if
-#'                       `prev_ct_src == 'result'`, ensure this matches the appropriate database
-#'                       label in the last set of results
-#' @param current_db_string string label indicating the current CDM version
-#' @param prev_ct_src a string indicating where the counts from the previous data model
-#'                    should be extracted: either `cdm` (to pull from the previous CDM instance)
-#'                    or `result` (to pull from a previous instance of `check_dc` output)
-#' @param prev_rslt_tbl if `prev_ct_src = 'result'`, the name of the table where previous results
-#'                      are stored
-#' @param prev_rslt_schema if `prev_ct_src = 'result'`, the name of the schema where previous results
-#'                         are stored. defaults to `config('results_schema')`
-#' @param prev_db the database connection to be used to access the previous CDM or result table(s);
-#'                defaults to `config('db_src')`
-#' @param check_string an abbreviated identifier to identify all output from this module
-#'                     defaults to `dc`
+#' @param dc_tbl *tabular input* || **required**
 #'
-#' @returns a list with two dataframes:
-#'          - `dc_cts`: dataframe containing the row and (where applicable) person counts for each table
-#'          - `dc_meta`: the metadata associated with each input table that appears in `dc_cts`
+#'  The primary input table that contains descriptive information about the checks
+#'  to be executed by the function. It should include definitions for the CDM elements
+#'  that should be compared between the current and previous data model versions.
+#'  see `?dc_input_omop` or `?dc_input_pcornet` for examples of the input structure
+#'
+#' @param omop_or_pcornet *string* || defaults to `omop`
+#'
+#'  A string, either `omop` or `pcornet`, indicating the CDM format of the data
+#'
+#' @param prev_db_string *string* || defaults to `v1`
+#'
+#'  A string label indicating the previous CDM version
+#'
+#'  If `prev_ct_src` is set to `result`, make sure this matches the appropriate database
+#'  label in the last set of results
+#'
+#' @param current_db_string *string* || defaults to `v2`
+#'
+#'  A string label indicating the current CDM version
+#'
+#' @param prev_ct_src *string* || defaults to `cdm`
+#'
+#'  A string indicating the source from which  the counts from the previous data model
+#'  should be extracted:
+#'  - `cdm` will compute the counts based on the previous CDM tables
+#'  - `result` will pull existing counts from a previous instance of `check_dc` output
+#'
+#' @param prev_rslt_tbl *string* || defaults to `dc_output`
+#'
+#'  If `prev_ct_src` is set to `result`, this string should reflect name of
+#'  the table where previous results are stored on the database
+#'
+#' @param prev_rslt_schema *string* || defaults to `config('results_schema')`
+#'
+#'  If `prev_ct_src` is set to `result`, this string should reflect name of
+#'  the schema where previous results are stored on the database
+#'
+#' @param prev_db *database connection* || defaults to `config('db_src')`
+#'
+#'  A database connection object that will connect the function to the
+#'  previous CDM instance or the defined result table
+#'
+#' @param check_string *string* || defaults to `dc`
+#'
+#'  An abbreviated identifier that will be used to label all output from this module
+#'
+#' @returns
+#'  This function will return a list with two dataframes:
+#'  - `dc_cts`: A table containing the row and (where applicable) person counts for each CDM
+#'  element specified by the user
+#'  - `dc_meta`: A table containing the metadata associated with each check that appears in `dc_cts`
 #'
 #' @importFrom cli cli_abort
 #' @importFrom stringr str_detect
@@ -222,22 +252,39 @@ check_dc <- function(dc_tbl,
 
 #' Data Cycle Changes -- Processing
 #'
-#' Intakes the output of check_dc in order to apply additional processing. This
+#' Intakes the output of `check_dc` in order to apply additional processing. This
 #' includes computing percent change across data model versions and computing an
 #' overall set of counts/percent changes across all sites included in the input.
 #'
-#' @param dc_ct_results the name of the table output by check_dc labelled `dc_cts` that contains
-#'                      the previous and current data cycle counts
-#' @param dc_meta_results the name of the table output by check_dc labelled `dc_meta` that contains
-#'                        metadata associated with each executed check
-#' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
-#'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
-#' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
-#'                      of these files. If the results are local or remote, leave NULL
+#' @param dc_ct_results *tabular input* || **required**
 #'
-#' @return dc_ct_results tbl with totals and additional change in proportion
-#'         and threshold columns; the dc_meta_results table remains unchanged, so the original
-#'         version should be used where needed
+#'  The `dc_cts` output of `check_dc`. This table should include results for all
+#'  institutions that should be included in the computation of overall / "network level"
+#'  statistics.
+#'
+#' @param dc_meta_results *tabular input* || **required**
+#'
+#'  The `dc_meta` output of `check_dc`
+#'
+#' @param rslt_source *string* || defaults to `remote`
+#'
+#'  A string that identifies the location of the `dc_results` table.
+#'  Acceptable values are
+#'  - `local` - table is stored as a dataframe in the local R environment
+#'  - `csv` - table is stored as a CSV file
+#'  - `remote` - table is stored on a remote database
+#'
+#' @param csv_rslt_path *string* || defaults to `NULL`
+#'
+#'  If `rslt_source` has been set to `csv`, this parameter should indicate the path to
+#'  the result file(s). Otherwise, this parameter can be left as `NULL`
+#'
+#' @return
+#'  This function will return the `dc_ct_results` table with overall / "network-wide" counts
+#'  and the proportion change between the two data models
+#'
+#'  The `dc_meta_results` table remains unchanged, so the original version returned by `check_dc`
+#'  can be used if needed
 #'
 #' @importFrom readr read_csv
 #' @importFrom tidyr pivot_wider

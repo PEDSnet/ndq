@@ -2,33 +2,53 @@
 #' Unmapped Concepts
 #'
 #' This function will evaluate the count and proportion of unmapped concepts associated
-#' with the fact type of interest. If produce_mapped_list is set to TRUE, a summary of
+#' with the fact type of interest. If `produce_mapped_list` is set to TRUE, a summary of
 #' the source values associated with unmapped concepts will also be produced to help
-#' identify areas where mappings could potentially be improved.
+#' identify areas where mappings could potentially be improved. This analysis can be also be
+#' executed longitudinally by year.
 #'
-#' @param uc_tbl dataframe with metadata describing the tables/columns for which
-#'               unmapped concepts should be identified
-#' @param by_year boolean indicating whether the analysis should be conducted longitudinally by year
-#'                or not; note that a mapped list will NOT be produced for the longitudinal analysis
-#' @param unmapped_values concepts / other values that indicate an unmapped value
-#' @param check_string an abbreviated identifier to identify all output from this module
-#'                     defaults to `uc`
-#' @param produce_mapped_list if `TRUE` then will produce a table with the source values
-#'                            associated with the top unmapped values; this table will
-#'                            be iteratively output to the database backend of choice and will
-#'                            NOT be stored locally. Only source values with > 10 occurrences
-#'                            are included.
+#' @param uc_tbl *tabular input* || **required**
 #'
-#' @return if `by_year` is `FALSE`: a dataframe with the total row count, the unmapped row count, the proportion
-#'         of unmapped values, and some additional descriptive metadata for each check
+#'  The primary input table that contains descriptive information about the checks
+#'  to be executed by the function. It should include definitions for the fields that
+#'  should be evaluated for missingness and other relevant metadata.
+#'  see `?uc_input_omop` or `?uc_input_pcornet` for examples of the input structure
 #'
-#'         if `by_year` is `TRUE`: a dataframe with the total row count, the unmapped row count, the proportion
-#'         of unmapped values, and some additional descriptive metadata for each check stratified by each year
-#'         present in the fact table
+#' @param by_year *boolean* || defaults to `FALSE`
 #'
-#'         if `produce_mapped_list` is `TRUE`, then a table with name `uc_grpd` that includes
-#'         the source values (with > 10 appearances) and counts of those values associated
-#'         with unmapped concepts
+#'  A boolean indicating whether the analysis should be conducted longitudinally by year
+#'
+#'  **Note:** the mapped list functionality is NOT available for the longitudinal analysis
+#'
+#' @param unmapped_values *string / vector* || defaults to 44814650, 0, 44814653, & 44814649
+#'
+#'  A string or vector listing the concept(s) that indicate an unmapped value. The function
+#'  will check for NULL values by default, so that does not need to be defined here.
+#'
+#' @param produce_mapped_list *boolean* || defaults to `TRUE`
+#'
+#'  A boolean indicating whether a list of source values associated with unmapped concepts
+#'  should be produced in addition to the primary output. This table will be iteratively output
+#'  to the database backend of choice and will NOT be stored locally.
+#'  Only source values with > 10 occurrences are included.
+#'
+#' @param check_string *string* || defaults to `uc`
+#'
+#'  An abbreviated identifier that will be used to label all output from this module
+#'
+#' @return
+#'
+#'  If `by_year` is `FALSE`, this function will produce a dataframe with the total row count,
+#'  the unmapped row count, the proportion of unmapped values, and some additional descriptive
+#'  metadata for each user-defined check
+#'
+#'  If `by_year` is `TRUE`, this function will produce a dataframe with the total row count,
+#'  the unmapped row count, the proportion of unmapped values, and some additional descriptive
+#'  metadata for each user-defined check stratified by each year present in the fact table
+#'
+#'  If `produce_mapped_list` is `TRUE`, then a table with name `uc_grpd` that includes
+#'  the source values (with > 10 appearances) and counts of those values associated
+#'  with unmapped concepts will be produced in addition to the primary tabular output
 #'
 #' @export
 #'
@@ -271,19 +291,33 @@ check_uc_by_year <- function(uc_tbl,
 
 #' Unmapped Concepts -- Processing
 #'
-#' Intakes the output of check_uc in order to apply additional processing. This
-#' includes either adding proportions (for by_year output) or computing overall
-#' totals across all sites included in the input (for not by_year output)
+#' Intakes the output of `check_uc` in order to apply additional processing. This
+#' includes either adding proportions (for longitudinal output) or computing overall
+#' totals across all sites included in the input (for non-longitudinal output)
 #'
-#' @param uc_results the output of check_uc
-#' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
-#'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
-#' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
-#'                      of these files. If the results are local or remote, leave NULL
+#' @param uc_results *tabular input* || **required**
 #'
-#' @return a table with either an additional column with unmapped proportions (by_year) or
-#'         with additional rows that include total unmapped counts/proportions across all
-#'         sites (not by_year)
+#'  The tabular output of `check_uc`. This table should include results for all
+#'  institutions that should be included in the computation of overall / "network level"
+#'  statistics.
+#'
+#' @param rslt_source *string* || defaults to `remote`
+#'
+#'  A string that identifies the location of the `uc_results` table.
+#'  Acceptable values are
+#'  - `local` - table is stored as a dataframe in the local R environment
+#'  - `csv` - table is stored as a CSV file
+#'  - `remote` - table is stored on a remote database
+#'
+#' @param csv_rslt_path *string* || defaults to `NULL`
+#'
+#'  If `rslt_source` has been set to `csv`, this parameter should indicate the path to
+#'  the result file(s). Otherwise, this parameter can be left as `NULL`
+#'
+#' @return
+#'  This function will return all columns from the `uc_results` input with either an
+#'  additional column with unmapped proportions (by_year) or with additional rows that
+#'  include total unmapped counts/proportions across all sites (not by_year)
 #'
 #' @export
 #'

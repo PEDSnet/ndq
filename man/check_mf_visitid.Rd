@@ -12,30 +12,38 @@ check_mf_visitid(
 )
 }
 \arguments{
-\item{mf_tbl}{a table with information about the tables that should be cross
-checked against the visit_tbl to ensure the visit_occurrence_id / encounterid
-exists as a primary key}
+\item{mf_tbl}{\emph{tabular input} || \strong{required}
 
-\item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
+The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for the clinical fact
+types with visit IDs that should be evaluated against the visit_tbl.
+see \code{?mf_visitid_input_omop} or \code{?mf_visitid_input_pcornet} for examples of the input structure}
 
-\item{visit_tbl}{the CDM visit_occurrence / encounter table that contains the visit ID primary key}
+\item{omop_or_pcornet}{\emph{string} || defaults to \code{omop}
 
-\item{check_string}{an abbreviated identifier to identify all output from this module
-defaults to \code{mf_visitid}}
+A string, either \code{omop} or \code{pcornet}, indicating the CDM format of the data}
+
+\item{visit_tbl}{\emph{tabular input} || defaults to \code{cdm_tbl('visit_occurrence')}
+
+The CDM table with the visit primary key IDs. Typically, this will
+be either the OMOP \code{visit_occurrence} or PCORnet \code{encounter} table}
+
+\item{check_string}{\emph{string} || defaults to \code{mf_visitid}
+
+An abbreviated identifier that will be used to label all output from this module}
 }
 \value{
-a table summarizing the total number of visits in the fact table, the number of NULL visits,
-and the number of visits that cannot link back to the visit table. has columns: measure,
-total_visits, missing_visits_total, missing_visits_distinct, visit_na, total_id, check_name,
-database_version,site
+This function will return a table summarizing the total number of visits in the fact table,
+the number of NULL visit IDs, and the number of visits that do not have an associated entry
+in the visit table
 }
 \description{
-This function will check to see if the visit_occurrence_id/encounterid in a given fact table
-also exists in the visit_occurrence/encoubter table and identify cases where the visit_occurrence_id/encounterid
-is missing entirely (NULL). There may be cases where this is expected
+This function will check to see if the \code{visit_occurrence_id}/\code{encounterid} in a given fact table
+also exists in the \code{visit_occurrence}/\code{encounter} table and identify cases where these IDs
+are missing entirely (NULL). There may be cases where this is expected
 (for example, immunizations imported from an external registry) but generally the
-visit_occurrence_id/encounterid should be populated and exist as a primary key in the
-visit_occurrence/encounter table.
+\code{visit_occurrence_id}/\code{encounterid} should be populated and exist as a primary key in the
+\code{visit_occurrence}/\code{encounter} table.
 }
 \examples{
 # First create input file with desired checks to be executed

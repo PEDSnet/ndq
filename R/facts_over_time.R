@@ -5,23 +5,57 @@
 #' the fact of interest within a specified time period. The user will supply the end points of the time span
 #' (i.e. January 2009 - January 2024) and the time period they wish to divide it by (i.e. month, year).
 #'
-#' @param fot_tbl a table with information describing the fact tables that should be examined;
-#'                see `?fot_input_omop` or `?fot_input_pcornet` for details
-#' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param compute_method a string input of either `loop` or `group`; controls whether the
-#'                       check is executed by looping through each time period or grouping by a date field
-#' @param time_span a list that contains the start date and end date of the time span (i.e. list(2009-01-01, 2015-01-01))
-#' @param time_period string indicating the length of time that the time span should be divided into (i.e. months, years)
-#' @param lookback_interval the number of time periods (defined in `time_period`) to look back in each interval
-#'                          (i.e. 1 year, 3 months); defaults to 1
-#' @param check_string the abbreviated name of the check; defaults to `fot`
-#' @param visits_only if TRUE, counts ONLY distinct visits and not patients or rows
-#' @param distinct_visits if TRUE, counts distinct visits as well as total counts and total patients
+#' @param fot_tbl *tabular input* || **required**
 #'
-#' @return a dataframe with one row for each time period within the specified time span for each check;
-#' - if visits_only = TRUE, will produce only counts of visits for the check + time period
-#' - if visits_only = FALSE and distinct_visits = TRUE, will produce counts of patients, rows, and visits for the check + time period
-#' - if visits_only = FALSE and distinct_visits = FALSE, will produce counts of patients and rows for the check + time period
+#'  The primary input table that contains descriptive information about the checks
+#'  to be executed by the function. It should include definitions for the clinical fact
+#'  types that should be evaluated across the user-specified time span per each time period.
+#'  see `?fot_input_omop` or `?fot_input_pcornet` for examples of the input structure
+#'
+#' @param omop_or_pcornet *string* || defaults to `omop`
+#'
+#'  A string, either `omop` or `pcornet`, indicating the CDM format of the data
+#'
+#' @param compute_method *string* || defaults to `loop`
+#'
+#'  A string, either `loop` or `group`, that controls whether the
+#'  check is executed by looping through each time period or grouping by a date field to
+#'  obtain counts. `group` is recommended for high performing database systems.
+#'
+#' @param time_span *list (length 2)* || defaults to `list('2009-01-01', today())`
+#'
+#'  A list that contains the start date and end date of the total time period of interest
+#'
+#' @param time_period *string* || defaults to `month`
+#'
+#'  A string indicating the length of each time period that should be examined, like months or years
+#'
+#' @param lookback_interval *integer* || defaults to `1`
+#'
+#'  An integer indicating the number of time periods (defined in `time_period`) to look back in each interval.
+#'  For example, a `time_period` of `month` and a `lookback_interval` of `3` would produce quarterly counts.
+#'
+#' @param check_string *string* || defaults to `fot`
+#'
+#'  An abbreviated identifier that will be used to label all output from this module
+#'
+#' @param visits_only *boolean* || defaults to FALSE
+#'
+#'  If set to `TRUE`, then this function will only return visit counts and will not return patient
+#'  or row counts. By default, visit, row, and patient counts are returned.
+#'
+#' @param distinct_visits *boolean* || defaults to TRUE
+#'
+#'  If set to `FALSE`, then this function will only return patient and row counts and will not return
+#'  visit counts. By default, visit, row, and patient counts are returned.
+#'
+#' @return
+#'
+#'  This function will return a dataframe with one row for each time period within the
+#'  specified time span for each check. Additionally:
+#' - If `visits_only = TRUE`, only visit counts will be returned for the check + time period
+#' - If `visits_only = FALSE` and `distinct_visits = TRUE`, patient, row, and visit counts will be returned for the check + time period
+#' - If `visits_only = FALSE` and `distinct_visits = FALSE`, only patient and row counts will be returned for the check + time period
 #'
 #' @importFrom purrr reduce
 #' @import lubridate
@@ -590,39 +624,63 @@ add_fot_ratios <- function(fot_lib_output,
 #'
 #' Intakes the output of check_fot in order to apply additional processing. This
 #' includes applying a heuristic meant to compare the fact count in a given time period
-#' to other time periods around it. For a montly computation, for example, the heuristic
+#' to other time periods around it. For a monthly computation, for example, the heuristic
 #' would be `month / ((month-1 * .25) + (month+1 * .25) + (month-12 * .5))` which is
 #' the value for a given month divided by the weighted average of the value in the previous
 #' month, the next month, and the same month in the previous year. The function can also
 #' optionally compute a ratio given a `total_pt` column (added by the user) to be used as a
 #' denominator and a `ratio_mult` value to be used as a multiplier.
 #'
+#' @param fot_results *tabular input* || **required**
 #'
-#' @param fot_results the table output by check_fot
-#' @param target_col the numerical column in fot_results that should be used to
-#'                   compute the heuristic; options are row_cts, row_pts, or row_visits
-#' @param add_ratios boolean to indicate whether ratios / rates should be computed
-#'                   if TRUE, the fot_results table should have an additional `total_pt`
-#'                   column with counts for the denominator of the user's choosing
+#'  The tabular output of `check_fot`. This table should include results for all
+#'  institutions that should be included in the computation of overall / "network level"
+#'  statistics.
 #'
-#'                   for example, the count of patients in that time period that
-#'                   had a visit
-#' @param ratio_mult if add_ratios = TRUE, the numerical multiplier that should
-#'                   be used to compute the rate
-#' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
-#'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
-#' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
-#'                      of these files. If the results are local or remote, leave NULL
+#' @param target_col *string* || defaults to `row_cts`
 #'
-#' @returns a list with up to three dataframes:
-#'          `fot_heuristic`: the summary heuristic (month / ((month-1)*.25 +
-#'                                                           (month+1)*.25 +
-#'                                                           (month-12)*.5))
-#'          `fot_heuristic_summary`: summary values (mean, med, sd, q1, q3) based on
-#'                                   the heuristic
-#'          and if add_ratios = TRUE
-#'          `fot_ratios`: the fot_results table with an additional column with the
-#'                        incidence ratio applied (as row_ratio)
+#'  A string indicating the column in `fot_results` that should be used to
+#'  compute the primary heuristic. For the ratio computation, `row_pts` will
+#'  *always* be used regardless of what is specified in this parameter.
+#'
+#' @param add_ratios *boolean* || defaults to `FALSE`
+#'
+#'  A boolean indicating whether incidence ratios / rates should be computed.
+#'  if TRUE, the user should edit the `fot_results` table to include an additional `total_pt`
+#'  column with counts for the denominator of the user's choosing. We recommend including
+#'  the desired denominator population as a check passed into the `check_fot` function
+#'  to facilitate the computation of patient counts for each time period.
+#'
+#' @param ratio_mult *integer* || defaults to `10,000`
+#'
+#'  If `add_ratios` is set to  `TRUE`, this parameter should represent the numerical
+#'  multiplier that should be used to compute the incidence ratio. This will result in
+#'  a ratio that represents the fact rate per (`ratio_mult`) patients.
+#'
+#' @param rslt_source *string* || defaults to `remote`
+#'
+#'  A string that identifies the location of the `fot_results` table.
+#'  Acceptable values are
+#'  - `local` - table is stored as a dataframe in the local R environment
+#'  - `csv` - table is stored as a CSV file
+#'  - `remote` - table is stored on a remote database
+#'
+#' @param csv_rslt_path *string* || defaults to `NULL`
+#'
+#'  If `rslt_source` has been set to `csv`, this parameter should indicate the path to
+#'  the result file(s). Otherwise, this parameter can be left as `NULL`
+#'
+#' @returns
+#'
+#'  This function will return a list of up to three dataframes:
+#'  - `fot_heuristic`: a table with the summary heuristic  for each fact type
+#'  (month / ((month-1) * .25 +
+#'  (month+1) * .25 +
+#'  (month-12)*.5))
+#'  - `fot_heuristic_summary`: a table with summary values (mean, med, sd, q1, q3) based on
+#'  the heuristic
+#'  - `fot_ratios`: the `fot_results` table with an additional column with the
+#'  incidence ratio (only returned if `row_ratio = TRUE`)
 #'
 #' @importFrom stats median
 #' @importFrom stats quantile

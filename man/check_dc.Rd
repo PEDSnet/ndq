@@ -17,38 +17,63 @@ check_dc(
 )
 }
 \arguments{
-\item{dc_tbl}{table with details of the CDM elements that should be tested in
-both the current and previous data model versions. see \code{?dc_input_omop} or
-\code{?dc_input_pcornet} for details}
+\item{dc_tbl}{\emph{tabular input} || \strong{required}
 
-\item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
+The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for the CDM elements
+that should be compared between the current and previous data model versions.
+see \code{?dc_input_omop} or \code{?dc_input_pcornet} for examples of the input structure}
 
-\item{prev_db_string}{string label indicating the previous CDM version; if
-\code{prev_ct_src == 'result'}, ensure this matches the appropriate database
+\item{omop_or_pcornet}{\emph{string} || defaults to \code{omop}
+
+A string, either \code{omop} or \code{pcornet}, indicating the CDM format of the data}
+
+\item{prev_db_string}{\emph{string} || defaults to \code{v1}
+
+A string label indicating the previous CDM version
+
+If \code{prev_ct_src} is set to \code{result}, make sure this matches the appropriate database
 label in the last set of results}
 
-\item{current_db_string}{string label indicating the current CDM version}
+\item{current_db_string}{\emph{string} || defaults to \code{v2}
 
-\item{prev_ct_src}{a string indicating where the counts from the previous data model
-should be extracted: either \code{cdm} (to pull from the previous CDM instance)
-or \code{result} (to pull from a previous instance of \code{check_dc} output)}
+A string label indicating the current CDM version}
 
-\item{prev_db}{the database connection to be used to access the previous CDM or result table(s);
-defaults to \code{config('db_src')}}
+\item{prev_ct_src}{\emph{string} || defaults to \code{cdm}
 
-\item{prev_rslt_tbl}{if \code{prev_ct_src = 'result'}, the name of the table where previous results
-are stored}
+A string indicating the source from which  the counts from the previous data model
+should be extracted:
+\itemize{
+\item \code{cdm} will compute the counts based on the previous CDM tables
+\item \code{result} will pull existing counts from a previous instance of \code{check_dc} output
+}}
 
-\item{prev_rslt_schema}{if \code{prev_ct_src = 'result'}, the name of the schema where previous results
-are stored. defaults to \code{config('results_schema')}}
+\item{prev_db}{\emph{database connection} || defaults to \code{config('db_src')}
 
-\item{check_string}{an abbreviated identifier to identify all output from this module
-defaults to \code{dc}}
+A database connection object that will connect the function to the
+previous CDM instance or the defined result table}
+
+\item{prev_rslt_tbl}{\emph{string} || defaults to \code{dc_output}
+
+If \code{prev_ct_src} is set to \code{result}, this string should reflect name of
+the table where previous results are stored on the database}
+
+\item{prev_rslt_schema}{\emph{string} || defaults to \code{config('results_schema')}
+
+If \code{prev_ct_src} is set to \code{result}, this string should reflect name of
+the schema where previous results are stored on the database}
+
+\item{check_string}{\emph{string} || defaults to \code{dc}
+
+An abbreviated identifier that will be used to label all output from this module}
 }
 \value{
-a list with two dataframes:
-- \code{dc_cts}: dataframe containing the row and (where applicable) person counts for each table
-- \code{dc_meta}: the metadata associated with each input table that appears in \code{dc_cts}
+This function will return a list with two dataframes:
+\itemize{
+\item \code{dc_cts}: A table containing the row and (where applicable) person counts for each CDM
+element specified by the user
+\item \code{dc_meta}: A table containing the metadata associated with each check that appears in \code{dc_cts}
+}
 }
 \description{
 This function will compute row & patient counts in the specified tables for both

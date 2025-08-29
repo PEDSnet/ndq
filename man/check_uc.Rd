@@ -13,41 +13,54 @@ check_uc(
 )
 }
 \arguments{
-\item{uc_tbl}{dataframe with metadata describing the tables/columns for which
-unmapped concepts should be identified}
+\item{uc_tbl}{\emph{tabular input} || \strong{required}
 
-\item{by_year}{boolean indicating whether the analysis should be conducted longitudinally by year
-or not; note that a mapped list will NOT be produced for the longitudinal analysis}
+The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for the fields that
+should be evaluated for missingness and other relevant metadata.
+see \code{?uc_input_omop} or \code{?uc_input_pcornet} for examples of the input structure}
 
-\item{produce_mapped_list}{if \code{TRUE} then will produce a table with the source values
-associated with the top unmapped values; this table will
-be iteratively output to the database backend of choice and will
-NOT be stored locally. Only source values with > 10 occurrences
-are included.}
+\item{by_year}{\emph{boolean} || defaults to \code{FALSE}
 
-\item{unmapped_values}{concepts / other values that indicate an unmapped value}
+A boolean indicating whether the analysis should be conducted longitudinally by year
 
-\item{check_string}{an abbreviated identifier to identify all output from this module
-defaults to \code{uc}}
+\strong{Note:} the mapped list functionality is NOT available for the longitudinal analysis}
+
+\item{produce_mapped_list}{\emph{boolean} || defaults to \code{TRUE}
+
+A boolean indicating whether a list of source values associated with unmapped concepts
+should be produced in addition to the primary output. This table will be iteratively output
+to the database backend of choice and will NOT be stored locally.
+Only source values with > 10 occurrences are included.}
+
+\item{unmapped_values}{\emph{string / vector} || defaults to 44814650, 0, 44814653, & 44814649
+
+A string or vector listing the concept(s) that indicate an unmapped value. The function
+will check for NULL values by default, so that does not need to be defined here.}
+
+\item{check_string}{\emph{string} || defaults to \code{uc}
+
+An abbreviated identifier that will be used to label all output from this module}
 }
 \value{
-if \code{by_year} is \code{FALSE}: a dataframe with the total row count, the unmapped row count, the proportion
-of unmapped values, and some additional descriptive metadata for each check
+If \code{by_year} is \code{FALSE}, this function will produce a dataframe with the total row count,
+the unmapped row count, the proportion of unmapped values, and some additional descriptive
+metadata for each user-defined check
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{    if `by_year` is `TRUE`: a dataframe with the total row count, the unmapped row count, the proportion
-    of unmapped values, and some additional descriptive metadata for each check stratified by each year
-    present in the fact table
+If \code{by_year} is \code{TRUE}, this function will produce a dataframe with the total row count,
+the unmapped row count, the proportion of unmapped values, and some additional descriptive
+metadata for each user-defined check stratified by each year present in the fact table
 
-    if `produce_mapped_list` is `TRUE`, then a table with name `uc_grpd` that includes
-    the source values (with > 10 appearances) and counts of those values associated
-    with unmapped concepts
-}\if{html}{\out{</div>}}
+If \code{produce_mapped_list} is \code{TRUE}, then a table with name \code{uc_grpd} that includes
+the source values (with > 10 appearances) and counts of those values associated
+with unmapped concepts will be produced in addition to the primary tabular output
 }
 \description{
 This function will evaluate the count and proportion of unmapped concepts associated
-with the fact type of interest. If produce_mapped_list is set to TRUE, a summary of
+with the fact type of interest. If \code{produce_mapped_list} is set to TRUE, a summary of
 the source values associated with unmapped concepts will also be produced to help
-identify areas where mappings could potentially be improved.
+identify areas where mappings could potentially be improved. This analysis can be also be
+executed longitudinally by year.
 }
 \examples{
 # First create input file with desired checks to be executed

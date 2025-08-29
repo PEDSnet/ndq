@@ -1,14 +1,23 @@
 
-#' Add anonymized site identifier to all tables
+#' Add an anonymized site identifier to all tables
 #'
-#' @param all_sites_tbl a tbl that contains a column called `site`
-#'                      with each of the sites that you want to mask
-#'                      in all the other tables
-#' @param tbls_to_anon a **NAMED** list of all of the tables that you want to add
-#'                     the masked site identifier column to
-#' @return each of the original tables in `tbls_to_anon` with the original columns
-#'         plus a column called `site_anon` with a masked identifier
-#'         that is consistent across all of the tables in `tbls_to_anon`
+#' This function will iterate through the provided list of result tables
+#' to apply consistent anonymization of site names across all output.
+#'
+#' @param all_sites_tbl *tabular input* || **required**
+#'
+#'  A reference table that contains a column called `site` with all of
+#'  the sites that should be masked in each of the provided result tables
+#'
+#' @param tbls_to_anon *named list* || **required**
+#'
+#'  A **NAMED** list of all of the tables that should be anonymized
+#'
+#' @return
+#'
+#'  This function will return each of the original tables in `tbls_to_anon` with
+#'  all the original columns plus a column called `site_anon` with a masked identifier
+#'  that is consistent across all of the tables in `tbls_to_anon`
 #'
 #' @export
 #'

@@ -14,43 +14,64 @@ process_fot(
 )
 }
 \arguments{
-\item{fot_results}{the table output by check_fot}
+\item{fot_results}{\emph{tabular input} || \strong{required}
 
-\item{target_col}{the numerical column in fot_results that should be used to
-compute the heuristic; options are row_cts, row_pts, or row_visits}
+The tabular output of \code{check_fot}. This table should include results for all
+institutions that should be included in the computation of overall / "network level"
+statistics.}
 
-\item{add_ratios}{boolean to indicate whether ratios / rates should be computed
-if TRUE, the fot_results table should have an additional \code{total_pt}
-column with counts for the denominator of the user's choosing
+\item{target_col}{\emph{string} || defaults to \code{row_cts}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{              for example, the count of patients in that time period that
-              had a visit
-}\if{html}{\out{</div>}}}
+A string indicating the column in \code{fot_results} that should be used to
+compute the primary heuristic. For the ratio computation, \code{row_pts} will
+\emph{always} be used regardless of what is specified in this parameter.}
 
-\item{ratio_mult}{if add_ratios = TRUE, the numerical multiplier that should
-be used to compute the rate}
+\item{add_ratios}{\emph{boolean} || defaults to \code{FALSE}
 
-\item{rslt_source}{the location of the results. acceptable values are \code{local} (stored as a dataframe in the R environment),
-\code{csv} (stored as CSV files), or \code{remote} (stored on a remote DBMS); defaults to remote}
+A boolean indicating whether incidence ratios / rates should be computed.
+if TRUE, the user should edit the \code{fot_results} table to include an additional \code{total_pt}
+column with counts for the denominator of the user's choosing. We recommend including
+the desired denominator population as a check passed into the \code{check_fot} function
+to facilitate the computation of patient counts for each time period.}
 
-\item{csv_rslt_path}{if the results have been stored as CSV files, the path to the location
-of these files. If the results are local or remote, leave NULL}
+\item{ratio_mult}{\emph{integer} || defaults to \verb{10,000}
+
+If \code{add_ratios} is set to  \code{TRUE}, this parameter should represent the numerical
+multiplier that should be used to compute the incidence ratio. This will result in
+a ratio that represents the fact rate per (\code{ratio_mult}) patients.}
+
+\item{rslt_source}{\emph{string} || defaults to \code{remote}
+
+A string that identifies the location of the \code{fot_results} table.
+Acceptable values are
+\itemize{
+\item \code{local} - table is stored as a dataframe in the local R environment
+\item \code{csv} - table is stored as a CSV file
+\item \code{remote} - table is stored on a remote database
+}}
+
+\item{csv_rslt_path}{\emph{string} || defaults to \code{NULL}
+
+If \code{rslt_source} has been set to \code{csv}, this parameter should indicate the path to
+the result file(s). Otherwise, this parameter can be left as \code{NULL}}
 }
 \value{
-a list with up to three dataframes:
-\code{fot_heuristic}: the summary heuristic (month / ((month-1)\emph{.25 +
-(month+1)}.25 +
+This function will return a list of up to three dataframes:
+\itemize{
+\item \code{fot_heuristic}: a table with the summary heuristic  for each fact type
+(month / ((month-1) * .25 +
+(month+1) * .25 +
 (month-12)*.5))
-\code{fot_heuristic_summary}: summary values (mean, med, sd, q1, q3) based on
+\item \code{fot_heuristic_summary}: a table with summary values (mean, med, sd, q1, q3) based on
 the heuristic
-and if add_ratios = TRUE
-\code{fot_ratios}: the fot_results table with an additional column with the
-incidence ratio applied (as row_ratio)
+\item \code{fot_ratios}: the \code{fot_results} table with an additional column with the
+incidence ratio (only returned if \code{row_ratio = TRUE})
+}
 }
 \description{
 Intakes the output of check_fot in order to apply additional processing. This
 includes applying a heuristic meant to compare the fact count in a given time period
-to other time periods around it. For a montly computation, for example, the heuristic
+to other time periods around it. For a monthly computation, for example, the heuristic
 would be \code{month / ((month-1 * .25) + (month+1 * .25) + (month-12 * .5))} which is
 the value for a given month divided by the weighted average of the value in the previous
 month, the next month, and the same month in the previous year. The function can also

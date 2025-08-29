@@ -12,26 +12,47 @@ process_bmc(
 )
 }
 \arguments{
-\item{bmc_results}{the \code{bmc_counts} table output by check_bmc}
+\item{bmc_results}{\emph{tabular input} || \strong{required}
 
-\item{bmc_concepts_labelled}{the \code{bmc_concepts} table output by check_bmc, with an additional
-column called \code{include} added with "not best" or non-ideal concepts
-marked with a 0 (optionally, "best" concepts can also be marked with a 1)}
+The \code{bmc_counts} output of \code{check_bmc}. This table should include results for all
+institutions that should be included in the computation of overall / "network level"
+statistics.}
 
-\item{rslt_source}{the location of the results. acceptable values are \code{local} (stored as a dataframe in the R environment),
-\code{csv} (stored as CSV files), or \code{remote} (stored on a remote DBMS); defaults to remote}
+\item{bmc_concepts_labelled}{\emph{tabular input} || \strong{required}
 
-\item{csv_rslt_path}{if the results have been stored as CSV files, the path to the location
-of these files. If the results are local or remote, leave NULL}
+The \code{bmc_concepts} output of \code{check_bmc}, with an additional  column called \code{include}
+added with "not best" or non-ideal concepts marked with a 0
+(optionally, "best" concepts can also be marked with a 1)}
+
+\item{rslt_source}{\emph{string} || defaults to \code{remote}
+
+A string that identifies the location of the \code{bmc_results} table.
+Acceptable values are
+\itemize{
+\item \code{local} - table is stored as a dataframe in the local R environment
+\item \code{csv} - table is stored as a CSV file
+\item \code{remote} - table is stored on a remote database
+}}
+
+\item{csv_rslt_path}{\emph{string} || defaults to \code{NULL}
+
+If \code{rslt_source} has been set to \code{csv}, this parameter should indicate the path to
+the result file(s). Otherwise, this parameter can be left as \code{NULL}}
 }
 \value{
-a dataframe summarizing the proportion of best vs not best concepts for a given check, indicated by
-the appropriate value in the "include" column
+This function will return a list of two dataframes:
+\itemize{
+\item \code{bmc_output_pp}: A table summarizing the proportion of best vs not best
+concepts for a given check, indicated by the user designation in the
+\code{bmc_concepts_labelled} table
+\item \code{bmc_concepts_pp}: The \code{bmc_results} input table with the best / not best designations
+added
+}
 }
 \description{
-Intakes the output of check_bmc in order to apply additional processing. This
+Intakes the output of \code{check_bmc} in order to apply additional processing. This
 includes applying the user-specified best/not best labels that were added to
-the bmc_concepts output, then using those labels to compute proportions of
+the \code{bmc_concepts} table, then using those labels to compute proportions of
 best vs not best concept representation in each check.
 }
 \examples{

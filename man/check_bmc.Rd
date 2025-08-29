@@ -7,32 +7,41 @@
 check_bmc(
   bmc_tbl,
   omop_or_pcornet = "omop",
-  concept_tbl = vocabulary_tbl("concept"),
+  concept_tbl = NULL,
   check_string = "bmc"
 )
 }
 \arguments{
-\item{bmc_tbl}{table with information regarding the fields that should be
-evaluated to determine if they only include "best" concepts;
-see \code{?bmc_input_omop} or \code{?bmc_input_pcornet} for details}
+\item{bmc_tbl}{\emph{tabular input} || \emph{required}
 
-\item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
+The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions the fields that should be
+evaluated to determine if they only include "best" concepts.
+see \code{?bmc_input_omop} or \code{?bmc_input_pcornet} for examples of the input structure}
 
-\item{concept_tbl}{the vocabulary table with concept information; defaults to \code{vocabulary.concept}
+\item{omop_or_pcornet}{\emph{string} || defaults to \code{omop}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{               if you do not have the OMOP vocabulary tables or would not like to use them, set this
-               argument to NULL
-}\if{html}{\out{</div>}}}
+A string, either \code{omop} or \code{pcornet}, indicating the CDM format of the data}
 
-\item{check_string}{string that contains a description of the table}
+\item{concept_tbl}{\emph{tabular input} || defaults to \code{NULL}
+
+An optional parameter used to define a vocabulary table with concept definitions
+(for example, the OHDSI concept table). If left NULL, the concepts as they exist
+in the fact table will be returned to the user.}
+
+\item{check_string}{\emph{string} || defaults to \code{bmc}
+
+An abbreviated identifier that will be used to label all output from this module}
 }
 \value{
-a list of two dataframes:
-\code{bmc_counts}: each concept present in the specified field and the
-associated row and patient counts/proportions
-\code{bmc_concepts}: just the concepts from bmc_counts -- to be labelled
-as "best" (1) vs "not best" (0) concepts in a column
+This function will return a list of two dataframes:
+\itemize{
+\item \code{bmc_counts}: A table with one row for each concept present in each user-defined field
+and the associated row and patient counts/proportions
+\item \code{bmc_concepts}: A table with just the concepts from \code{bmc_counts}. This output is
+should be labelled with "best" (1) vs "not best" (0) indicators in a column
 called \code{include} for use in the processing step
+}
 }
 \description{
 This function will identify the existing concepts within the specified field

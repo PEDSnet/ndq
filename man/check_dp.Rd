@@ -13,25 +13,38 @@ check_dp(
 )
 }
 \arguments{
-\item{dp_tbl}{table with information about the fact types that should
-be evaluated in comparison to visit & birth dates
+\item{dp_tbl}{\emph{tabular input} || \strong{required}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{          see ?ndq::dp_input_omop for more details
-}\if{html}{\out{</div>}}}
+The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for the clinical fact
+types that should be evaluated for date plausibility.
+see \code{?dp_input_omop} or \code{?dp_input_pcornet} for examples of the input structure}
 
-\item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
+\item{omop_or_pcornet}{\emph{string} || defaults to \code{omop}
 
-\item{visit_tbl}{the CDM table with visit identifiers and dates; defaults to \code{cdm_tbl(visit_occurrence)}}
+A string, either \code{omop} or \code{pcornet}, indicating the CDM format of the data}
 
-\item{dob_tbl}{the CDM table with patient identifiers and birth dates; defaults to \code{cdm_tbl(person)}}
+\item{visit_tbl}{\emph{tabular input} || defaults to \code{cdm_tbl(visit_occurrence)}
 
-\item{check_string}{an abbreviated identifier to identify all output from this module
-defaults to \code{dp}}
+A table with visit information, including identifiers that can link back to facts
+and start & end dates. This argument will most likely be the \code{visit_occurrence} table for OMOP or
+the \code{encounter} table for PCORnet. Custom tables with specific visit subsets
+(i.e. a table with only nephrology specialist visits) can also be provided.}
+
+\item{dob_tbl}{\emph{tabular input} || defaults to \code{cdm_tbl('person')}
+
+A table with patient identifiers that can link back to facts and birth dates. This argument
+will most likely be the \code{person} table for OMOP or the \code{demographic} table for PCORnet.}
+
+\item{check_string}{\emph{string} || defaults to \code{dp}
+
+An abbreviated identifier that will be used to label all output from this module}
 }
 \value{
-a table with the count & proportion of rows with an implausible date value,
-meaning that it fell before the associated visit start date, after the associated
-visit end date, or before the patient birth date
+This function will return a table with the count & proportion of rows with an
+implausible date value, with one column for each of the 3 implausibility definitions.
+These will indicate the proportion of facts falling before the associated visit start date,
+after the associated visit end date, or before the patient birth date
 }
 \description{
 This function will iterate through the provided input table to identify

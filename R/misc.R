@@ -193,24 +193,42 @@ output_tbl_append <- function(data, name = NA, local = FALSE,
 
 #' Create informational metadata file
 #'
-#' @param check_tbls a list of table names from which the list of executed
-#'                   checks should be extracted
-#' @param metadata_file if one exists, a previously generated metadata file
-#'                      to append to. the function will also highlight new
-#'                      checks that will need to be described
-#' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
-#'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
-#' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
-#'                      of these files. If the results are local or remote, leave NULL
+#' This function will intake a list of result tables and extract relevant descriptive
+#' metadata. This is a convenience function to encourage robust documentation of the
+#' checks that are executed as part of a data quality assessment.
 #'
-#' @returns a dataframe with all executed checks from the input tables
+#' @param check_tbls *list* || **required**
 #'
-#'          if a metadate file is provided, it will include all information from this
-#'          file in addition to newly added checks that need additional metadata added
+#'  A list of table names from which the complete list of executed checks should be extracted
 #'
-#'          if a metadata file is NOT provided, it will include all checks with some
-#'          metadata pulled from the tables themselves and other fields left blank for the
-#'          user to fill in
+#' @param metadata_file *tabular input* || defaults to `NULL`
+#'
+#'  This parameter allows the user to insert a previously generated metadata file to which
+#'  any new analysis should be appended. The function will also print a message in the console
+#'  to highlight new checks that will need to be described more fully by the user
+#'
+#' @param rslt_source *string* || defaults to `remote`
+#'
+#'  A string that identifies the location of the tables listed in `check_tbls`.
+#'  Acceptable values are
+#'  - `local` - table is stored as a dataframe in the local R environment
+#'  - `csv` - table is stored as a CSV file
+#'  - `remote` - table is stored on a remote database
+#'
+#' @param csv_rslt_path *string* || defaults to `NULL`
+#'
+#'  If `rslt_source` has been set to `csv`, this parameter should indicate the path to
+#'  the result file(s). Otherwise, this parameter can be left as `NULL`
+#'
+#' @returns
+#'
+#'  This function will return a dataframe with the names and other information related to
+#'  executed checks from each of the provided `check_tbls`.
+#'  - If a metadata file is provided, this table will include all information from this
+#'    file in addition to newly added checks that need additional metadata added
+#'  - If a metadata file is NOT provided, it will include all checks with some
+#'    metadata pulled from the tables themselves and other fields left blank for the
+#'    user to fill in
 #'
 #' @export
 #'

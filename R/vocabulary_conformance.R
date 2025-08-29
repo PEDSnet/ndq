@@ -1,23 +1,45 @@
 
 #' Vocabulary Conformance
 #'
-#' This function will use the `vocabulary.concept` table to identify the vocabulary
-#' of each concept and determine how many rows comply with the standard vocabularies
-#' expected for that field and how many rows violate these expectations.
+#' This function will use a provided table with concept to vocabulary mappings to
+#' identify the vocabulary of each concept and determine how many rows comply with
+#' the standard vocabularies expected for that field and how many rows violate these expectations.
 #'
-#' @param vc_tbl a table with the table, field, and vocabulary information for each
-#'               check
-#' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param check_string an abbreviated identifier to identify all output from this module
-#'                     defaults to `vc`
-#' @param concept_tbl a vocabulary table, like the OMOP concept table, with at least the concept column of interest (concept_id or concept_code),
-#'                    the concept name, and the vocabulary id
-#' @param null_values a vector of NULL values (or other values that would not belong to accepted vocabularies
-#'                    but are broadly accepted) that should be excluded when identifying non-valueset concepts
+#' @param vc_tbl *tabular input* || **required**
 #'
-#' @return a dataframe with summary information about each vocabulary that appears in the field,
-#'         with violations marked in a T/F field; vocabularies associated with the indicated
-#'         null_values are ignored, so proportions may not add up to 1 as a result
+#'  The primary input table that contains descriptive information about the checks
+#'  to be executed by the function. It should include definitions for database table fields and
+#'  the expected vocabularies for that field.
+#'  see `?vc_input_omop` or `?vc_input_pcornet` for examples of the input structure
+#'
+#' @param omop_or_pcornet somop_or_pcornet *string* || defaults to `omop`
+#'
+#'  A string, either `omop` or `pcornet`, indicating the CDM format of the data
+#'
+#' @param concept_tbl *tabular input* || defaults to `vocabulary_tbl('concept')`
+#'
+#'  A vocabulary table with concept definitions (for example, the OHDSI concept table) that includes
+#'  the vocabulary to which the concept belongs. This table should at a minimum have the columns:
+#'  `concept_id`, `concept_name`, `vocabulary_id`
+#'
+#' @param null_values *string / vector* || defaults to 44814650, 0, 44814653, & 44814649
+#'
+#'  A string or vector listing the concept(s) that indicate a NULL value, which will be
+#'  excluding when assessing for the presence of vocabularies not accepted in the field.
+#'
+#' @param check_string *string* || defaults to `vc`
+#'
+#'  An abbreviated identifier that will be used to label all output from this module
+#'
+#' @return
+#'
+#'  This function will return a table with summary information about each vocabulary that
+#'  appears in the field, with violations marked in a T/F field. These summaries are computed at
+#'  both the row and concept levels. This is to account for any cases where a large quantity of rows are
+#'  in violation of the acceptable vocabularies, but it is made up of only 1-2 distinct concepts.
+#'
+#'  Note that vocabularies associated with the indicated `null_values` are ignored, so proportions may
+#'  not add up to 1 as a result.
 #'
 #' @importFrom stringr str_split
 #'
@@ -137,20 +159,35 @@ check_vc <- function(vc_tbl,
 
 #' Vocabulary Conformance -- Processing
 #'
-#' Intakes the output of check_vc in order to apply additional processing. This
+#' Intakes the output of `check_vc` in order to apply additional processing. This
 #' includes computing row and patient proportions and computing overall totals
 #' across all sites included in the input.
 #'
-#' @param vc_results the output of check_vc
-#' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
-#'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
-#' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
-#'                      of these files. If the results are local or remote, leave NULL
+#' @param vc_results *tabular input* || **required**
 #'
-#' @return a list that contains two dataframes:
-#' - `vc_processed`: a dataframe with additional columns that include proportions of violations
-#'                   and the overall summary
-#' - `vc_violations`: a dataframe with ONLY violating vocabularies
+#'  The tabular output of `check_vc`. This table should include results for all
+#'  institutions that should be included in the computation of overall / "network level"
+#'  statistics.
+#'
+#' @param rslt_source *string* || defaults to `remote`
+#'
+#'  A string that identifies the location of the `vc_results` table.
+#'  Acceptable values are
+#'  - `local` - table is stored as a dataframe in the local R environment
+#'  - `csv` - table is stored as a CSV file
+#'  - `remote` - table is stored on a remote database
+#'
+#' @param csv_rslt_path *string* || defaults to `NULL`
+#'
+#'  If `rslt_source` has been set to `csv`, this parameter should indicate the path to
+#'  the result file(s). Otherwise, this parameter can be left as `NULL`
+#'
+#' @return
+#'
+#'  This function will return a list that contains two dataframes:
+#'  -`vc_processed`: The `vc_results` table with additional rows reflecting the overall / "network level"
+#'  counts and a computed proportion of violating vocabularies
+#'  -`vc_violations`: A table listing all of the vocabulary violations
 #'
 #' @export
 #'

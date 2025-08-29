@@ -6,22 +6,35 @@
 #' so the user can assess which of these concepts are acceptable ("best") or should
 #' not be used in that field ("not best")
 #'
-#' @param bmc_tbl table with information regarding the fields that should be
-#'                evaluated to determine if they only include "best" concepts;
-#'                see `?bmc_input_omop` or `?bmc_input_pcornet` for details
-#' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param concept_tbl the vocabulary table with concept information; defaults to `vocabulary.concept`
+#' @param bmc_tbl *tabular input* || *required*
 #'
-#'                    if you do not have the OMOP vocabulary tables or would not like to use them, set this
-#'                    argument to NULL
-#' @param check_string string that contains a description of the table
+#'  The primary input table that contains descriptive information about the checks
+#'  to be executed by the function. It should include definitions the fields that should be
+#'  evaluated to determine if they only include "best" concepts.
+#'  see `?bmc_input_omop` or `?bmc_input_pcornet` for examples of the input structure
 #'
-#' @return a list of two dataframes:
-#'         `bmc_counts`: each concept present in the specified field and the
-#'                       associated row and patient counts/proportions
-#'         `bmc_concepts`: just the concepts from bmc_counts -- to be labelled
-#'                         as "best" (1) vs "not best" (0) concepts in a column
-#'                         called `include` for use in the processing step
+#' @param omop_or_pcornet *string* || defaults to `omop`
+#'
+#'  A string, either `omop` or `pcornet`, indicating the CDM format of the data
+#'
+#' @param concept_tbl *tabular input* || defaults to `NULL`
+#'
+#'  An optional parameter used to define a vocabulary table with concept definitions
+#'  (for example, the OHDSI concept table). If left NULL, the concepts as they exist
+#'  in the fact table will be returned to the user.
+#'
+#' @param check_string *string* || defaults to `bmc`
+#'
+#'  An abbreviated identifier that will be used to label all output from this module
+#'
+#' @return
+#'
+#'  This function will return a list of two dataframes:
+#'  - `bmc_counts`: A table with one row for each concept present in each user-defined field
+#'  and the associated row and patient counts/proportions
+#'  - `bmc_concepts`: A table with just the concepts from `bmc_counts`. This output is
+#'  should be labelled with "best" (1) vs "not best" (0) indicators in a column
+#'  called `include` for use in the processing step
 #'
 #' @export
 #'
@@ -42,7 +55,7 @@
 #'
 check_bmc <- function(bmc_tbl,
                       omop_or_pcornet = 'omop',
-                      concept_tbl = vocabulary_tbl('concept'),
+                      concept_tbl = NULL,
                       check_string='bmc') {
 
   site_nm <- config('qry_site')
@@ -284,22 +297,44 @@ bmc_rollup <- function(bmc_output_pp){
 
 #' Best Mapped Concepts -- Processing
 #'
-#' Intakes the output of check_bmc in order to apply additional processing. This
+#' Intakes the output of `check_bmc` in order to apply additional processing. This
 #' includes applying the user-specified best/not best labels that were added to
-#' the bmc_concepts output, then using those labels to compute proportions of
+#' the `bmc_concepts` table, then using those labels to compute proportions of
 #' best vs not best concept representation in each check.
 #'
-#' @param bmc_results the `bmc_counts` table output by check_bmc
-#' @param bmc_concepts_labelled the `bmc_concepts` table output by check_bmc, with an additional
-#'                              column called `include` added with "not best" or non-ideal concepts
-#'                              marked with a 0 (optionally, "best" concepts can also be marked with a 1)
-#' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
-#'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
-#' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
-#'                      of these files. If the results are local or remote, leave NULL
+#' @param bmc_results *tabular input* || **required**
 #'
-#' @returns a dataframe summarizing the proportion of best vs not best concepts for a given check, indicated by
-#'          the appropriate value in the "include" column
+#'  The `bmc_counts` output of `check_bmc`. This table should include results for all
+#'  institutions that should be included in the computation of overall / "network level"
+#'  statistics.
+#'
+#' @param bmc_concepts_labelled *tabular input* || **required**
+#'
+#'  The `bmc_concepts` output of `check_bmc`, with an additional  column called `include`
+#'  added with "not best" or non-ideal concepts marked with a 0
+#'  (optionally, "best" concepts can also be marked with a 1)
+#'
+#' @param rslt_source *string* || defaults to `remote`
+#'
+#'  A string that identifies the location of the `bmc_results` table.
+#'  Acceptable values are
+#'  - `local` - table is stored as a dataframe in the local R environment
+#'  - `csv` - table is stored as a CSV file
+#'  - `remote` - table is stored on a remote database
+#'
+#' @param csv_rslt_path *string* || defaults to `NULL`
+#'
+#'  If `rslt_source` has been set to `csv`, this parameter should indicate the path to
+#'  the result file(s). Otherwise, this parameter can be left as `NULL`
+#'
+#' @returns
+#'
+#'  This function will return a list of two dataframes:
+#'  - `bmc_output_pp`: A table summarizing the proportion of best vs not best
+#'  concepts for a given check, indicated by the user designation in the
+#'  `bmc_concepts_labelled` table
+#'  - `bmc_concepts_pp`: The `bmc_results` input table with the best / not best designations
+#'  added
 #'
 #' @importFrom stringr str_wrap
 #'

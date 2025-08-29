@@ -17,33 +17,57 @@ check_fot(
 )
 }
 \arguments{
-\item{fot_tbl}{a table with information describing the fact tables that should be examined;
-see \code{?fot_input_omop} or \code{?fot_input_pcornet} for details}
+\item{fot_tbl}{\emph{tabular input} || \strong{required}
 
-\item{omop_or_pcornet}{string indicating the CDM format of the data; defaults to \code{omop}}
+The primary input table that contains descriptive information about the checks
+to be executed by the function. It should include definitions for the clinical fact
+types that should be evaluated across the user-specified time span per each time period.
+see \code{?fot_input_omop} or \code{?fot_input_pcornet} for examples of the input structure}
 
-\item{compute_method}{a string input of either \code{loop} or \code{group}; controls whether the
-check is executed by looping through each time period or grouping by a date field}
+\item{omop_or_pcornet}{\emph{string} || defaults to \code{omop}
 
-\item{time_span}{a list that contains the start date and end date of the time span (i.e. list(2009-01-01, 2015-01-01))}
+A string, either \code{omop} or \code{pcornet}, indicating the CDM format of the data}
 
-\item{time_period}{string indicating the length of time that the time span should be divided into (i.e. months, years)}
+\item{compute_method}{\emph{string} || defaults to \code{loop}
 
-\item{lookback_interval}{the number of time periods (defined in \code{time_period}) to look back in each interval
-(i.e. 1 year, 3 months); defaults to 1}
+A string, either \code{loop} or \code{group}, that controls whether the
+check is executed by looping through each time period or grouping by a date field to
+obtain counts. \code{group} is recommended for high performing database systems.}
 
-\item{check_string}{the abbreviated name of the check; defaults to \code{fot}}
+\item{time_span}{\emph{list (length 2)} || defaults to \code{list('2009-01-01', today())}
 
-\item{visits_only}{if TRUE, counts ONLY distinct visits and not patients or rows}
+A list that contains the start date and end date of the total time period of interest}
 
-\item{distinct_visits}{if TRUE, counts distinct visits as well as total counts and total patients}
+\item{time_period}{\emph{string} || defaults to \code{month}
+
+A string indicating the length of each time period that should be examined, like months or years}
+
+\item{lookback_interval}{\emph{integer} || defaults to \code{1}
+
+An integer indicating the number of time periods (defined in \code{time_period}) to look back in each interval.
+For example, a \code{time_period} of \code{month} and a \code{lookback_interval} of \code{3} would produce quarterly counts.}
+
+\item{check_string}{\emph{string} || defaults to \code{fot}
+
+An abbreviated identifier that will be used to label all output from this module}
+
+\item{visits_only}{\emph{boolean} || defaults to FALSE
+
+If set to \code{TRUE}, then this function will only return visit counts and will not return patient
+or row counts. By default, visit, row, and patient counts are returned.}
+
+\item{distinct_visits}{\emph{boolean} || defaults to TRUE
+
+If set to \code{FALSE}, then this function will only return patient and row counts and will not return
+visit counts. By default, visit, row, and patient counts are returned.}
 }
 \value{
-a dataframe with one row for each time period within the specified time span for each check;
+This function will return a dataframe with one row for each time period within the
+specified time span for each check. Additionally:
 \itemize{
-\item if visits_only = TRUE, will produce only counts of visits for the check + time period
-\item if visits_only = FALSE and distinct_visits = TRUE, will produce counts of patients, rows, and visits for the check + time period
-\item if visits_only = FALSE and distinct_visits = FALSE, will produce counts of patients and rows for the check + time period
+\item If \code{visits_only = TRUE}, only visit counts will be returned for the check + time period
+\item If \code{visits_only = FALSE} and \code{distinct_visits = TRUE}, patient, row, and visit counts will be returned for the check + time period
+\item If \code{visits_only = FALSE} and \code{distinct_visits = FALSE}, only patient and row counts will be returned for the check + time period
 }
 }
 \description{

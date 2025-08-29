@@ -2,18 +2,30 @@
 #' Expected Concepts Present
 #'
 #' This function will iterate through the provided input table to identify
-#' the count of patients who have the concept identified in the defined concept set
-#' and the proportion of patients who have the concept based on the defined cohort table.
+#' the count of patients who have the at least one occurrence of the concept defined in the
+#' user-provided concept set and the proportion of patients who have the concept
+#' based on the user-defined denominator cohort.
 #'
-#' @param ecp_tbl table with information regarding the concepts and associated fact tables
-#'                that should be evaluated, and the cohort that should be used to establish
-#'                a patient denominator
-#' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param check_string an abbreviated identifier to identify all output from this module
-#'                     defaults to `ecp`
+#' @param ecp_tbl *tabular input* || **required**
 #'
-#' @return a table with the total patient count, the count of patients with a particular concept,
-#'         the proportion of total patients with the concept, and relevant descriptive metadata
+#'  The primary input table that contains descriptive information about the checks
+#'  to be executed by the function. It should include definitions for the concepts
+#'  that should be identified and the denominator cohort to be used for the computation.
+#'  see `?ecp_input_omop` or `?ecp_input_pcornet` for examples of the input structure
+#'
+#' @param omop_or_pcornet *string* || defaults to `omop`
+#'
+#'  A string, either `omop` or `pcornet`, indicating the CDM format of the data
+#'
+#' @param check_string *string* || defaults to `ecp`
+#'
+#'  An abbreviated identifier that will be used to label all output from this module
+#'
+#' @return
+#'
+#'  This function will return a table with the total patient count, the count of
+#'  patients with a particular concept, the proportion of total patients with the
+#'  concept, plus some additional descriptive metadata
 #'
 #' @export
 #'
@@ -112,17 +124,33 @@ check_ecp <- function(ecp_tbl,
 
 #' Expected Concepts Present -- Processing
 #'
-#' Intakes the output of check_ecp in order to apply additional processing. This
-#' includes creating a new check_name_app column to specify that the check
+#' Intakes the output of `check_ecp` in order to apply additional processing. This
+#' includes creating a new `check_name_app` column to specify that the check
 #' was computed at the person level.
 #'
-#' @param ecp_results table output by check_ecp
-#' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
-#'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
-#' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
-#'                      of these files. If the results are local or remote, leave NULL
+#' @param ecp_results *tabular input* || **required**
 #'
-#' @returns same input table with additional check_name_app column to indicate application level
+#'  The tabular output of `check_ecp`. This table should include results for all
+#'  institutions that should be included in the computation of overall / "network level"
+#'  statistics.
+#'
+#' @param rslt_source *string* || defaults to `remote`
+#'
+#'  A string that identifies the location of the `ecp_results` table.
+#'  Acceptable values are
+#'  - `local` - table is stored as a dataframe in the local R environment
+#'  - `csv` - table is stored as a CSV file
+#'  - `remote` - table is stored on a remote database
+#'
+#' @param csv_rslt_path *string* || defaults to `NULL`
+#'
+#'  If `rslt_source` has been set to `csv`, this parameter should indicate the path to
+#'  the result file(s). Otherwise, this parameter can be left as `NULL`
+#'
+#' @returns
+#'
+#'  This function will return the `ecp_results` table with and additional
+#'  `check_name_app` column to indicate application level
 #'
 #' @export
 #'

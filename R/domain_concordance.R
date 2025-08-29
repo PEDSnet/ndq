@@ -8,17 +8,34 @@
 #' count towards that cohort when the two events occur within a specified number of days
 #' of each other.
 #'
-#' @param dcon_tbl table describing each cohort pair that should be examined;
-#'                 there should be 2 rows per check, one for each cohort, with the same check_id
-#'                 see `?dcon_input_omop` or `?dcon_input_pcornet` for details
-#' @param omop_or_pcornet string indicating the CDM format of the data; defaults to `omop`
-#' @param compute_level string indicating the level at which the computation should be executed
-#'                      accepted values are `patient` or `visit`
-#' @param check_string the abbreviated name of the check; defaults to `dcon`
+#' @param dcon_tbl *tabular* || **required**
 #'
-#' @return a list with two dataframes:
-#'         1. counts for the patients/visits in the first cohort, the patients/visits in the second cohort, and the patients/visits in both
-#'         2. metadata information about each of the cohorts for which counts were computed
+#'  The primary input table that contains descriptive information about the checks
+#'  to be executed by the function. It should include definitions for each pair of cohorts,
+#'  meaning there should be **2 rows per check**, one fo each cohort, with the same `check_id`.
+#'  see `?dcon_input_omop` or `?dcon_input_pcornet` for examples of the input structure
+#'
+#' @param omop_or_pcornet *string* || defaults to `omop`
+#'
+#'  A string, either `omop` or `pcornet`, indicating the CDM format of the data
+#'
+#' @param compute_level *string* || defaults to `patient`
+#'
+#'  A string indicating whether the analysis should be conducted at the `patient`
+#'  or `visit` level
+#'
+#' @param check_string *string* || defaults to `dcon`
+#'
+#'  An abbreviated identifier that will be used to label all output from this module
+#'
+#' @return
+#'
+#'  This function will return a list of two dataframes:
+#'  - `dcon_output`: A table with counts of patients/visits in the first cohort,
+#'  patients/visits in the second cohort, and patients/visits in both cohorts (who also
+#'  meet the time limit criteria)
+#'  - `dcon_meta`: A table with descriptive metadata about each of the cohorts for
+#'  which counts were computed
 #'
 #' @export
 #'
@@ -231,27 +248,43 @@ check_dcon<- function(dcon_tbl,
 
 #' Domain Concordance -- Processing
 #'
-#' Intakes the output of check_dcon in order to apply additional processing. This
-#' includes computing the following cohort overlap counts and proportions:
-#' - cohort_1_only: overall, patients in just cohort 1
-#' - cohort_2_only: overall, patients in just cohort 2
-#' - combined: overall, patients in both 1 and 2
-#' - cohort_1_denom: patients in cohort 1 not cohort 2
-#' - cohort_2_denom: patients in cohort 2 not cohort 1
-#' - cohort_1_in_2: patients in cohort 2 who are also in 1 (use cohort 2 as denominator)
-#' - cohort_2_in_1: patients in cohort 1 who are also in 2 (use cohort 1 as denominator)
+#'  Intakes the output of `check_dcon` in order to apply additional processing. This
+#'  includes computing the following cohort overlap counts and proportions:
+#'  - `cohort_1_only`: overall, patients in just cohort 1
+#'  - `cohort_2_only`: overall, patients in just cohort 2
+#'  - `combined`: overall, patients in both 1 and 2
+#'  - `cohort_1_denom`: patients in cohort 1 not cohort 2
+#'  - `cohort_2_denom`: patients in cohort 2 not cohort 1
+#'  - `cohort_1_in_2`: patients in cohort 2 who are also in 1 (use cohort 2 as denominator)
+#'  - `cohort_2_in_1`: patients in cohort 1 who are also in 2 (use cohort 1 as denominator)
 #'
-#' Note that cohort_1_in_2 and cohort_2_in_1 will have the same raw count, but different
-#' proportions since the denominator is different
+#'  Note that `cohort_1_in_2` and `cohort_2_in_1` will have the same raw count, but different
+#'  proportions since the denominator is different
 #'
-#' @param dcon_results table output by check_dcon
-#' @param rslt_source the location of the results. acceptable values are `local` (stored as a dataframe in the R environment),
-#'                    `csv` (stored as CSV files), or `remote` (stored on a remote DBMS); defaults to remote
-#' @param csv_rslt_path if the results have been stored as CSV files, the path to the location
-#'                      of these files. If the results are local or remote, leave NULL
+#' @param dcon_results *tabular input* || **required**
 #'
-#' @return a dataframe with one row for cohort overlap computation type listed in the description, with
-#'         the associated raw count (of patients or visits) and the associated proportion
+#'  The `dcon_counts` output of `check_dcon`. This table should include results for all
+#'  institutions that should be included in the computation of overall / "network level"
+#'  statistics.
+#'
+#' @param rslt_source *string* || defaults to `remote`
+#'
+#'  A string that identifies the location of the `dcon_results` table.
+#'  Acceptable values are
+#'  - `local` - table is stored as a dataframe in the local R environment
+#'  - `csv` - table is stored as a CSV file
+#'  - `remote` - table is stored on a remote database
+#'
+#' @param csv_rslt_path *string* || defaults to `NULL`
+#'
+#'  If `rslt_source` has been set to `csv`, this parameter should indicate the path to
+#'  the result file(s). Otherwise, this parameter can be left as `NULL`
+#'
+#' @return
+#'
+#'  This function will return a dataframe that, for each cohort pair, contains one row for
+#'  each cohort overlap computation type listed in the description,
+#'  including the associated raw counts and proportions
 #'
 #' @export
 #'
