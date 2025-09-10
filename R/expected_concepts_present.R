@@ -61,9 +61,11 @@ check_ecp <- function(ecp_tbl,
 
     if(tolower(omop_or_pcornet) == 'omop'){
       pt_col <- 'person_id'
+      pt_tbl <- 'person'
       join_cols <- set_names('concept_id', ecp_list[[i]]$concept_field)
     }else if(tolower(omop_or_pcornet) == 'pcornet'){
       pt_col <- 'patid'
+      pt_tbl <- 'demographic'
       join_cols <- set_names('concept_code', ecp_list[[i]]$concept_field)
       join_cols2 <- set_names('vocabulary_id', ecp_list[[i]]$vocabulary_field)
       join_cols <- join_cols %>% append(join_cols2)
@@ -75,7 +77,8 @@ check_ecp <- function(ecp_tbl,
       select(!!sym(pt_col))
 
     total_pts <- cohort_tbl %>%
-      add_site() %>% filter(site == site_nm) %>%
+      add_site(site_tbl = cdm_tbl(pt_tbl),
+               id_col = pt_col) %>% filter(site == site_nm) %>%
       summarise(total_pt_ct = n_distinct(!!sym(pt_col))) %>%
       collect()
 
@@ -92,7 +95,8 @@ check_ecp <- function(ecp_tbl,
     }
 
     fact_pts <- tbl_use %>%
-      add_site() %>% filter(site == site_nm) %>%
+      add_site(site_tbl = cdm_tbl(pt_tbl),
+               id_col = pt_col) %>% filter(site == site_nm) %>%
       inner_join(cohort_tbl) %>%
       inner_join(load_codeset(ecp_list[[i]]$conceptset_name,
                               indexes = NULL), by = join_cols) %>%

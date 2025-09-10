@@ -60,6 +60,15 @@ check_bmc <- function(bmc_tbl,
 
   site_nm <- config('qry_site')
 
+  if(omop_or_pcornet == 'omop'){
+    pt_col <- 'person_id'
+    pt_tbl <- 'person'
+  }else if(omop_or_pcornet == 'pcornet'){
+    pt_col <- 'patid'
+    pt_tbl <- 'demographic'
+  }else{
+    cli::cli_abort('Invalid value for omop_or_pcornet. Please choose `omop` or `pcornet` as the CDM')}
+
   fact_tbl_list_args <- split(bmc_tbl, seq(nrow(bmc_tbl)))
 
   results <- list()
@@ -73,12 +82,14 @@ check_bmc <- function(bmc_tbl,
                              table = fact_tbl_list_args[[i]]$table,
                              db = config('db_src')) %>%
         filter(!! rlang::parse_expr(fact_tbl_list_args[[i]]$filter_logic)) %>%
-        add_site() %>% filter(site == site_nm)
+        add_site(site_tbl = cdm_tbl(pt_tbl),
+                 id_col = pt_col) %>% filter(site == site_nm)
     }else{
       tbl_use <- pick_schema(schema = fact_tbl_list_args[[i]]$schema,
                              table = fact_tbl_list_args[[i]]$table,
                              db = config('db_src')) %>%
-        add_site() %>% filter(site == site_nm)
+        add_site(site_tbl = cdm_tbl(pt_tbl),
+                 id_col = pt_col) %>% filter(site == site_nm)
     }
 
     if(is.null(concept_tbl)){
@@ -93,12 +104,6 @@ check_bmc <- function(bmc_tbl,
                            concept_field = fact_tbl_list_args[[i]]$concept_table_field,
                            concept_tbl = concept_tbl)
     }
-
-
-    if(omop_or_pcornet == 'omop'){
-      pt_col <- 'person_id'
-    }else if(omop_or_pcornet == 'pcornet'){pt_col <- 'patid'}else{
-      cli::cli_abort('Invalid value for omop_or_pcornet. Please choose `omop` or `pcornet` as the CDM')}
 
     total_cts <-
       xwalk %>%

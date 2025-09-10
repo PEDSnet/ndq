@@ -116,8 +116,10 @@ check_dc <- function(dc_tbl,
 
   if(tolower(omop_or_pcornet) == 'omop'){
     pt_col <- 'person_id'
+    pt_tbl <- 'person'
   }else if(tolower(omop_or_pcornet) == 'pcornet'){
     pt_col <- 'patid'
+    pt_tbl <- 'demographic'
   }else{
     cli::cli_abort('Invalid value for omop_or_pcornet. Please choose `omop` or `pcornet` as the CDM')
   }
@@ -134,7 +136,8 @@ check_dc <- function(dc_tbl,
     tbl_current <- pick_schema(schema = dc_tbl[[i]]$schema_current,
                                table = dc_tbl[[i]]$table_current,
                                db = config('db_src')) %>%
-      add_site() %>%
+      add_site(site_tbl = cdm_tbl(pt_tbl),
+               id_col = pt_col) %>%
       filter(site == site_nm)
 
     pid_check <- any(str_detect(colnames(tbl_current),pt_col))
@@ -169,13 +172,15 @@ check_dc <- function(dc_tbl,
                                        table = dc_tbl[[i]]$table_prev,
                                        db = prev_db) %>%
           filter(!! rlang::parse_expr(dc_tbl[[i]]$filter_logic)) %>%
-          add_site() %>%
+          add_site(site_tbl = cdm_tbl(pt_tbl),
+                   id_col = pt_col) %>%
           filter(site == site_nm)
       }else{
         this_round_prev <- pick_schema(schema = dc_tbl[[i]]$schema_prev,
                                        table = dc_tbl[[i]]$table_prev,
                                        db = prev_db) %>%
-          add_site() %>%
+          add_site(site_tbl = cdm_tbl(pt_tbl),
+                   id_col = pt_col) %>%
           filter(site == site_nm)
       }
 

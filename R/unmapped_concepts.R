@@ -14,6 +14,10 @@
 #'  should be evaluated for missingness and other relevant metadata.
 #'  see `?uc_input_omop` or `?uc_input_pcornet` for examples of the input structure
 #'
+#' @param omop_or_pcornet *string* || defaults to `omop`
+#'
+#'  A string, either `omop` or `pcornet`, indicating the CDM format of the data
+#'
 #' @param by_year *boolean* || defaults to `FALSE`
 #'
 #'  A boolean indicating whether the analysis should be conducted longitudinally by year
@@ -82,6 +86,7 @@
 #' }
 #'
 check_uc <- function(uc_tbl,
+                     omop_or_pcornet = 'omop',
                      by_year = FALSE,
                      produce_mapped_list=TRUE,
                      unmapped_values = c(44814650L,0L,
@@ -90,6 +95,7 @@ check_uc <- function(uc_tbl,
 
   if(by_year){
     check_concepts <- check_uc_by_year(uc_tbl = uc_tbl,
+                                       omop_or_pcornet = omop_or_pcornet,
                                        unmapped_values = unmapped_values,
                                        check_string = check_string)
   }else{
@@ -99,6 +105,14 @@ check_uc <- function(uc_tbl,
     concept_list <- split(uc_tbl, seq(nrow(uc_tbl)))
 
     check_concepts <- list()
+
+    if(tolower(omop_or_pcornet) == 'omop'){
+      pt_col <- 'person_id'
+      pt_tbl <- 'person'
+    }else if(tolower(omop_or_pcornet) == 'pcornet'){
+      pt_col <- 'patid'
+      pt_tbl <- 'demographic'
+    }
 
     for(i in 1:length(concept_list)) {
 
@@ -117,7 +131,8 @@ check_uc <- function(uc_tbl,
 
       total_rows <-
         tbl_use %>%
-        add_site() %>% filter(site == site_nm) %>%
+        add_site(site_tbl = cdm_tbl(pt_tbl),
+                 id_col = pt_col) %>% filter(site == site_nm) %>%
         summarise(
           total_rows = as.numeric(n())
         ) %>% collect()
@@ -127,7 +142,8 @@ check_uc <- function(uc_tbl,
 
       unmapped_vals <-
         tbl_use %>%
-        add_site() %>% filter(site == site_nm) %>%
+        add_site(site_tbl = cdm_tbl(pt_tbl),
+                 id_col = pt_col) %>% filter(site == site_nm) %>%
         filter(.data[[colname]]  %in% unmapped_values | is.na(.data[[colname]]))
 
       if(produce_mapped_list) {
@@ -189,6 +205,7 @@ check_uc <- function(uc_tbl,
 #'
 #' @param uc_tbl dataframe with metadata describing the tables/columns for which
 #'               unmapped concepts should be identified
+#' @param omop_or_pcornet string identifying the cdm format of the underlying data
 #' @param unmapped_values concepts / other values that indicate an unmapped value
 #' @param check_string an abbreviated identifier to identify all output from this module
 #'                     defaults to `uc`
@@ -201,6 +218,7 @@ check_uc <- function(uc_tbl,
 #'
 #'
 check_uc_by_year <- function(uc_tbl,
+                             omop_or_pcornet = 'omop',
                              unmapped_values = c(44814650L,0L,
                                                  44814653L, 44814649L),
                              check_string = 'uc') {
@@ -210,6 +228,14 @@ check_uc_by_year <- function(uc_tbl,
   concept_list <- split(uc_tbl, seq(nrow(uc_tbl)))
 
   check_concepts <- list()
+
+  if(tolower(omop_or_pcornet) == 'omop'){
+    pt_col <- 'person_id'
+    pt_tbl <- 'person'
+  }else if(tolower(omop_or_pcornet) == 'pcornet'){
+    pt_col <- 'patid'
+    pt_tbl <- 'demographic'
+  }
 
   for(i in 1:length(concept_list)) {
 
@@ -230,7 +256,8 @@ check_uc_by_year <- function(uc_tbl,
 
     unmapped_vals <-
       tbl_use %>%
-      add_site() %>% filter(site == site_nm) %>%
+      add_site(site_tbl = cdm_tbl(pt_tbl),
+               id_col = pt_col) %>% filter(site == site_nm) %>%
       filter(.data[[colname]]  %in% unmapped_values | is.na(.data[[colname]]))
 
     date_cols <-
@@ -257,7 +284,8 @@ check_uc_by_year <- function(uc_tbl,
 
     total_rows <-
       tbl_use %>%
-      add_site() %>% filter(site == site_nm) %>%
+      add_site(site_tbl = cdm_tbl(pt_tbl),
+               id_col = pt_col) %>% filter(site == site_nm) %>%
       mutate(year_date = as.integer(sql(sql_string))) %>%
       group_by(
         year_date

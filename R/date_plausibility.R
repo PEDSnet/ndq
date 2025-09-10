@@ -68,12 +68,14 @@ check_dp <- function(dp_tbl,
 
   if(tolower(omop_or_pcornet) == 'omop'){
     person_col <- 'person_id'
+    pt_tbl <- 'person'
     visit_col <- 'visit_occurrence_id'
     visit_start <- 'visit_start_date'
     visit_end <- 'visit_end_date'
     dob <- 'birth_datetime'
   }else if(tolower(omop_or_pcornet) == 'pcornet'){
     person_col <- 'patid'
+    pt_tbl <- 'demographic'
     visit_col <- 'encounterid'
     visit_start <- 'admit_date'
     visit_end <- 'discharge_date'
@@ -93,12 +95,14 @@ check_dp <- function(dp_tbl,
                              table = date_tbls[[i]]$table,
                              db = config('db_src')) %>%
         filter(!! rlang::parse_expr(date_tbls[[i]]$filter_logic)) %>%
-        add_site() %>% filter(site == site_nm)
+        add_site(site_tbl = cdm_tbl(pt_tbl),
+                 id_col = person_col) %>% filter(site == site_nm)
     }else{
       tbl_use <- pick_schema(schema = date_tbls[[i]]$schema,
                              table = date_tbls[[i]]$table,
                              db = config('db_src')) %>%
-        add_site() %>% filter(site == site_nm)
+        add_site(site_tbl = cdm_tbl(pt_tbl),
+                 id_col = person_col) %>% filter(site == site_nm)
     }
 
     ## total records

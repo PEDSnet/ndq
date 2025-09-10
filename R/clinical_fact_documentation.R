@@ -80,10 +80,12 @@ check_cfd <- function(cfd_tbl,
 
   if(tolower(omop_or_pcornet) == 'omop'){
     pt_col <- 'person_id'
+    pt_tbl <- 'person'
     visit_col <- 'visit_occurrence_id'
     visit_type_col <- colnames(visit_type_tbl)[2]
   }else if(tolower(omop_or_pcornet) == 'pcornet'){
     pt_col <- 'patid'
+    pt_tbl <- 'demographic'
     visit_col <- 'encounterid'
     visit_type_col <- colnames(visit_type_tbl)[2]
   }else{cli::cli_abort('Invalid value for omop_or_pcornet. Please choose `omop` or `pcornet` as the CDM')}
@@ -101,7 +103,8 @@ check_cfd <- function(cfd_tbl,
     }
 
     visit_tbl_filt <- visit_tbl %>%
-      add_site() %>%
+      add_site(site_tbl = cdm_tbl(pt_tbl),
+               id_col = pt_col) %>%
       filter(site == site_nm,
              !!sym(visit_type_col) %in% cids)
 

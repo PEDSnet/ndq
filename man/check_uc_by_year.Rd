@@ -6,6 +6,7 @@
 \usage{
 check_uc_by_year(
   uc_tbl,
+  omop_or_pcornet = "omop",
   unmapped_values = c(44814650L, 0L, 44814653L, 44814649L),
   check_string = "uc"
 )
@@ -13,6 +14,8 @@ check_uc_by_year(
 \arguments{
 \item{uc_tbl}{dataframe with metadata describing the tables/columns for which
 unmapped concepts should be identified}
+
+\item{omop_or_pcornet}{string identifying the cdm format of the underlying data}
 
 \item{unmapped_values}{concepts / other values that indicate an unmapped value}
 

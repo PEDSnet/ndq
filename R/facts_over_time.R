@@ -228,9 +228,11 @@ check_fot_loop <- function(fot_tbl,
       if(tolower(omop_or_pcornet) == 'omop'){
         visit_col <- 'visit_occurrence_id'
         pt_col <- 'person_id'
+        pt_tbl <- 'person'
       }else if(tolower(omop_or_pcornet) == 'pcornet'){
         visit_col <- 'encounterid'
         pt_col <- 'patid'
+        pt_tbl <- 'demographic'
       }else{cli::cli_abort('Invalid value for omop_or_pcornet. Please choose `omop` or `pcornet` as the CDM')}
 
       date_cols <- time_tbls[[i]]$date_field
@@ -256,7 +258,8 @@ check_fot_loop <- function(fot_tbl,
 
       visits_narrowed <-
         tbl_use %>%
-        add_site() %>% filter(site == site_nm) %>%
+        add_site(site_tbl = cdm_tbl(pt_tbl),
+                 id_col = pt_col) %>% filter(site == site_nm) %>%
         filter(!! sym(colname_string) <= baseline_end_date &
                  !! sym(colname_string) > baseline_start_date)
 
@@ -365,9 +368,11 @@ check_fot_group <- function(fot_tbl,
     if(tolower(omop_or_pcornet) == 'omop'){
       visit_col <- 'visit_occurrence_id'
       pt_col <- 'person_id'
+      pt_tbl <- 'person'
     }else if(tolower(omop_or_pcornet) == 'pcornet'){
       visit_col <- 'encounterid'
       pt_col <- 'patid'
+      pt_tbl <- 'demographic'
     }else{cli::cli_abort('Invalid value for omop_or_pcornet. Please choose `omop` or `pcornet` as the CDM')}
 
     date_cols <- time_tbls[[i]]$date_field
@@ -393,7 +398,8 @@ check_fot_group <- function(fot_tbl,
 
     visits_narrowed <-
       tbl_use %>%
-      add_site() %>% filter(site == site_nm) %>%
+      add_site(site_tbl = cdm_tbl(pt_tbl),
+               id_col = pt_col) %>% filter(site == site_nm) %>%
       filter(!! sym(colname_string) <= end_date &
                !! sym(colname_string) >= start_date)
 

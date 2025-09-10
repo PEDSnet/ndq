@@ -82,12 +82,14 @@ check_vs <- function(vs_tbl,
     if(tolower(omop_or_pcornet) == 'omop'){
       join_cols <- set_names('concept_id', paste0(concept_id_fn))
       pt_col <- 'person_id'
+      pt_tbl <- 'person'
       concept_col <- 'concept_id'
     }else if(tolower(omop_or_pcornet) == 'pcornet'){
       join_cols <- set_names('concept_code', paste0(concept_id_fn))
       join_cols2 <- set_names('vocabulary_id', valuesets[[i]]$vocabulary_field)
       join_cols <- join_cols %>% append(join_cols2)
       pt_col <- 'patid'
+      pt_tbl <- 'demographic'
       concept_col <- 'concept_code'
     }else{cli::cli_abort('Invalid value for omop_or_pcornet. Please choose `omop` or `pcornet` as the CDM')}
 
@@ -104,7 +106,8 @@ check_vs <- function(vs_tbl,
 
     total_rows <-
       tbl_use %>%
-      add_site() %>% filter(site == site_nm) %>%
+      add_site(site_tbl = cdm_tbl(pt_tbl),
+               id_col = pt_col) %>% filter(site == site_nm) %>%
       summarise(total_denom_ct=n(),
                 total_pt_ct=n_distinct(!!sym(pt_col))) %>% collect() %>%
       add_meta(check_lib = check_string)
@@ -112,7 +115,8 @@ check_vs <- function(vs_tbl,
     if(!is.null(concept_tbl)){
       illegal_values <-
         tbl_use %>%
-        add_site() %>% filter(site == site_nm) %>%
+        add_site(site_tbl = cdm_tbl(pt_tbl),
+                 id_col = pt_col) %>% filter(site == site_nm) %>%
         anti_join(codeset_round,
                   by = join_cols) %>%
         filter(! .data[[concept_id_fn]] %in% null_values) %>%
@@ -127,7 +131,8 @@ check_vs <- function(vs_tbl,
     }else{
       illegal_values <-
         tbl_use %>%
-        add_site() %>% filter(site == site_nm) %>%
+        add_site(site_tbl = cdm_tbl(pt_tbl),
+                 id_col = pt_col) %>% filter(site == site_nm) %>%
         anti_join(codeset_round,
                   by = join_cols) %>%
         filter(! .data[[concept_id_fn]] %in% null_values) %>%

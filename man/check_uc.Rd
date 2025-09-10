@@ -6,6 +6,7 @@
 \usage{
 check_uc(
   uc_tbl,
+  omop_or_pcornet = "omop",
   by_year = FALSE,
   produce_mapped_list = TRUE,
   unmapped_values = c(44814650L, 0L, 44814653L, 44814649L),
@@ -19,6 +20,10 @@ The primary input table that contains descriptive information about the checks
 to be executed by the function. It should include definitions for the fields that
 should be evaluated for missingness and other relevant metadata.
 see \code{?uc_input_omop} or \code{?uc_input_pcornet} for examples of the input structure}
+
+\item{omop_or_pcornet}{\emph{string} || defaults to \code{omop}
+
+A string, either \code{omop} or \code{pcornet}, indicating the CDM format of the data}
 
 \item{by_year}{\emph{boolean} || defaults to \code{FALSE}
 

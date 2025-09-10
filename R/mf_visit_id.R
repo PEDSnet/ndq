@@ -67,8 +67,12 @@ check_mf_visitid <- function(mf_tbl,
 
     if(tolower(omop_or_pcornet) == 'omop'){
       visit_col <- 'visit_occurrence_id'
+      pt_col <- 'person_id'
+      pt_tbl <- 'person'
     }else if(tolower(omop_or_pcornet) == 'pcornet'){
       visit_col <- 'encounterid'
+      pt_col <- 'patid'
+      pt_tbl <- 'demographic'
     }else{cli::cli_abort('Invalid value for omop_or_pcornet. Please choose `omop` or `pcornet` as the CDM')}
 
     if(!is.na(check_visit_list[[i]]$filter_logic)){
@@ -84,20 +88,23 @@ check_mf_visitid <- function(mf_tbl,
 
     total_rows <-
       tbl_use %>%
-      add_site() %>% filter(site == site_nm) %>%
+      add_site(site_tbl = cdm_tbl(pt_tbl),
+               id_col = pt_col) %>% filter(site == site_nm) %>%
       summarise(total_ct = as.numeric(n())) %>%
       collect()
 
     total_visit_ids <-
       tbl_use %>%
-      add_site() %>% filter(site == site_nm) %>%
+      add_site(site_tbl = cdm_tbl(pt_tbl),
+               id_col = pt_col) %>% filter(site == site_nm) %>%
       summarise(
         total_visits=as.numeric(n_distinct(!!sym(visit_col)))
       ) %>% collect()
 
     tbl_visit_ids <-
       tbl_use %>%
-      add_site() %>% filter(site == site_nm) %>%
+      add_site(site_tbl = cdm_tbl(pt_tbl),
+               id_col = pt_col) %>% filter(site == site_nm) %>%
       anti_join(
         visit_tbl,
         by=visit_col

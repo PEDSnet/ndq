@@ -135,10 +135,14 @@ check_dcon<- function(dcon_tbl,
     b2 <- conc_tbls[[k]]$cohort_id[2]
 
     if(omop_or_pcornet == 'omop'){
+      pt_col <- 'person_id'
+      pt_tbl <- 'person'
       if(compute_level=='visit'){
         col_nm <- sym('visit_occurrence_id')
       } else{col_nm <- sym('person_id')}
     }else if(omop_or_pcornet == 'pcornet'){
+      pt_col <- 'patid'
+      pt_tbl <- 'demographic'
       if(compute_level=='visit'){
         col_nm <- sym('encounterid')
       } else{col_nm <- sym('patid')}
@@ -146,12 +150,14 @@ check_dcon<- function(dcon_tbl,
 
     cohort_1 <- tbl_use_c1 %>% mutate(date1 = !!sym(c1_date),
                                       cohort_label = b1) %>%
-      add_site() %>% filter(site == site_nm) %>%
+      add_site(site_tbl = cdm_tbl(pt_tbl),
+               id_col = pt_col) %>% filter(site == site_nm) %>%
       select(site, all_of(col_nm), date1, cohort_label) %>%
       compute_new(name = 'temp_c1', overwrite = TRUE)
     cohort_2 <- tbl_use_c2 %>% mutate(date2 = !!sym(c2_date),
                                       cohort_label = b2) %>%
-      add_site() %>% filter(site == site_nm) %>%
+      add_site(site_tbl = cdm_tbl(pt_tbl),
+               id_col = pt_col) %>% filter(site == site_nm) %>%
       select(site, all_of(col_nm), date2, cohort_label) %>%
       compute_new(name = 'temp_c2', overwrite = TRUE)
 
