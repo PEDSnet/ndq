@@ -67,8 +67,10 @@ check_ecp <- function(ecp_tbl,
       pt_col <- 'patid'
       pt_tbl <- 'demographic'
       join_cols <- set_names('concept_code', ecp_list[[i]]$concept_field)
-      join_cols2 <- set_names('vocabulary_id', ecp_list[[i]]$vocabulary_field)
-      join_cols <- join_cols %>% append(join_cols2)
+      if(!is.na(ecp_list[[i]]$vocabulary_field)){
+        join_cols2 <- set_names('vocabulary_id', ecp_list[[i]]$vocabulary_field)
+        join_cols <- join_cols %>% append(join_cols2)
+      }
     }
 
     cohort_tbl <- pick_schema(schema = ecp_list[[i]]$cohort_schema,

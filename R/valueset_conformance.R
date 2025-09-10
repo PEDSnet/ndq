@@ -86,8 +86,10 @@ check_vs <- function(vs_tbl,
       concept_col <- 'concept_id'
     }else if(tolower(omop_or_pcornet) == 'pcornet'){
       join_cols <- set_names('concept_code', paste0(concept_id_fn))
-      join_cols2 <- set_names('vocabulary_id', valuesets[[i]]$vocabulary_field)
-      join_cols <- join_cols %>% append(join_cols2)
+      if(!is.na(valuesets[[i]]$vocabulary_field)){
+        join_cols2 <- set_names('vocabulary_id', valuesets[[i]]$vocabulary_field)
+        join_cols <- join_cols %>% append(join_cols2)
+      }
       pt_col <- 'patid'
       pt_tbl <- 'demographic'
       concept_col <- 'concept_code'
