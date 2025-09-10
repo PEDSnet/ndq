@@ -286,7 +286,9 @@ check_uc_by_year <- function(uc_tbl,
       tbl_use %>%
       add_site(site_tbl = cdm_tbl(pt_tbl),
                id_col = pt_col) %>% filter(site == site_nm) %>%
-      mutate(year_date = as.integer(sql(sql_string))) %>%
+      rename_all(~toupper(.)) %>% ## need to account for sending SQL to snowflake which autocaps
+      mutate(year_date = as.integer(sql(toupper(sql_string)))) %>%
+      rename_all(~tolower(.)) %>% ## put it back to lowercase
       group_by(
         year_date
       ) %>% summarise(
@@ -295,7 +297,9 @@ check_uc_by_year <- function(uc_tbl,
 
     date_col_grpd <-
       date_cols_unmapped %>%
-      mutate(year_date = as.integer(sql(sql_string))) %>%
+      rename_all(~toupper(.)) %>% ## need to account for sending SQL to snowflake which autocaps
+      mutate(year_date = as.integer(sql(toupper(sql_string)))) %>%
+      rename_all(~tolower(.)) %>% ## put it back to lowercase
       group_by(
         year_date
       ) %>% summarise(
