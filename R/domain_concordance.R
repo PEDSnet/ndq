@@ -98,8 +98,8 @@ check_dcon<- function(dcon_tbl,
         join_cols <- set_names('concept_id', conc_tbls[[k]]$concept_field[1])
       }else{
         join_cols <- set_names('concept_code', conc_tbls[[k]]$concept_field[1])
-        if(!is.na(conc_tbls[[i]]$vocabulary_field)){
-          join_cols2 <- set_names('vocabulary_id', conc_tbls[[i]]$vocabulary_field)
+        if(!is.na(conc_tbls[[k]]$vocabulary_field)){
+          join_cols2 <- set_names('vocabulary_id', conc_tbls[[k]]$vocabulary_field)
           join_cols <- join_cols %>% append(join_cols2)
         }
       }
