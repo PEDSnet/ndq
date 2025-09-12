@@ -98,8 +98,8 @@ check_dcon<- function(dcon_tbl,
         join_cols <- set_names('concept_id', conc_tbls[[k]]$concept_field[1])
       }else{
         join_cols <- set_names('concept_code', conc_tbls[[k]]$concept_field[1])
-        if(!is.na(conc_tbls[[k]]$vocabulary_field)){
-          join_cols2 <- set_names('vocabulary_id', conc_tbls[[k]]$vocabulary_field)
+        if(!is.na(conc_tbls[[k]]$vocabulary_field[1])){
+          join_cols2 <- set_names('vocabulary_id', conc_tbls[[k]]$vocabulary_field[1])
           join_cols <- join_cols %>% append(join_cols2)
         }
       }
@@ -125,8 +125,10 @@ check_dcon<- function(dcon_tbl,
         join_cols <- set_names('concept_id', conc_tbls[[k]]$concept_field[2])
       }else{
         join_cols <- set_names('concept_code', conc_tbls[[k]]$concept_field[2])
-        join_cols2 <- set_names('vocabulary_id', conc_tbls[[k]]$vocabulary_field[2])
-        join_cols <- join_cols %>% append(join_cols2)
+        if(!is.na(conc_tbls[[k]]$vocabulary_field[2])){
+          join_cols2 <- set_names('vocabulary_id', conc_tbls[[k]]$vocabulary_field[2])
+          join_cols <- join_cols %>% append(join_cols2)
+        }
       }
 
       tbl_use_c2 <- tbl_use_c2 %>%
