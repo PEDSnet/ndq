@@ -144,7 +144,7 @@ check_cfd <- function(cfd_tbl,
 
       missed_visits <-
         visit_tbl_filt %>%
-        select(person_id,
+        select(!!sym(pt_col),
                !!sym(visit_col)) %>%
         anti_join(tbl_use,
                   by=visit_col) %>%
