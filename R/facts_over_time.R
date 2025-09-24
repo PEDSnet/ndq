@@ -353,6 +353,7 @@ check_fot_group <- function(fot_tbl,
                             distinct_visits = TRUE) {
 
   site_nm <- config('qry_site')
+  time_frame_db <- copy_to_new(df = time_frame)
 
   time_tbls <- split(fot_tbl, seq(nrow(fot_tbl)))
 
@@ -408,73 +409,91 @@ check_fot_group <- function(fot_tbl,
     t <- time_tbls[[i]]$table
 
     if(visits_only) {
-      visit_cts <-
-        visits_narrowed %>%
-        group_by(!!sym(colname_string)) %>%
-        summarise(row_visits = n_distinct(!!sym(visit_col))) %>%
-        collect() %>%
-        ungroup()  %>%
+      # visit_cts <-
+      #   visits_narrowed %>%
+      #   group_by(!!sym(colname_string)) %>%
+      #   summarise(row_visits = n_distinct(!!sym(visit_col))) %>%
+      #   collect() %>%
+      #   ungroup()  %>%
+      #   add_meta(check_lib=check_string) %>%
+      #   mutate(check_name = n) %>%
+      #   mutate(check_desc = d,
+      #          domain = t)
+
+      visit_cts_filter <- visits_narrowed %>%
+        cross_join(time_frame_db) %>%
+        filter(!!sym(colname_string) > time_start,
+               !!sym(colname_string) <= time_end) %>%
         add_meta(check_lib=check_string) %>%
         mutate(check_name = n) %>%
         mutate(check_desc = d,
-               domain = t)
-
-      visit_cts_filter <- visit_cts %>%
-        cross_join(time_frame) %>%
-        filter(!!sym(colname_string) > time_start,
-               !!sym(colname_string) <= time_end) %>%
-        mutate(time_start = ymd(time_start) + 1) %>%
+               domain = t) %>%
         group_by(check_type, database_version, site, check_name, check_desc,
                  domain, time_end, time_start) %>%
-        summarise(row_visits = sum(row_visits))
+        summarise(row_visits = n_distinct(!!sym(visit_col))) %>%
+        collect() %>%
+        ungroup() %>%
+        mutate(time_start = ymd(time_start) + 1)
 
     } else if(distinct_visits & !visits_only) {
-      visit_cts <-
-        visits_narrowed %>%
-        group_by(!!sym(colname_string)) %>%
+      # visit_cts <-
+      #   visits_narrowed %>%
+      #   group_by(!!sym(colname_string)) %>%
+      #   summarise(row_cts = n(),
+      #             row_visits = n_distinct(!!sym(visit_col)),
+      #             row_pts = n_distinct(!!sym(pt_col))) %>%
+      #   collect() %>%
+      #   ungroup()  %>%
+      #   add_meta(check_lib=check_string) %>%
+      #   mutate(check_name = n) %>%
+      #   mutate(check_desc = d,
+      #          domain = t)
+
+      visit_cts_filter <- visits_narrowed %>%
+        cross_join(time_frame_db) %>%
+        filter(!!sym(colname_string) > time_start,
+               !!sym(colname_string) <= time_end) %>%
+        add_meta(check_lib=check_string) %>%
+        mutate(check_name = n) %>%
+        mutate(check_desc = d,
+               domain = t) %>%
+        group_by(check_type, database_version, site, check_name, check_desc,
+                 domain, time_end, time_start) %>%
         summarise(row_cts = n(),
                   row_visits = n_distinct(!!sym(visit_col)),
                   row_pts = n_distinct(!!sym(pt_col))) %>%
         collect() %>%
-        ungroup()  %>%
+        ungroup() %>%
+        mutate(time_start = ymd(time_start) + 1)
+
+    } else if(!distinct_visits & !visits_only) {
+      # visit_cts <-
+      #   visits_narrowed %>%
+      #   group_by(!!sym(colname_string)) %>%
+      #   summarise(row_cts = n(),
+      #             row_pts = n_distinct(!!sym(pt_col))) %>%
+      #   collect() %>%
+      #   ungroup()  %>%
+      #   add_meta(check_lib=check_string) %>%
+      #   mutate(check_name = n) %>%
+      #   mutate(check_desc = d,
+      #          domain = t)
+
+      visit_cts_filter <- visits_narrowed %>%
+        cross_join(time_frame_db) %>%
+        filter(!!sym(colname_string) > time_start,
+               !!sym(colname_string) <= time_end) %>%
         add_meta(check_lib=check_string) %>%
         mutate(check_name = n) %>%
         mutate(check_desc = d,
-               domain = t)
-
-      visit_cts_filter <- visit_cts %>%
-        cross_join(time_frame) %>%
-        filter(!!sym(colname_string) > time_start,
-               !!sym(colname_string) <= time_end) %>%
-        mutate(time_start = ymd(time_start) + 1) %>%
+               domain = t) %>%
         group_by(check_type, database_version, site, check_name, check_desc,
                  domain, time_end, time_start) %>%
-        summarise(row_cts = sum(row_cts),
-                  row_pts = sum(row_pts),
-                  row_visits = sum(row_visits))
-
-    } else if(!distinct_visits & !visits_only) {
-      visit_cts <-
-        visits_narrowed %>%
-        group_by(!!sym(colname_string)) %>%
         summarise(row_cts = n(),
                   row_pts = n_distinct(!!sym(pt_col))) %>%
         collect() %>%
-        ungroup()  %>%
-        add_meta(check_lib=check_string) %>%
-        mutate(check_name = n) %>%
-        mutate(check_desc = d,
-               domain = t)
-
-      visit_cts_filter <- visit_cts %>%
-        cross_join(time_frame) %>%
-        filter(!!sym(colname_string) > time_start,
-               !!sym(colname_string) <= time_end) %>%
-        mutate(time_start = ymd(time_start) + 1) %>%
-        group_by(check_type, database_version, site, check_name, check_desc,
-                 domain, time_end, time_start) %>%
-        summarise(row_cts = sum(row_cts),
-                  row_pts = sum(row_pts))
+        ungroup() %>%
+        mutate(time_start = ymd(time_start) + 1)
     }
 
     time_cj <- visit_cts_filter %>%
