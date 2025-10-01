@@ -4,8 +4,8 @@
 #' This function will iterate through the provided input table to identify
 #' the proportion of rows in each fact type that have an implausible date.
 #' Implausibility is defined as a date that falls before the associated visit
-#' start date, after the associated visit end date, or before the patient's
-#' birth date.
+#' start date, after the associated visit end date, before the patient's
+#' birth date, or after the patient's death date + the defined buffer period.
 #'
 #' @param dp_tbl *tabular input* || **required**
 #'
@@ -29,6 +29,17 @@
 #'
 #'  A table with patient identifiers that can link back to facts and birth dates. This argument
 #'  will most likely be the `person` table for OMOP or the `demographic` table for PCORnet.
+#'
+#' @param death_tbl *tabular input* || defaults to `cdm_tbl('death')`
+#'
+#'  A table with patient identifiers that can link back to facts and death dates. This argument
+#'  will most likely be the `death` table for OMOP or the `death` table for PCORnet.
+#'
+#' @param post_death_buffer *integer* || defaults to `30`
+#'
+#'  An integer reflecting the number of days after death where the function should begin
+#'  counting facts as implausible. This allows the user to capture autopsy results
+#'  or other expected post-death facts to occur within the plausible window.
 #'
 #' @param check_string *string* || defaults to `dp`
 #'
@@ -62,6 +73,8 @@ check_dp <- function(dp_tbl,
                      omop_or_pcornet = 'omop',
                      visit_tbl = cdm_tbl('visit_occurrence'),
                      dob_tbl = cdm_tbl('person'),
+                     death_tbl = cdm_tbl('death'),
+                     post_death_buffer = 30L,
                      check_string = 'dp'){
 
   site_nm <- config('qry_site')
@@ -73,6 +86,7 @@ check_dp <- function(dp_tbl,
     visit_start <- 'visit_start_date'
     visit_end <- 'visit_end_date'
     dob <- 'birth_datetime'
+    death <- 'death_date'
   }else if(tolower(omop_or_pcornet) == 'pcornet'){
     person_col <- 'patid'
     pt_tbl <- 'demographic'
@@ -80,6 +94,7 @@ check_dp <- function(dp_tbl,
     visit_start <- 'admit_date'
     visit_end <- 'discharge_date'
     dob <- 'birth_date'
+    death <- 'death_date'
   }else{cli::cli_abort('Invalid value for omop_or_pcornet. Please choose `omop` or `pcornet` as the CDM')}
 
   date_tbls <- split(dp_tbl, seq(nrow(dp_tbl)))
@@ -154,11 +169,27 @@ check_dp <- function(dp_tbl,
                                    'before_birth_date' = 0)
     }
 
+    ## Event is (post_death_buffer) days after death
+    death_measure <- death_tbl %>%
+      select(!!sym(person_col), !!sym(death)) %>%
+      left_join(tbl_use %>% select(site, !!sym(person_col), !!sym(date_tbls[[i]]$date_field))) %>%
+      filter(!!sym(date_tbls[[i]]$date_field) > !!sym(death)) %>%
+      mutate(time_bw_events = sql(calc_days_between_dates(date_tbls[[i]]$date_field, death))) %>%
+      filter(abs(time_bw_events) > post_death_buffer) %>%
+      group_by(site) %>%
+      summarise(after_death = n()) %>% collect()
+
+    if(nrow(death_measure) < 1){
+      death_measure <- tibble('site' = site_nm,
+                              'after_death' = 0)
+    }
+
     ## build table
     combo_tbl <- total_records %>%
       left_join(visit_start_measure) %>%
       left_join(visit_end_measure) %>%
       left_join(birth_date_measure) %>%
+      left_join(death_measure) %>%
       pivot_longer(cols = !c('site', 'total_rows'),
                    names_to = 'implausible_type',
                    values_to = 'implausible_row') %>%

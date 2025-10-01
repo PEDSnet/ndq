@@ -83,7 +83,7 @@ test_that('process_dp local', {
 })
 
 
-test_that('process_ecp remote', {
+test_that('process_dp remote', {
 
   conn <- mk_testdb_omop()
 

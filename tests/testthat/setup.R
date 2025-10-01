@@ -11,7 +11,8 @@ mk_testdb_omop <- function(){
     'condition_occurrence' = 'iiiDTDTiiciiicic',
     'person' = 'iiiiiTiiiiiccicici',
     'visit_occurrence' = 'iiiDTDTiiiciicici',
-    'concept' = 'iccccccDDc')
+    'concept' = 'iccccccDDc',
+    'death' = 'iiDTiiic')
   for (file_name in list.files(path='testdata', pattern = "\\.csv$")) {
     # Get table_name from csv file_name without extension
     table_name <- sub('\\.csv$', '', file_name)

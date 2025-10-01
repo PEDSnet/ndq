@@ -9,6 +9,8 @@ check_dp(
   omop_or_pcornet = "omop",
   visit_tbl = cdm_tbl("visit_occurrence"),
   dob_tbl = cdm_tbl("person"),
+  death_tbl = cdm_tbl("death"),
+  post_death_buffer = 30L,
   check_string = "dp"
 )
 }
@@ -36,6 +38,17 @@ the \code{encounter} table for PCORnet. Custom tables with specific visit subset
 A table with patient identifiers that can link back to facts and birth dates. This argument
 will most likely be the \code{person} table for OMOP or the \code{demographic} table for PCORnet.}
 
+\item{death_tbl}{\emph{tabular input} || defaults to \code{cdm_tbl('death')}
+
+A table with patient identifiers that can link back to facts and death dates. This argument
+will most likely be the \code{death} table for OMOP or the \code{death} table for PCORnet.}
+
+\item{post_death_buffer}{\emph{integer} || defaults to \code{30}
+
+An integer reflecting the number of days after death where the function should begin
+counting facts as implausible. This allows the user to capture autopsy results
+or other expected post-death facts to occur within the plausible window.}
+
 \item{check_string}{\emph{string} || defaults to \code{dp}
 
 An abbreviated identifier that will be used to label all output from this module}
@@ -50,8 +63,8 @@ after the associated visit end date, or before the patient birth date
 This function will iterate through the provided input table to identify
 the proportion of rows in each fact type that have an implausible date.
 Implausibility is defined as a date that falls before the associated visit
-start date, after the associated visit end date, or before the patient's
-birth date.
+start date, after the associated visit end date, before the patient's
+birth date, or after the patient's death date + the defined buffer period.
 }
 \examples{
 # First create input file with desired checks to be executed

@@ -19,4 +19,5 @@ utils::globalVariables(c('.', 'accepted_value', 'application', 'best_rows', 'che
                        'visits_narrowed', 'vocabulary_id', 'year_date', 'visit_type', 'max_val',
                        'mean_val', 'median_val', 'min_val', 'q1', 'q3', 'site_anon', 'sitenum',
                        'tot_viol_ct', 'row_cts', 'row_pts', 'row_visits', 'check_application',
-                       'check_domain', 'full_description','dob_use', 'implausible_row', 'prop_implausible'))
+                       'check_domain', 'full_description','dob_use', 'implausible_row', 'prop_implausible',
+                       'time_bw_events'))
