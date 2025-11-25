@@ -48,6 +48,7 @@ reference:
     configurations.
   contents:
   - starts_with("bmc_input")
+  - bmc_best_notbest
   - starts_with("cfd_input")
   - starts_with("cfd_visit_types")
   - starts_with("dc_input")
