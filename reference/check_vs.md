@@ -74,18 +74,19 @@ instead.
 # First create input file with desired checks to be executed
 # You can access examples for both OMOP & PCORnet here:
 ndq::vs_input_omop
-#> # A tibble: 2 × 6
-#>   check_id    schema table  valueset_name      concept_field        filter_logic
-#>   <chr>       <chr>  <chr>  <chr>              <chr>                <lgl>       
-#> 1 pd_race_cid cdm    person valueset_race      race_concept_id      NA          
-#> 2 pd_eth_cid  cdm    person valueset_ethnicity ethnicity_concept_id NA          
-ndq::vs_input_pcornet
 #> # A tibble: 2 × 7
-#>   check_id    schema table       valueset_name    concept_field vocabulary_field
-#>   <chr>       <chr>  <chr>       <chr>            <chr>         <lgl>           
-#> 1 pd_race_cid cdm    demographic valueset_race    race          NA              
-#> 2 pd_eth_cid  cdm    demographic valueset_ethnic… hispanic      NA              
+#>   check_id    check_description schema table  valueset_name      concept_field  
+#>   <chr>       <chr>             <chr>  <chr>  <chr>              <chr>          
+#> 1 pd_race_cid Race              cdm    person valueset_race      race_concept_id
+#> 2 pd_eth_cid  Ethnicity         cdm    person valueset_ethnicity ethnicity_conc…
 #> # ℹ 1 more variable: filter_logic <lgl>
+ndq::vs_input_pcornet
+#> # A tibble: 2 × 8
+#>   check_id    check_description schema table       valueset_name   concept_field
+#>   <chr>       <chr>             <chr>  <chr>       <chr>           <chr>        
+#> 1 pd_race_cid Race              cdm    demographic valueset_race   race         
+#> 2 pd_eth_cid  Ethnicity         cdm    demographic valueset_ethni… hispanic     
+#> # ℹ 2 more variables: vocabulary_field <lgl>, filter_logic <lgl>
 
 # Use this as your input to the VS function
 if (FALSE) { # \dontrun{

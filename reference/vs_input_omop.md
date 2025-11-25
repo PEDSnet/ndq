@@ -15,12 +15,16 @@ vs_input_omop
 
 ### `vs_input_omop`
 
-A dataframe or CSV file with 6 columns
+A dataframe or CSV file with 7 columns
 
 - check_id:
 
   A short string "code" used to identify the specific check (ex: de,
   de_rx)
+
+- check_description:
+
+  A longer description of the check
 
 - schema:
 

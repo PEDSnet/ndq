@@ -81,31 +81,33 @@ ignored, so proportions may not add up to 1 as a result.
 # First create input file with desired checks to be executed
 # You can access examples for both OMOP & PCORnet here:
 ndq::vc_input_omop
-#> # A tibble: 9 × 6
-#>   check_id     schema table    acceptable_vocabular…¹ concept_field filter_logic
-#>   <chr>        <chr>  <chr>    <chr>                  <chr>         <lgl>       
-#> 1 pr_cid       cdm    procedu… ICD10CM,CPT4,ICD9CM,I… procedure_co… NA          
-#> 2 co_cscid     cdm    conditi… ICD9,ICD9CM,ICD10,ICD… condition_so… NA          
-#> 3 im_dose      cdm    immuniz… UCUM                   imm_dose_uni… NA          
-#> 4 dt_cause_cid cdm    death    SNOMED, OMOP Extension cause_concep… NA          
-#> 5 co_cid       cdm    conditi… SNOMED,OMOP Extension  condition_co… NA          
-#> 6 dr_cid       cdm    drug_ex… RxNorm, RxNorm Extens… drug_concept… NA          
-#> 7 im_cid       cdm    immuniz… CVX                    immunization… NA          
-#> 8 dr_dose      cdm    drug_ex… UCUM                   dose_unit_co… NA          
-#> 9 pr_pscid     cdm    procedu… ICD10CM,CPT4,ICD9CM,I… procedure_so… NA          
+#> # A tibble: 9 × 7
+#>   check_id   check_description schema table acceptable_vocabular…¹ concept_field
+#>   <chr>      <chr>             <chr>  <chr> <chr>                  <chr>        
+#> 1 pr_cid     Procedures        cdm    proc… ICD10CM,CPT4,ICD9CM,I… procedure_co…
+#> 2 co_cscid   Conditions (sour… cdm    cond… ICD9,ICD9CM,ICD10,ICD… condition_so…
+#> 3 im_dose    Immunization, do… cdm    immu… UCUM                   imm_dose_uni…
+#> 4 dt_cause_… Cause of death    cdm    death SNOMED, OMOP Extension cause_concep…
+#> 5 co_cid     Conditions        cdm    cond… SNOMED,OMOP Extension  condition_co…
+#> 6 dr_cid     Drugs             cdm    drug… RxNorm, RxNorm Extens… drug_concept…
+#> 7 im_cid     Immunizations     cdm    immu… CVX                    immunization…
+#> 8 dr_dose    Drugs, dosage un… cdm    drug… UCUM                   dose_unit_co…
+#> 9 pr_pscid   Procedures (sour… cdm    proc… ICD10CM,CPT4,ICD9CM,I… procedure_so…
 #> # ℹ abbreviated name: ¹​acceptable_vocabularies
+#> # ℹ 1 more variable: filter_logic <lgl>
 ndq::vc_input_pcornet
-#> # A tibble: 7 × 6
-#>   check_id     schema table    acceptable_vocabular…¹ concept_field filter_logic
-#>   <chr>        <chr>  <chr>    <chr>                  <chr>         <lgl>       
-#> 1 pr_cid       cdm    procedu… ICD10CM,CPT4,ICD9CM,I… px            NA          
-#> 2 im_dose      cdm    immuniz… UCUM                   vx_dose_unit  NA          
-#> 3 dt_cause_cid cdm    death    SNOMED, OMOP Extension cause_concep… NA          
-#> 4 co_cid       cdm    diagnos… SNOMED,ICD9,ICD9CM,IC… dx            NA          
-#> 5 dr_cid       cdm    prescri… RxNorm, RxNorm Extens… rxnorm_cui    NA          
-#> 6 im_cid       cdm    immuniz… CVX,NDC,CPT4,HCPCS,Rx… vx_code       NA          
-#> 7 dr_dose      cdm    prescri… UCUM                   rx_dose_orde… NA          
+#> # A tibble: 7 × 7
+#>   check_id   check_description schema table acceptable_vocabular…¹ concept_field
+#>   <chr>      <chr>             <chr>  <chr> <chr>                  <chr>        
+#> 1 pr_cid     Procedures        cdm    proc… ICD10CM,CPT4,ICD9CM,I… px           
+#> 2 im_dose    Immunization, do… cdm    immu… UCUM                   vx_dose_unit 
+#> 3 dt_cause_… Cause of death    cdm    death SNOMED, OMOP Extension cause_concep…
+#> 4 co_cid     Conditions        cdm    diag… SNOMED,ICD9,ICD9CM,IC… dx           
+#> 5 dr_cid     Drugs             cdm    pres… RxNorm, RxNorm Extens… rxnorm_cui   
+#> 6 im_cid     Immunizations     cdm    immu… CVX,NDC,CPT4,HCPCS,Rx… vx_code      
+#> 7 dr_dose    Drugs, dosage un… cdm    pres… UCUM                   rx_dose_orde…
 #> # ℹ abbreviated name: ¹​acceptable_vocabularies
+#> # ℹ 1 more variable: filter_logic <lgl>
 
 # Use this as your input to the vc function
 if (FALSE) { # \dontrun{

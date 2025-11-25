@@ -70,8 +70,11 @@ list of checks.</p>
 <h3 id="vc-input-omop"><code>vc_input_omop</code><a class="anchor" aria-label="anchor" href="#vc-input-omop"></a></h3>
 
 
-<p>A dataframe or CSV file with 6 columns</p><dl><dt>check_id</dt>
+<p>A dataframe or CSV file with 7 columns</p><dl><dt>check_id</dt>
 <dd><p>A short string "code" used to identify the specific check (ex: de, de_rx)</p></dd>
+
+<dt>check_description</dt>
+<dd><p>A longer description of the check</p></dd>
 
 <dt>schema</dt>
 <dd><p>The schema where the data is kept. Use <code>cdm</code> to use the pre-configured <code>cdm_schema</code>, <code>result</code> to use the preconfigured <code>results_schema</code>, or input the exact name of the schema.</p></dd>

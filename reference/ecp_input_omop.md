@@ -15,12 +15,16 @@ ecp_input_omop
 
 ### `ecp_input_omop`
 
-A dataframe or CSV file with 9 columns
+A dataframe or CSV file with 10 columns
 
 - check_id:
 
   A short string "code" used to identify the specific check (ex: de,
   de_rx)
+
+- check_description:
+
+  A longer description of the check
 
 - cohort_definition:
 

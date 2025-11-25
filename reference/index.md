@@ -76,6 +76,8 @@ PCORnet configurations.
   : Best Mapped Concepts Input File (OMOP)
 - [`bmc_input_pcornet`](https://pedsnet.github.io/ndq/reference/bmc_input_pcornet.md)
   : Best Mapped Concepts Input File (PCORnet)
+- [`bmc_best_notbest`](https://pedsnet.github.io/ndq/reference/bmc_best_notbest.md)
+  : Best Mapped Concepts Best/Not Best File
 - [`cfd_input_omop`](https://pedsnet.github.io/ndq/reference/cfd_input_omop.md)
   : Clinical Fact Documentation Input File (OMOP)
 - [`cfd_input_pcornet`](https://pedsnet.github.io/ndq/reference/cfd_input_pcornet.md)

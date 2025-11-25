@@ -53,26 +53,26 @@ patients with the concept, plus some additional descriptive metadata
 # First create input file with desired checks to be executed
 # You can access examples for both OMOP & PCORnet here:
 ndq::ecp_input_omop
-#> # A tibble: 5 × 9
-#>   check_id   cohort_definition           cohort_schema cohort_table schema table
-#>   <chr>      <chr>                       <chr>         <chr>        <chr>  <chr>
-#> 1 hemoglobin All patients in CDM person… cdm           person       cdm    meas…
-#> 2 sodium     All patients in CDM person… cdm           person       cdm    meas…
-#> 3 flu        All patients in CDM person… cdm           person       cdm    meas…
-#> 4 height     All patients in CDM person… cdm           person       cdm    meas…
-#> 5 weight     All patients in CDM person… cdm           person       cdm    meas…
-#> # ℹ 3 more variables: concept_field <chr>, conceptset_name <chr>,
+#> # A tibble: 5 × 10
+#>   check_id check_description cohort_definition cohort_schema cohort_table schema
+#>   <chr>    <chr>             <chr>             <chr>         <chr>        <chr> 
+#> 1 hemoglo… Hemoglobin Lab    All patients in … cdm           person       cdm   
+#> 2 sodium   Sodium Lab        All patients in … cdm           person       cdm   
+#> 3 flu      Influenza Lab     All patients in … cdm           person       cdm   
+#> 4 height   Height            All patients in … cdm           person       cdm   
+#> 5 weight   Weight            All patients in … cdm           person       cdm   
+#> # ℹ 4 more variables: table <chr>, concept_field <chr>, conceptset_name <chr>,
 #> #   filter_logic <lgl>
 ndq::ecp_input_pcornet
-#> # A tibble: 5 × 10
-#>   check_id   cohort_definition           cohort_schema cohort_table schema table
-#>   <chr>      <chr>                       <chr>         <chr>        <chr>  <chr>
-#> 1 hemoglobin All patients in CDM person… cdm           demographic  cdm    lab_…
-#> 2 sodium     All patients in CDM person… cdm           demographic  cdm    lab_…
-#> 3 flu        All patients in CDM person… cdm           demographic  cdm    lab_…
-#> 4 height     All patients in CDM person… cdm           demographic  cdm    lab_…
-#> 5 weight     All patients in CDM person… cdm           demographic  cdm    lab_…
-#> # ℹ 4 more variables: concept_field <chr>, vocabulary_field <lgl>,
+#> # A tibble: 5 × 11
+#>   check_id check_description cohort_definition cohort_schema cohort_table schema
+#>   <chr>    <chr>             <chr>             <chr>         <chr>        <chr> 
+#> 1 hemoglo… Hemoglobin Labs   All patients in … cdm           demographic  cdm   
+#> 2 sodium   Sodium Labs       All patients in … cdm           demographic  cdm   
+#> 3 flu      Influenza Labs    All patients in … cdm           demographic  cdm   
+#> 4 height   Height            All patients in … cdm           demographic  cdm   
+#> 5 weight   Weight            All patients in … cdm           demographic  cdm   
+#> # ℹ 5 more variables: table <chr>, concept_field <chr>, vocabulary_field <lgl>,
 #> #   conceptset_name <chr>, filter_logic <lgl>
 
 # Use this as your input to the ECP function

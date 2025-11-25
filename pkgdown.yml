@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   database_connection: database_connection.html
-last_built: 2025-11-13T16:13Z
+last_built: 2025-11-25T15:05Z
 urls:
   reference: https://pedsnet.github.io/ndq/reference
   article: https://pedsnet.github.io/ndq/articles

@@ -9,6 +9,7 @@ field so the user can assess which of these concepts are acceptable
 ``` r
 check_bmc(
   bmc_tbl,
+  best_notbest_tbl,
   omop_or_pcornet = "omop",
   concept_tbl = NULL,
   check_string = "bmc"
@@ -19,7 +20,7 @@ check_bmc(
 
 - bmc_tbl:
 
-  *tabular input* \|\| *required*
+  *tabular input* \|\| **required**
 
   The primary input table that contains descriptive information about
   the checks to be executed by the function. It should include
@@ -29,6 +30,23 @@ check_bmc(
   or
   [`?bmc_input_pcornet`](https://pedsnet.github.io/ndq/reference/bmc_input_pcornet.md)
   for examples of the input structure
+
+- best_notbest_tbl:
+
+  *tabular input* \|\| **required**
+
+  A table indicating the best/not best concept designations for each
+  check. See
+  [`?bmc_best_notbest`](https://pedsnet.github.io/ndq/reference/bmc_best_notbest.md)
+  for an example of this input structure.
+
+  If it is easier to list the concepts that are best, like if there are
+  a limited number of acceptable concepts but many unacceptable
+  concepts, the `best_notbest` column should be set to `1` and the
+  `default_to` column should be set to `notbest`. If the inverse is true
+  and it is easier to list the unacceptable concepts, the `best_notbest`
+  column should be set to `0` and the `default_to` column should be set
+  to `best`.
 
 - omop_or_pcornet:
 
