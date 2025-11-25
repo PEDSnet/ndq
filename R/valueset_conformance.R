@@ -156,6 +156,7 @@ check_vs <- function(vs_tbl,
       illegal_final <- illegal_values %>%
         add_meta(check_lib = check_string) %>%
         mutate(check_name = paste0(check_string, '_', valuesets[[i]]$check_id),
+               check_description = valuesets[[i]]$check_description,
                table_application = valuesets[[i]]$table,
                accepted_value = FALSE) %>%
         left_join(total_rows)
@@ -165,6 +166,7 @@ check_vs <- function(vs_tbl,
       illegal_final <- total_rows %>%
         add_meta(check_lib = check_string) %>%
         mutate(check_name = paste0(check_string, '_', valuesets[[i]]$check_id),
+               check_description = valuesets[[i]]$check_description,
                table_application = valuesets[[i]]$table,
                accepted_value = TRUE,
                measurement_column = -999,
@@ -273,14 +275,15 @@ process_vs <-function(vs_results,
     mutate(prop_total_viol=as.numeric(total_viol_ct/total_denom_ct),
            prop_total_pt_viol=as.numeric(total_viol_pt_ct/total_pt_ct)) %>%
     group_by(site, table_application, measurement_column, vocabulary_id, check_type,
-             check_name, total_denom_ct, accepted_value) %>%
+             check_name, total_denom_ct, accepted_value, check_description) %>%
     summarise(tot_ct = sum(total_viol_ct),
               tot_prop = sum(prop_total_viol)) %>%
     ungroup()
 
   vs_violations <- vs_process %>%
     filter(!accepted_value)%>%
-    group_by(site, table_application, measurement_column, check_type, check_name, total_denom_ct) %>%
+    group_by(site, table_application, measurement_column, check_type,
+             check_name, total_denom_ct, check_description) %>%
     summarise(tot_ct=sum(tot_ct),
               tot_prop=sum(tot_prop))%>%
     ungroup()%>%

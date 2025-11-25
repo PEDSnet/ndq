@@ -6,12 +6,24 @@
 #' so the user can assess which of these concepts are acceptable ("best") or should
 #' not be used in that field ("not best")
 #'
-#' @param bmc_tbl *tabular input* || *required*
+#' @param bmc_tbl *tabular input* || **required**
 #'
 #'  The primary input table that contains descriptive information about the checks
 #'  to be executed by the function. It should include definitions the fields that should be
 #'  evaluated to determine if they only include "best" concepts.
 #'  see `?bmc_input_omop` or `?bmc_input_pcornet` for examples of the input structure
+#'
+#' @param best_notbest_tbl *tabular input* || **required**
+#'
+#'  A table indicating the best/not best concept designations for each
+#'  check. See `?bmc_best_notbest` for an example of this input structure.
+#'
+#'  If it is easier to list the concepts that are best, like if there
+#'  are a limited number of acceptable concepts but many unacceptable concepts,
+#'  the `best_notbest` column should be set to `1` and the `default_to` column
+#'  should be set to `notbest`. If the inverse is true and it is easier to
+#'  list the unacceptable concepts, the `best_notbest` column should be
+#'  set to `0` and the `default_to` column should be set to `best`.
 #'
 #' @param omop_or_pcornet *string* || defaults to `omop`
 #'
@@ -54,6 +66,7 @@
 #'
 #'
 check_bmc <- function(bmc_tbl,
+                      best_notbest_tbl,
                       omop_or_pcornet = 'omop',
                       concept_tbl = NULL,
                       check_string='bmc') {
@@ -132,8 +145,7 @@ check_bmc <- function(bmc_tbl,
         mutate(person_proportions=round(concept_pts/total_pts,2)) %>%
         add_meta(check_lib = check_string) %>%
         mutate(check_name = paste0(check_string, '_', fact_tbl_list_args[[i]]$check_id)) %>%
-        mutate(check_desc = fact_tbl_list_args[[i]]$check_description) #%>%
-        #mutate(check_desc_short =fact_tbl_name)
+        mutate(check_description = fact_tbl_list_args[[i]]$check_description)
 
     } else {
 
@@ -145,8 +157,7 @@ check_bmc <- function(bmc_tbl,
         mutate(person_proportions=round(concept_pts/total_pts,2)) %>%
         add_meta(check_lib = check_string) %>%
         mutate(check_name = paste0(check_string, '_', fact_tbl_list_args[[i]]$check_id)) %>%
-        mutate(check_desc = fact_tbl_list_args[[i]]$check_description) #%>%
-        #mutate(check_desc_short=fact_tbl_name)
+        mutate(check_description = fact_tbl_list_args[[i]]$check_description)
 
     }
 
@@ -155,19 +166,20 @@ check_bmc <- function(bmc_tbl,
 
   }
 
+  best_notbest_tbl <- best_notbest_tbl %>%
+    mutate(check_name = paste0(check_string, '_', check_name))
+
   results_red <- purrr::reduce(.x = results,
-                               .f = dplyr::union)
+                               .f = dplyr::union) %>%
+    left_join(best_notbest_tbl %>% distinct(check_name, default_to)) %>%
+    left_join(best_notbest_tbl %>% select(check_name, concept, best_notbest)) %>%
+    mutate(best_notbest = case_when(is.na(best_notbest) & default_to == 'best' ~ 1,
+                                    is.na(best_notbest) & default_to == 'notbest' ~ 0,
+                                    TRUE ~ best_notbest))
 
-  bmc_concepts <- results_red %>% distinct(check_name, concept)
+  # bmc_concepts <- results_red %>% distinct(check_name, concept)
 
-  opt <- list('bmc_counts' = results_red,
-              'bmc_concepts' = bmc_concepts)
-
-  cli::cli_alert_info(stringr::str_wrap(cli::col_br_magenta('To prepare the concept set for the processing step,
-                                        please add a column called "include" to the bmc_concepts output and mark any
-                                        concepts that are NOT best with a 0.')))
-
-  return(opt)
+  return(results_red)
 
 }
 
@@ -264,21 +276,23 @@ bmc_assign <- function(bmc_output,
 bmc_rollup <- function(bmc_output_pp){
   # find proportions of best mapped for each site
   bmc_sites <- bmc_output_pp %>%
-    group_by(across(c(site, include, check_type, database_version,
-                      starts_with("check_name"), check_desc, total_rows)))%>%
+    group_by(across(c(site, best_notbest, check_type, database_version,
+                      starts_with("check_name"), check_description, total_rows)))%>%
     summarise(best_rows=sum(concept_rows)) %>%
     ungroup()%>%
     mutate(best_row_prop=best_rows/total_rows)
 
   # finding instances where no best mapped rows in table for site
   bmc_no_sites <- bmc_sites %>%
-    group_by(across(c(site, check_type, database_version, starts_with("check_name"), check_desc, total_rows)))%>%
-    summarise(include=max(include)) %>%
+    group_by(across(c(site, check_type, database_version,
+                      starts_with("check_name"), check_description,
+                      total_rows)))%>%
+    summarise(best_notbest=max(best_notbest)) %>%
     ungroup()%>%
-    filter(include==0L)%>%
+    filter(best_notbest==0L)%>%
     mutate(best_rows=0L,
            best_row_prop=0,
-           include=1L)
+           best_notbest=1L)
 
   # put together all of the site-level info
   bmc_all <- bmc_sites %>%
@@ -286,8 +300,8 @@ bmc_rollup <- function(bmc_output_pp){
 
   # add up site counts to get overall proportions
   bmc_overall <- bmc_all %>%
-    filter(include==1L)%>%
-    group_by(check_type, database_version, check_name, check_desc)%>%
+    filter(best_notbest==1L)%>%
+    group_by(check_type, database_version, check_name, check_description)%>%
     summarise(best_rows=sum(best_rows),
               total_rows=sum(total_rows))%>%
     ungroup()%>%
@@ -309,15 +323,9 @@ bmc_rollup <- function(bmc_output_pp){
 #'
 #' @param bmc_results *tabular input* || **required**
 #'
-#'  The `bmc_counts` output of `check_bmc`. This table should include results for all
+#'  The output of `check_bmc`. This table should include results for all
 #'  institutions that should be included in the computation of overall / "network level"
 #'  statistics.
-#'
-#' @param bmc_concepts_labelled *tabular input* || **required**
-#'
-#'  The `bmc_concepts` output of `check_bmc`, with an additional  column called `include`
-#'  added with "not best" or non-ideal concepts marked with a 0
-#'  (optionally, "best" concepts can also be marked with a 1)
 #'
 #' @param rslt_source *string* || defaults to `remote`
 #'
@@ -334,12 +342,9 @@ bmc_rollup <- function(bmc_output_pp){
 #'
 #' @returns
 #'
-#'  This function will return a list of two dataframes:
-#'  - `bmc_output_pp`: A table summarizing the proportion of best vs not best
-#'  concepts for a given check, indicated by the user designation in the
-#'  `bmc_concepts_labelled` table
-#'  - `bmc_concepts_pp`: The `bmc_results` input table with the best / not best designations
-#'  added
+#'  A table summarizing the proportion of best vs not best
+#'  concepts for a given check, indicated by the user designation provided
+#'  in the `check_bmc` results
 #'
 #' @importFrom stringr str_wrap
 #'
@@ -349,23 +354,15 @@ bmc_rollup <- function(bmc_output_pp){
 #' # This function should be run after check_bmc has been executed for all
 #' # network institutions and results have been combined into a common table
 #'
-#' # All returned concepts should also be labelled to indicate whether they
-#' # should be included as a "best" concept or not:
-#'
-#' readr::read_csv(system.file('extdata', 'bmc_concept_examples.csv', package = 'ndq'))
-#'
-#' # Once the labels have been applied, the function can be executed
 #' ## When results are kept locally:
 #' \dontrun{
 #' my_bmc_process <- process_bmc(bmc_results = my_bmc_rslts,
-#'                               bmc_concepts_labelled = my_bmc_concepts,
 #'                               rslt_source = 'local')
 #' }
 #'
 #' ## When results are kept in CSV files:
 #' \dontrun{
 #' my_bmc_process <- process_bmc(bmc_results = 'my_bmc_rslts',
-#'                               bmc_concepts_labelled = 'my_bmc_concepts',
 #'                               rslt_source = 'csv',
 #'                               csv_rslt_path = 'path/to/my/results')
 #' }
@@ -373,37 +370,25 @@ bmc_rollup <- function(bmc_output_pp){
 #' ## When results are kept on a remote database:
 #' \dontrun{
 #' my_bmc_process <- process_bmc(bmc_results = 'my_bmc_rslts',
-#'                               bmc_concepts_labelled = 'my_bmc_concepts',
 #'                               rslt_source = 'remote')
 #' }
 #'
 process_bmc <- function(bmc_results,
-                        bmc_concepts_labelled,
+                        #bmc_concepts_labelled,
                         rslt_source = 'remote',
                         csv_rslt_path = NULL){
 
   if(tolower(rslt_source) == 'remote'){
     bmc_int <- results_tbl(bmc_results) %>%
       collect()
-    bmc_concepts <- results_tbl(bmc_concepts_labelled) %>%
-      collect()
   }else if(tolower(rslt_source) == 'csv'){
     bmc_int <- readr::read_csv(paste0(csv_rslt_path, bmc_results))
-    bmc_concepts <- readr::read_csv(paste0(csv_rslt_path, bmc_concepts_labelled))
   }else if(tolower(rslt_source) == 'local'){
     bmc_int <- bmc_results %>% collect()
-    bmc_concepts <- bmc_concepts_labelled %>% collect()
   }else{cli::cli_abort('Incorrect input for rslt_source. Please set the rslt_source to either local, csv, or remote')}
 
+  bmc_rolled <- bmc_rollup(bmc_output_pp = bmc_int)
 
-  bmc_assigned <- bmc_assign(bmc_output = bmc_int,
-                             conceptset = bmc_concepts)
-
-  bmc_rolled <- bmc_rollup(bmc_output_pp = bmc_assigned)
-
-  opt <- list('bmc_concepts_pp' = bmc_assigned,
-              'bmc_output_pp' = bmc_rolled)
-
-  return(opt)
+  return(bmc_rolled)
 
 }

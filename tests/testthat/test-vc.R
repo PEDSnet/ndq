@@ -1,5 +1,6 @@
 
 vc_test <- tibble('check_id' = c('conditions'),
+                  'check_description' = c('conditions'),
                   'schema' = c('cdm'),
                   'table' = c('condition_occurrence'),
                   'acceptable_vocabularies' = c("SNOMED, OMOP Extension"),

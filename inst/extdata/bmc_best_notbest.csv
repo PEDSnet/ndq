@@ -1,0 +1,19 @@
+check_name,concept,best_notbest,default_to,
+rxnorm_di,Quant Branded Drug,1,notbest,
+rxnorm_di,Branded Drug,1,notbest,1
+rxnorm_di,Branded Pack,1,notbest,1
+rxnorm_di,Clinical Drug,1,notbest,1
+rxnorm_di,Clinical Pack,1,notbest,1
+rxnorm_di,Quant Clinical Drug,1,notbest,
+rxnorm_di,Quant Branded Drug,1,notbest,
+rxnorm_di,Branded Drug,1,notbest,
+rxnorm_di,Branded Pack,1,notbest,
+rxnorm_di,Clinical Drug,1,notbest,
+rxnorm_di,Clinical Pack,1,notbest,
+rxnorm_di,Quant Clinical Drug,1,notbest,
+race,Refuse to answer,0,best,
+race,No information,0,best,
+race,Unknown,0,best,
+ethnicity,Refuse to answer,0,best,
+ethnicity,No information,0,best,
+ethnicity,Unknown,0,best,

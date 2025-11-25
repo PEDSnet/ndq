@@ -7,9 +7,10 @@
 \format{
 \subsection{\code{vc_input_pcornet}}{
 
-A dataframe or CSV file with 6 columns
+A dataframe or CSV file with 7 columns
 \describe{
 \item{check_id}{A short string "code" used to identify the specific check (ex: de, de_rx)}
+\item{check_description}{A longer description of the check}
 \item{schema}{The schema where the data is kept. Use \code{cdm} to use the pre-configured \code{cdm_schema}, \code{result} to use the preconfigured \code{results_schema}, or input the exact name of the schema.}
 \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 \item{acceptable_vocabularies}{A comma-separated string of acceptable vocabulary values (ex: "RxNorm, RxNorm Extension")}

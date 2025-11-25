@@ -4,25 +4,14 @@
 \alias{process_bmc}
 \title{Best Mapped Concepts -- Processing}
 \usage{
-process_bmc(
-  bmc_results,
-  bmc_concepts_labelled,
-  rslt_source = "remote",
-  csv_rslt_path = NULL
-)
+process_bmc(bmc_results, rslt_source = "remote", csv_rslt_path = NULL)
 }
 \arguments{
 \item{bmc_results}{\emph{tabular input} || \strong{required}
 
-The \code{bmc_counts} output of \code{check_bmc}. This table should include results for all
+The output of \code{check_bmc}. This table should include results for all
 institutions that should be included in the computation of overall / "network level"
 statistics.}
-
-\item{bmc_concepts_labelled}{\emph{tabular input} || \strong{required}
-
-The \code{bmc_concepts} output of \code{check_bmc}, with an additional  column called \code{include}
-added with "not best" or non-ideal concepts marked with a 0
-(optionally, "best" concepts can also be marked with a 1)}
 
 \item{rslt_source}{\emph{string} || defaults to \code{remote}
 
@@ -40,14 +29,9 @@ If \code{rslt_source} has been set to \code{csv}, this parameter should indicate
 the result file(s). Otherwise, this parameter can be left as \code{NULL}}
 }
 \value{
-This function will return a list of two dataframes:
-\itemize{
-\item \code{bmc_output_pp}: A table summarizing the proportion of best vs not best
-concepts for a given check, indicated by the user designation in the
-\code{bmc_concepts_labelled} table
-\item \code{bmc_concepts_pp}: The \code{bmc_results} input table with the best / not best designations
-added
-}
+A table summarizing the proportion of best vs not best
+concepts for a given check, indicated by the user designation provided
+in the \code{check_bmc} results
 }
 \description{
 Intakes the output of \code{check_bmc} in order to apply additional processing. This
@@ -59,23 +43,15 @@ best vs not best concept representation in each check.
 # This function should be run after check_bmc has been executed for all
 # network institutions and results have been combined into a common table
 
-# All returned concepts should also be labelled to indicate whether they
-# should be included as a "best" concept or not:
-
-readr::read_csv(system.file('extdata', 'bmc_concept_examples.csv', package = 'ndq'))
-
-# Once the labels have been applied, the function can be executed
 ## When results are kept locally:
 \dontrun{
 my_bmc_process <- process_bmc(bmc_results = my_bmc_rslts,
-                              bmc_concepts_labelled = my_bmc_concepts,
                               rslt_source = 'local')
 }
 
 ## When results are kept in CSV files:
 \dontrun{
 my_bmc_process <- process_bmc(bmc_results = 'my_bmc_rslts',
-                              bmc_concepts_labelled = 'my_bmc_concepts',
                               rslt_source = 'csv',
                               csv_rslt_path = 'path/to/my/results')
 }
@@ -83,7 +59,6 @@ my_bmc_process <- process_bmc(bmc_results = 'my_bmc_rslts',
 ## When results are kept on a remote database:
 \dontrun{
 my_bmc_process <- process_bmc(bmc_results = 'my_bmc_rslts',
-                              bmc_concepts_labelled = 'my_bmc_concepts',
                               rslt_source = 'remote')
 }
 

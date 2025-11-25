@@ -1,5 +1,6 @@
 
 vs_test <- tibble('check_id' = c('race', 'ethnicity'),
+                  'check_description' = c('race', 'ethnicity'),
                   'schema' = c('cdm', 'cdm'),
                   'table' = c('person', 'person'),
                   'valueset_name' = c('valueset_race', 'valueset_ethnicity'),

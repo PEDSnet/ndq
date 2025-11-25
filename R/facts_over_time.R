@@ -275,7 +275,7 @@ check_fot_loop <- function(fot_tbl,
           ungroup()  %>%
           add_meta(check_lib=check_string) %>%
           mutate(check_name = n) %>%
-          mutate(check_desc = d,
+          mutate(check_description = d,
                  domain = t)
       } else if(distinct_visits & !visits_only) {
         visit_cts <-
@@ -287,7 +287,7 @@ check_fot_loop <- function(fot_tbl,
           ungroup()  %>%
           add_meta(check_lib=check_string) %>%
           mutate(check_name = n) %>%
-          mutate(check_desc = d,
+          mutate(check_description = d,
                  domain = t)
       } else if(!distinct_visits & !visits_only) {
         visit_cts <-
@@ -298,7 +298,7 @@ check_fot_loop <- function(fot_tbl,
           ungroup()  %>%
           add_meta(check_lib=check_string) %>%
           mutate(check_name = n) %>%
-          mutate(check_desc = d,
+          mutate(check_description = d,
                  domain = t)
       }
 
@@ -426,9 +426,9 @@ check_fot_group <- function(fot_tbl,
                !!sym(colname_string) <= time_end) %>%
         add_meta(check_lib=check_string) %>%
         mutate(check_name = n) %>%
-        mutate(check_desc = d,
+        mutate(check_description = d,
                domain = t) %>%
-        group_by(check_type, database_version, site, check_name, check_desc,
+        group_by(check_type, database_version, site, check_name, check_description,
                  domain, time_end, time_start) %>%
         summarise(row_visits = n_distinct(!!sym(visit_col))) %>%
         collect() %>%
@@ -455,9 +455,9 @@ check_fot_group <- function(fot_tbl,
                !!sym(colname_string) <= time_end) %>%
         add_meta(check_lib=check_string) %>%
         mutate(check_name = n) %>%
-        mutate(check_desc = d,
+        mutate(check_description = d,
                domain = t) %>%
-        group_by(check_type, database_version, site, check_name, check_desc,
+        group_by(check_type, database_version, site, check_name, check_description,
                  domain, time_end, time_start) %>%
         summarise(row_cts = n(),
                   row_visits = n_distinct(!!sym(visit_col)),
@@ -485,9 +485,9 @@ check_fot_group <- function(fot_tbl,
                !!sym(colname_string) <= time_end) %>%
         add_meta(check_lib=check_string) %>%
         mutate(check_name = n) %>%
-        mutate(check_desc = d,
+        mutate(check_description = d,
                domain = t) %>%
-        group_by(check_type, database_version, site, check_name, check_desc,
+        group_by(check_type, database_version, site, check_name, check_description,
                  domain, time_end, time_start) %>%
         summarise(row_cts = n(),
                   row_pts = n_distinct(!!sym(pt_col))) %>%
@@ -503,7 +503,7 @@ check_fot_group <- function(fot_tbl,
 
     fill_blanks <- visit_cts_filter %>%
       ungroup() %>%
-      distinct(check_type, database_version, site, check_name, check_desc,
+      distinct(check_type, database_version, site, check_name, check_description,
                domain) %>%
       cross_join(time_cj)
 
@@ -555,7 +555,7 @@ fot_check_calc <- function(tblx,
 fot_check <- function(target_col,
                       tblx,
                       check_col='check_name',
-                      check_desc='check_desc',
+                      check_desc='check_description',
                       site_col='site',
                       time_col='time_end') {
 
@@ -625,13 +625,13 @@ add_fot_ratios <- function(fot_lib_output,
                                TRUE~row_pts/(total_pt)*denom_mult))%>%collect()
 
   fot_input_tbl_allsite_med<-fot_input_tbl%>%
-    group_by(check_type, check_name, check_desc, database_version, time_end) %>%
+    group_by(check_type, check_name, check_description, database_version, time_end) %>%
     summarise(row_ratio=median(row_ratio, na.rm=TRUE))%>%
     ungroup()%>%
     mutate(site='allsite_median')
 
   fot_input_tbl_allsite_mean<-fot_input_tbl%>%
-    group_by(check_type, check_name, check_desc, database_version, time_end) %>%
+    group_by(check_type, check_name, check_description, database_version, time_end) %>%
     summarise(row_ratio=mean(row_ratio, na.rm=TRUE))%>%
     ungroup()%>%
     mutate(site='allsite_mean')
@@ -776,7 +776,7 @@ process_fot <- function(fot_results,
   fot_list <- fot_check(target_col = target_col,
                         tblx = fot_int,
                         check_col='check_name',
-                        check_desc='check_desc',
+                        check_desc='check_description',
                         site_col='site',
                         time_col='time_end')
 

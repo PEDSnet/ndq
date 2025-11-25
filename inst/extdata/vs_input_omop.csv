@@ -1,3 +1,3 @@
-check_id,schema,table,valueset_name,concept_field,filter_logic
-pd_race_cid,cdm,person,valueset_race,race_concept_id,NA
-pd_eth_cid,cdm,person,valueset_ethnicity,ethnicity_concept_id,NA
+check_id,check_description,schema,table,valueset_name,concept_field,filter_logic
+pd_race_cid,Race,cdm,person,valueset_race,race_concept_id,NA
+pd_eth_cid,Ethnicity,cdm,person,valueset_ethnicity,ethnicity_concept_id,NA

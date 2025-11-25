@@ -160,7 +160,7 @@ check_uc <- function(uc_tbl,
                        values_to = 'src_value') %>%
           add_meta(check_lib = check_string) %>%
           mutate(
-            unmapped_description = meta_desc
+            check_description = meta_desc
           ) %>% collect()
 
         output_tbl_append(data=unmapped_db,
@@ -179,8 +179,8 @@ check_uc <- function(uc_tbl,
         add_meta(check_lib = check_string) %>%
         mutate(check_name = paste0(check_string, '_', concept_list[[i]]$check_id)) %>%
         relocate(site, .before = total_rows) %>%
-        mutate(measure = concept_list[[i]]$check_description) %>%
-        relocate(measure, .after = site) %>%
+        mutate(check_description = concept_list[[i]]$check_description) %>%
+        relocate(check_description, .after = site) %>%
         mutate(
           unmapped_prop = round(as.numeric(unmapped_rows) / as.numeric(total_rows), 2),
           unmapped_prop = ifelse(is.na(unmapped_prop), 0, unmapped_prop)
@@ -306,7 +306,7 @@ check_uc_by_year <- function(uc_tbl,
         total_unmapped_row_ct = as.numeric(n())
       ) %>% collect() %>%
       inner_join(total_rows) %>%
-      mutate(unmapped_description=concept_list[[i]]$check_description) %>%
+      mutate(check_description=concept_list[[i]]$check_description) %>%
       add_meta(check_lib = check_string) %>%
       relocate(
         site, .before = year_date
@@ -399,7 +399,7 @@ process_uc <- function(uc_results,
 
   }else{
     total_uc <- uc_int %>%
-      group_by(measure, check_type, database_version, check_name) %>%
+      group_by(check_description, check_type, database_version, check_name) %>%
       summarise(total_rows=sum(total_rows, na.rm = TRUE),
                 unmapped_rows=sum(unmapped_rows, na.rm = TRUE))%>%
       ungroup() %>%

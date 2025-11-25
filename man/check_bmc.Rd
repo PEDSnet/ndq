@@ -6,18 +6,31 @@
 \usage{
 check_bmc(
   bmc_tbl,
+  best_notbest_tbl,
   omop_or_pcornet = "omop",
   concept_tbl = NULL,
   check_string = "bmc"
 )
 }
 \arguments{
-\item{bmc_tbl}{\emph{tabular input} || \emph{required}
+\item{bmc_tbl}{\emph{tabular input} || \strong{required}
 
 The primary input table that contains descriptive information about the checks
 to be executed by the function. It should include definitions the fields that should be
 evaluated to determine if they only include "best" concepts.
 see \code{?bmc_input_omop} or \code{?bmc_input_pcornet} for examples of the input structure}
+
+\item{best_notbest_tbl}{\emph{tabular input} || \strong{required}
+
+A table indicating the best/not best concept designations for each
+check. See \code{?bmc_best_notbest} for an example of this input structure.
+
+If it is easier to list the concepts that are best, like if there
+are a limited number of acceptable concepts but many unacceptable concepts,
+the \code{best_notbest} column should be set to \code{1} and the \code{default_to} column
+should be set to \code{notbest}. If the inverse is true and it is easier to
+list the unacceptable concepts, the \code{best_notbest} column should be
+set to \code{0} and the \code{default_to} column should be set to \code{best}.}
 
 \item{omop_or_pcornet}{\emph{string} || defaults to \code{omop}
 

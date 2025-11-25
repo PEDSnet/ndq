@@ -223,7 +223,7 @@ check_dcon<- function(dcon_tbl,
     }
 
     nm <- conc_tbls[[k]]$check_id %>% unique()
-    d <- paste0(conc_tbls[[k]]$cohort_description[1], ' and ', conc_tbls[[k]]$cohort_description[2])
+    d <- paste0(conc_tbls[[k]]$cohort_description[1], ' / ', conc_tbls[[k]]$cohort_description[2])
 
     final_tbls <-
       reduce(.x=cohort_list_cts,
@@ -231,7 +231,7 @@ check_dcon<- function(dcon_tbl,
       #mutate(yr=9999) %>%
       add_meta(check_lib = 'dcon') %>%
       mutate(check_name=paste0(check_string, '_', nm),
-             check_desc=d) %>% collect()
+             check_description=d) %>% collect()
 
     meta_tbl <- tibble(check_type = c(compute_level, compute_level),
                        check_name = c(final_tbls$check_name[1], final_tbls$check_name[2]),
@@ -336,7 +336,7 @@ process_dcon <- function(dcon_results,
   }else{cli::cli_abort('Incorrect input for rslt_source. Please set the rslt_source to either local, csv, or remote')}
 
   dcon_overall <- dcon_int %>%
-    group_by(check_type, database_version, check_name, check_desc, cohort) %>%
+    group_by(check_type, database_version, check_name, check_description, cohort) %>%
     summarise(value=sum(value,na.rm=TRUE))%>%
     ungroup()%>%
     mutate(site='total')

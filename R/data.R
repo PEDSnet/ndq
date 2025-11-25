@@ -55,9 +55,10 @@
 #' list of checks.
 #'
 #' @format ## `vc_input_omop`
-#' A dataframe or CSV file with 6 columns
+#' A dataframe or CSV file with 7 columns
 #' \describe{
 #'   \item{check_id}{A short string "code" used to identify the specific check (ex: de, de_rx)}
+#'   \item{check_description}{A longer description of the check}
 #'   \item{schema}{The schema where the data is kept. Use `cdm` to use the pre-configured `cdm_schema`, `result` to use the preconfigured `results_schema`, or input the exact name of the schema.}
 #'   \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 #'   \item{acceptable_vocabularies}{A comma-separated string of acceptable vocabulary values (ex: "RxNorm, RxNorm Extension")}
@@ -76,9 +77,10 @@
 #' list of checks.
 #'
 #' @format ## `vc_input_pcornet`
-#' A dataframe or CSV file with 6 columns
+#' A dataframe or CSV file with 7 columns
 #' \describe{
 #'   \item{check_id}{A short string "code" used to identify the specific check (ex: de, de_rx)}
+#'   \item{check_description}{A longer description of the check}
 #'   \item{schema}{The schema where the data is kept. Use `cdm` to use the pre-configured `cdm_schema`, `result` to use the preconfigured `results_schema`, or input the exact name of the schema.}
 #'   \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 #'   \item{acceptable_vocabularies}{A comma-separated string of acceptable vocabulary values (ex: "RxNorm, RxNorm Extension")}
@@ -98,9 +100,10 @@
 #' list of checks.
 #'
 #' @format ## `vs_input_omop`
-#' A dataframe or CSV file with 6 columns
+#' A dataframe or CSV file with 7 columns
 #' \describe{
 #'   \item{check_id}{A short string "code" used to identify the specific check (ex: de, de_rx)}
+#'   \item{check_description}{A longer description of the check}
 #'   \item{schema}{The schema where the data is kept. Use `cdm` to use the pre-configured `cdm_schema`, `result` to use the preconfigured `results_schema`, or input the exact name of the schema.}
 #'   \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 #'   \item{valueset_name}{The name of the CSV file (stored in the pre-defined file subdirectory) defining the acceptable values for the valueset}
@@ -120,9 +123,10 @@
 #' list of checks.
 #'
 #' @format ## `vs_input_pcornet`
-#' A dataframe or CSV file with 6 columns
+#' A dataframe or CSV file with 7 columns
 #' \describe{
 #'   \item{check_id}{A short string "code" used to identify the specific check (ex: de, de_rx)}
+#'   \item{check_description}{A longer description of the check}
 #'   \item{schema}{The schema where the data is kept. Use `cdm` to use the pre-configured `cdm_schema`, `result` to use the preconfigured `results_schema`, or input the exact name of the schema.}
 #'   \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 #'   \item{valueset_name}{The name of the CSV file (stored in the pre-defined file subdirectory) defining the acceptable values for the valueset}
@@ -197,9 +201,10 @@
 #' directory and point to that location.
 #'
 #' @format ## `ecp_input_omop`
-#' A dataframe or CSV file with 9 columns
+#' A dataframe or CSV file with 10 columns
 #' \describe{
 #'   \item{check_id}{A short string "code" used to identify the specific check (ex: de, de_rx)}
+#'   \item{check_description}{A longer description of the check}
 #'   \item{cohort_definition}{The definition of the specific cohort used to identify patients with the concept of interest}
 #'   \item{cohort_schema}{The schema where the cohort_table is kept. Use `cdm` to use the pre-configured `cdm_schema`, `result` to use the preconfigured `results_schema`, or input the exact name of the schema.}
 #'   \item{cohort_table}{The name of the CDM or pre-computed results table where the cohort has been stored}
@@ -232,6 +237,7 @@
 #' A dataframe or CSV file with 9 columns
 #' \describe{
 #'   \item{check_id}{A short string "code" used to identify the specific check (ex: de, de_rx)}
+#'   \item{check_description}{A longer description of the check}
 #'   \item{cohort_definition}{The definition of the specific cohort used to identify patients with the concept of interest}
 #'   \item{cohort_schema}{The schema where the cohort_table is kept. Use `cdm` to use the pre-configured `cdm_schema`, `result` to use the preconfigured `results_schema`, or input the exact name of the schema.}
 #'   \item{cohort_table}{The name of the CDM or pre-computed results table where the cohort has been stored}
@@ -370,6 +376,25 @@
 #' }
 #'
 "bmc_input_pcornet"
+
+#' Best Mapped Concepts Best/Not Best File
+#'
+#' A sample version of the best/not best designation file to classify
+#' concepts in the result of this module. This exact
+#' file is also included as a CSV in the package if the user wishes
+#' to use it, or the structure can be copied to produce a custom
+#' list of checks.
+#'
+#' @format ## `bmc_best_notbest`
+#' A dataframe or CSV file with 4 columns
+#' \describe{
+#'   \item{check_name}{The name of the check associated with the concepts of interest, which should match what is provided in the `bmc_tbl` input}
+#'   \item{concept}{The concept identifier or concept name (depending on if a vocabulary table is provided) that should be classified as best/not best}
+#'   \item{best_notbest}{A binary indicator where 0 indicates the concept is not best / unacceptable and 1 indicates the concept is best / acceptable}
+#'   \item{default_to}{An indicator, either `best` or `notbest`, to designate what any concepts not listed in this file should be defaulted to}
+#' }
+#'
+"bmc_best_notbest"
 
 
 #' Missing Field: Visit ID Input File (OMOP)

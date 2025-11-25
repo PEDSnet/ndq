@@ -137,6 +137,7 @@ check_vc <- function(vc_tbl,
              table_application = vocabvals[[i]]$table,
              accepted_value = ifelse(vocabulary_id %in% values, TRUE, FALSE),
              concept_name = paste0('Vocabulary Identifier - ', vocabulary_id),
+             check_description = vocabvals[[i]]$check_description,
              temp = 0) %>%
       relocate(temp) %>%
       rename_with(~concept_id_fn, temp) %>%
@@ -235,7 +236,7 @@ process_vc <-function(vc_results,
   vc_process <- vc_int %>%
     mutate(prop_total_viol=as.numeric(total_viol_ct/total_denom_ct),
            prop_total_pt_viol=as.numeric(total_viol_pt_ct/total_pt_ct)) %>%
-    group_by(site, table_application, measurement_column, vocabulary_id,
+    group_by(site, table_application, measurement_column, vocabulary_id, check_description,
              check_type, check_name, total_denom_ct, total_concept_ct, accepted_value) %>%
     summarise(tot_ct = sum(total_viol_ct),
               tot_prop = sum(prop_total_viol),
@@ -245,7 +246,7 @@ process_vc <-function(vc_results,
 
   vc_violations <- vc_process %>%
     filter(!accepted_value)%>%
-    group_by(site, table_application, measurement_column, check_type, check_name, total_denom_ct) %>%
+    group_by(site, check_description, table_application, measurement_column, check_type, check_name, total_denom_ct) %>%
     summarise(tot_ct=sum(tot_ct),
               tot_prop=sum(tot_prop))%>%
     ungroup()%>%

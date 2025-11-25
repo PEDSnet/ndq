@@ -174,7 +174,7 @@ check_mf_visitid <- function(mf_tbl,
       )
 
     all_tbl <- tibble(
-      measure = check_visit_list[[i]]$check_description,
+      check_description = check_visit_list[[i]]$check_description,
       total_ct = as.numeric(total_rows$total_ct),
       total_visits = as.numeric(total_visit_ids$total_visits),
       missing_visits_total = as.numeric(visit_summaries$missing_visits_total),
@@ -268,7 +268,7 @@ process_mf_visitid <- function(mf_visitid_results,
 
   # compute overall counts for mf_visitid check
   test_mf_overall <- mf_int %>%
-    group_by(domain, measure, check_type, database_version, check_name) %>%
+    group_by(domain, check_description, check_type, database_version, check_name) %>%
     summarise(total_visits=sum(total_visits),
               missing_visits_total=sum(missing_visits_total),
               missing_visits_distinct=sum(missing_visits_distinct),

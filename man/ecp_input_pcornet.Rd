@@ -10,6 +10,7 @@
 A dataframe or CSV file with 9 columns
 \describe{
 \item{check_id}{A short string "code" used to identify the specific check (ex: de, de_rx)}
+\item{check_description}{A longer description of the check}
 \item{cohort_definition}{The definition of the specific cohort used to identify patients with the concept of interest}
 \item{cohort_schema}{The schema where the cohort_table is kept. Use \code{cdm} to use the pre-configured \code{cdm_schema}, \code{result} to use the preconfigured \code{results_schema}, or input the exact name of the schema.}
 \item{cohort_table}{The name of the CDM or pre-computed results table where the cohort has been stored}

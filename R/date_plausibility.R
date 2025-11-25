@@ -132,11 +132,11 @@ check_dp <- function(dp_tbl,
       left_join(tbl_use %>% select(site, !!sym(visit_col), !!sym(date_tbls[[i]]$date_field))) %>%
       filter(!!sym(date_tbls[[i]]$date_field) < !!sym(visit_start)) %>%
       group_by(site) %>%
-      summarise(before_visit_start = n()) %>% collect()
+      summarise(previs = n()) %>% collect()
 
     if(nrow(visit_start_measure) < 1){
       visit_start_measure <- tibble('site' = site_nm,
-                                    'before_visit_start' = 0)
+                                    'previs' = 0)
     }
 
     ## Event is after visit end date
@@ -145,11 +145,11 @@ check_dp <- function(dp_tbl,
       left_join(tbl_use %>% select(site, !!sym(visit_col), !!sym(date_tbls[[i]]$date_field))) %>%
       filter(!!sym(date_tbls[[i]]$date_field) > !!sym(visit_end)) %>%
       group_by(site) %>%
-      summarise(after_visit_end = n()) %>% collect()
+      summarise(postvis = n()) %>% collect()
 
     if(nrow(visit_end_measure) < 1){
       visit_end_measure <- tibble('site' = site_nm,
-                                   'after_visit_end' = 0)
+                                  'postvis' = 0)
     }
 
     ## Event is prior to birth date
@@ -162,11 +162,11 @@ check_dp <- function(dp_tbl,
       left_join(dob_tbl_use) %>%
       filter(dob_use > !!sym(date_tbls[[i]]$date_field)) %>%
       group_by(site) %>%
-      summarise(before_birth_date = n()) %>% collect()
+      summarise(prebirth = n()) %>% collect()
 
     if(nrow(birth_date_measure) < 1){
       birth_date_measure <- tibble('site' = site_nm,
-                                   'before_birth_date' = 0)
+                                   'prebirth' = 0)
     }
 
     ## Event is (post_death_buffer) days after death
@@ -177,11 +177,11 @@ check_dp <- function(dp_tbl,
       mutate(time_bw_events = sql(calc_days_between_dates(date_tbls[[i]]$date_field, death))) %>%
       filter(abs(time_bw_events) > post_death_buffer) %>%
       group_by(site) %>%
-      summarise(after_death = n()) %>% collect()
+      summarise(postdeath = n()) %>% collect()
 
     if(nrow(death_measure) < 1){
       death_measure <- tibble('site' = site_nm,
-                              'after_death' = 0)
+                              'postdeath' = 0)
     }
 
     ## build table
@@ -197,8 +197,13 @@ check_dp <- function(dp_tbl,
              prop_implausible = round(prop_implausible, 4),
              implausible_row = ifelse(is.na(implausible_row), 0, implausible_row),
              prop_implausible = ifelse(is.na(prop_implausible), 0, prop_implausible),
-             check_name = paste0(check_string, '_', date_tbls[[i]]$check_id),
-             check_description = date_tbls[[i]]$check_description)
+             check_name = paste0(check_string, '_', date_tbls[[i]]$check_id, '-', implausible_type),
+             check_description = date_tbls[[i]]$check_description,
+             implausible_type = case_when(implausible_type == 'previs' ~ 'Before Visit Start',
+                                          implausible_type == 'postvis' ~ 'After Visit End',
+                                          implausible_type == 'prebirth' ~ 'Before Patient Birth',
+                                          implausible_type == 'postdeath' ~ paste0('After Patient Death \n(With ',
+                                                                                   post_death_buffer, ' Day Buffer)')))
 
     date_rslt[[i]] <- combo_tbl
 
@@ -278,8 +283,20 @@ process_dp <- function(dp_results,
     dp_int <- dp_results %>% collect()
   }else{cli::cli_abort('Incorrect input for rslt_source. Please set the rslt_source to either local, csv, or remote')}
 
+  # compute overall proportion
+  dp_overall <- dp_int %>%
+    group_by(implausible_type, check_name, check_description) %>%
+    summarise(total_rows=sum(total_rows),
+              implausible_row=sum(implausible_row)) %>%
+    ungroup()%>%
+    mutate(site = 'total',
+           prop_implausible = implausible_row/total_rows) %>% collect()
+
+  # bring together total and sites
   dp_final <- dp_int %>%
-    mutate(check_name_app = paste0(check_name, '_rows'))
+    dplyr::bind_rows(dp_overall) %>%
+    mutate(check_name_app=paste0(check_name, "_rows"),
+           check_type='dp')
 
   return(dp_final)
 }

@@ -112,7 +112,8 @@ check_ecp <- function(ecp_tbl,
              concept_group = concept_group,
              prop_with_concept = as.numeric(concept_pt_ct/total_pt_ct),
              check_name = paste0(check_string, '_', ecp_list[[i]]$check_id),
-             cohort_denominator = pt_cohort) %>%
+             cohort_denominator = pt_cohort,
+             check_description = ecp_list[[i]]$check_description) %>%
       add_meta(check_lib = 'ecp')
 
 
