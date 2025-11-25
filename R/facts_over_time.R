@@ -265,7 +265,7 @@ check_fot_loop <- function(fot_tbl,
 
       n <- paste0(check_string, '_', time_tbls[[i]]$check_id)
       d <- time_tbls[[i]]$check_description
-      t <- time_tbls[[i]]$table
+      t <- time_tbls[[i]]$check_domain
 
       if(visits_only) {
         visit_cts <-
@@ -406,7 +406,7 @@ check_fot_group <- function(fot_tbl,
 
     n <- paste0(check_string, '_', time_tbls[[i]]$check_id)
     d <- time_tbls[[i]]$check_description
-    t <- time_tbls[[i]]$table
+    t <- time_tbls[[i]]$check_domain
 
     if(visits_only) {
       # visit_cts <-

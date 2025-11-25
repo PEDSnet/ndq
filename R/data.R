@@ -519,6 +519,7 @@
 #' \describe{
 #'   \item{check_id}{A short string "code" used to identify the specific check (ex: de, de_rx)}
 #'   \item{check_description}{A longer description of the check (ex: full drug_exposure table, prescribed drugs based on drug_type_concept_id)}
+#'   \item{check_domain}{A string indicating the domain of the check (ex: visits, drugs)}
 #'   \item{schema}{The schema where the data is kept. Use `cdm` to use the pre-configured `cdm_schema`, `result` to use the preconfigured `results_schema`, or input the exact name of the schema.}
 #'   \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 #'   \item{date_field}{The date field to be used to identify the date associated with the event}
@@ -541,6 +542,7 @@
 #' \describe{
 #'   \item{check_id}{A short string "code" used to identify the specific check (ex: dr_admin, dr_rx)}
 #'   \item{check_description}{A longer description of the check (ex: full med_admin table, full prescribing table)}
+#'   \item{check_domain}{A string indicating the domain of the check (ex: visits, drugs)}
 #'   \item{schema}{The schema where the data is kept. Use `cdm` to use the pre-configured `cdm_schema`, `result` to use the preconfigured `results_schema`, or input the exact name of the schema.}
 #'   \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 #'   \item{date_field}{The date field to be used to identify the date associated with the event}

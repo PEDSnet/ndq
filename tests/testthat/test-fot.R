@@ -1,6 +1,7 @@
 
 fot_test <- tibble('check_id' = c('ip visits'),
                    'check_description' = c('inpatient visits'),
+                   'check_domain' = c('visits'),
                    'schema' = c('cdm'),
                    'table' = c('visit_occurrence'),
                    'date_field' = c('visit_start_date'),

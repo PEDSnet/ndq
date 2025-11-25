@@ -11,6 +11,7 @@ A dataframe or CSV file with 6 columns
 \describe{
 \item{check_id}{A short string "code" used to identify the specific check (ex: dr_admin, dr_rx)}
 \item{check_description}{A longer description of the check (ex: full med_admin table, full prescribing table)}
+\item{check_domain}{A string indicating the domain of the check (ex: visits, drugs)}
 \item{schema}{The schema where the data is kept. Use \code{cdm} to use the pre-configured \code{cdm_schema}, \code{result} to use the preconfigured \code{results_schema}, or input the exact name of the schema.}
 \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
 \item{date_field}{The date field to be used to identify the date associated with the event}
