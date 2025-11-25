@@ -137,34 +137,34 @@ specified time span for each check. Additionally:</p><ul><li><p>If <code>visits_
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># First create input file with desired checks to be executed</span></span></span>
 <span class="r-in"><span><span class="co"># You can access examples for both OMOP &amp; PCORnet here:</span></span></span>
 <span class="r-in"><span><span class="fu">ndq</span><span class="fu">::</span><span class="va"><a href="fot_input_omop.html">fot_input_omop</a></span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 22 × 6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    check_id  check_description              schema table date_field filter_logic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> vi        all visits                     cdm    visi… visit_sta… <span style="color: #BB0000;">NA</span>          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> vo_office outpatient visits              cdm    visi… visit_sta… visit_conce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> vo_labs   outpatient lab visits          cdm    visi… visit_sta… visit_conce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> vo_th     telehealth visits              cdm    visi… visit_sta… visit_conce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> vo_oa     other ambulatory visits        cdm    visi… visit_sta… visit_conce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> vip       inpatient visits (9201 or 200… cdm    visi… visit_sta… visit_conce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ved       emergency department visits    cdm    visi… visit_sta… visit_conce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> vob       observation visits             cdm    visi… visit_sta… visit_conce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> co        all conditions                 cdm    cond… condition… <span style="color: #BB0000;">NA</span>          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> dp        prescription drugs             cdm    drug… drug_expo… drug_type_c…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 22 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    check_id  check_description check_domain schema table date_field filter_logic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> vi        all visits        visits       cdm    visi… visit_sta… <span style="color: #BB0000;">NA</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> vo_office outpatient visits visits       cdm    visi… visit_sta… visit_conce…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> vo_labs   outpatient lab v… visits       cdm    visi… visit_sta… visit_conce…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> vo_th     telehealth visits visits       cdm    visi… visit_sta… visit_conce…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> vo_oa     other ambulatory… visits       cdm    visi… visit_sta… visit_conce…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> vip       inpatient visits… visits       cdm    visi… visit_sta… visit_conce…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ved       emergency depart… visits       cdm    visi… visit_sta… visit_conce…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> vob       observation visi… visits       cdm    visi… visit_sta… visit_conce…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> co        all conditions    conditions   cdm    cond… condition… <span style="color: #BB0000;">NA</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> dp        prescription dru… drugs        cdm    drug… drug_expo… drug_type_c…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 12 more rows</span></span>
 <span class="r-in"><span><span class="fu">ndq</span><span class="fu">::</span><span class="va"><a href="fot_input_pcornet.html">fot_input_pcornet</a></span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 21 × 6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    check_id  check_description              schema table date_field filter_logic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> vi        all visits                     cdm    enco… admit_date <span style="color: #BB0000;">NA</span>          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> vo_office outpatient visits              cdm    enco… admit_date enc_type ==…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> vo_th     telehealth visits              cdm    enco… admit_date enc_type ==…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> vo_oa     other ambulatory visits        cdm    enco… admit_date enc_type ==…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> vip       inpatient visits (9201 or 200… cdm    enco… admit_date enc_type %i…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ved       emergency department visits    cdm    enco… admit_date enc_type ==…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> vob       observation visits             cdm    enco… admit_date enc_type ==…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> co        all diagnoses                  cdm    diag… admit_date <span style="color: #BB0000;">NA</span>          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> dp        prescription drugs             cdm    pres… rx_start_… <span style="color: #BB0000;">NA</span>          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ip        inpatient administration drugs cdm    med_… medadmin_… <span style="color: #BB0000;">NA</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 21 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    check_id  check_description check_domain schema table date_field filter_logic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> vi        all visits        visits       cdm    enco… admit_date <span style="color: #BB0000;">NA</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> vo_office outpatient visits visits       cdm    enco… admit_date enc_type ==…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> vo_th     telehealth visits visits       cdm    enco… admit_date enc_type ==…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> vo_oa     other ambulatory… visits       cdm    enco… admit_date enc_type ==…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> vip       inpatient visits… visits       cdm    enco… admit_date enc_type %i…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ved       emergency depart… visits       cdm    enco… admit_date enc_type ==…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> vob       observation visi… visits       cdm    enco… admit_date enc_type ==…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> co        all diagnoses     conditions   cdm    diag… admit_date <span style="color: #BB0000;">NA</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> dp        prescription dru… drugs        cdm    pres… rx_start_… <span style="color: #BB0000;">NA</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ip        inpatient admini… drugs        cdm    med_… medadmin_… <span style="color: #BB0000;">NA</span>          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 11 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Use this as your input to the FOT function</span></span></span>

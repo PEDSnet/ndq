@@ -27,6 +27,10 @@ A dataframe or CSV file with 6 columns
   A longer description of the check (ex: full drug_exposure table,
   prescribed drugs based on drug_type_concept_id)
 
+- check_domain:
+
+  A string indicating the domain of the check (ex: visits, drugs)
+
 - schema:
 
   The schema where the data is kept. Use `cdm` to use the pre-configured
