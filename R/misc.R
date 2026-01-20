@@ -269,10 +269,10 @@ create_check_metadata <- function(check_tbls,
 
       cts <- tbl_load %>% distinct(check_type) %>% pull()
 
-      if(cts == 'dc'){sc <- c('check_type', 'domain')}else if(cts %in% c('dcon', 'bmc')){sc <- c('check_type', 'check_desc')
-      }else if(cts == 'ecp'){sc <- c('check_type', 'check_type')}else if(cts == 'fot'){sc <- c('domain', 'check_desc')
-      }else if(cts == 'mf'){sc <- c('domain', 'measure')}else if(cts == 'pf'){sc <- c('visit_type', 'check_desc')
-      }else if(cts == 'uc'){sc <- c('check_type', 'measure')}else if(cts %in% c('vc', 'vs')){sc <- c('table_application', 'measurement_column')}
+      if(cts %in% c('dc', 'mf_visitid', 'fot')){sc <- c('domain', 'check_description')
+      }else if(cts %in% c('dcon', 'bmc', 'ecp', 'dp', 'uc')){sc <- c('check_type', 'check_description')
+      }else if(cts == 'cfd'){sc <- c('visit_type', 'check_description')
+      }else if(cts %in% c('vc', 'vs')){sc <- c('table_application', 'measurement_column')}
 
       meta_final <- tbl_load %>%
         mutate(check_domain = !!sym(sc[1]),

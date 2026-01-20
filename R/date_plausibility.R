@@ -210,7 +210,8 @@ check_dp <- function(dp_tbl,
   }
 
   date_red <- purrr::reduce(.x = date_rslt,
-                            .f = dplyr::union)
+                            .f = dplyr::union) %>%
+    add_meta(check_lib = check_string)
 
   return(date_red)
 }

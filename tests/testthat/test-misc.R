@@ -62,7 +62,8 @@ test_that('create_check_metadata works', {
                      'database_version' = c('1', '1'),
                      'check_type' = c('ecp', 'ecp'),
                      'check_name' = c('ecp_test1', 'ecp_test2'),
-                     'cohort_denom' = c('mycohort', 'mycohort'))
+                     'cohort_denom' = c('mycohort', 'mycohort'),
+                     'check_description' = c('Test 1', 'Test 2'))
 
   expect_no_error(create_check_metadata(check_tbls = list(ecp_rslt),
                                         rslt_source = 'local'))
