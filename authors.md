@@ -17,14 +17,14 @@
 Source:
 [`DESCRIPTION`](https://github.com/PEDSnet/ndq/blob/main/DESCRIPTION)
 
-Razzaghi H, Dickinson K, Wieand K, Bailey C (2025). *ndq: Network Data
+Razzaghi H, Dickinson K, Wieand K, Bailey C (2026). *ndq: Network Data
 Quality (NDQ)*. R package version 0.0.0.9000,
 <https://github.com/PEDSnet/ndq>.
 
     @Manual{,
       title = {ndq: Network Data Quality (NDQ)},
       author = {Hanieh Razzaghi and Kimberley Dickinson and Kaleigh Wieand and Charles Bailey},
-      year = {2025},
+      year = {2026},
       note = {R package version 0.0.0.9000},
       url = {https://github.com/PEDSnet/ndq},
     }
