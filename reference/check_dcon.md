@@ -38,7 +38,7 @@ check_dcon(
   *string* \|\| defaults to `patient`
 
   A string indicating whether the analysis should be conducted at the
-  `patient` or `visit` level
+  `patient`, `visit`, or `visit_detail` (for OMOP implementations) level
 
 - omop_or_pcornet:
 

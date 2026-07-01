@@ -12,6 +12,7 @@ both the OMOP and PCORnet common data models (CDMs).
 You can install the development version of this package from GitHub:
 
 ``` r
+
 remotes::install_github('PEDSnet/ndq')
 ```
 
