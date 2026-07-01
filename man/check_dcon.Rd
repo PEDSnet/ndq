@@ -21,8 +21,8 @@ see \code{?dcon_input_omop} or \code{?dcon_input_pcornet} for examples of the in
 
 \item{compute_level}{\emph{string} || defaults to \code{patient}
 
-A string indicating whether the analysis should be conducted at the \code{patient}
-or \code{visit} level}
+A string indicating whether the analysis should be conducted at the \code{patient},
+\code{visit}, or \code{visit_detail} (for OMOP implementations) level}
 
 \item{omop_or_pcornet}{\emph{string} || defaults to \code{omop}
 

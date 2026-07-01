@@ -71,7 +71,7 @@ test_that('check_dcon', {
   config('current_version', '1')
   config('retain_intermediates', FALSE)
   config('base_dir', getwd())
-  config('subdirs', list('spec_dir' = 'testspecs'))
+  config('subdirs', list('specs' = 'testspecs'))
   config('cache_enabled', FALSE)
 
   check_dcon(dcon_tbl = dcon_test,
@@ -116,7 +116,7 @@ test_that('process_dcon', {
   config('current_version', '1')
   config('retain_intermediates', FALSE)
   config('base_dir', getwd())
-  config('subdirs', list('spec_dir' = 'testspecs'))
+  config('subdirs', list('specs' = 'testspecs'))
   config('cache_enabled', FALSE)
 
   dcon_opt <- check_dcon(dcon_tbl = dcon_test,

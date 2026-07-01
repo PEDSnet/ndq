@@ -21,8 +21,8 @@
 #'
 #' @param compute_level *string* || defaults to `patient`
 #'
-#'  A string indicating whether the analysis should be conducted at the `patient`
-#'  or `visit` level
+#'  A string indicating whether the analysis should be conducted at the `patient`,
+#'  `visit`, or `visit_detail` (for OMOP implementations) level
 #'
 #' @param check_string *string* || defaults to `dcon`
 #'
@@ -143,7 +143,9 @@ check_dcon<- function(dcon_tbl,
       pt_tbl <- 'person'
       if(compute_level=='visit'){
         col_nm <- sym('visit_occurrence_id')
-      } else{col_nm <- sym('person_id')}
+      }else if(compute_level=='visit_detail'){
+        col_nm <- sym('visit_detail_id')
+      }else{col_nm <- sym('person_id')}
     }else if(omop_or_pcornet == 'pcornet'){
       pt_col <- 'patid'
       pt_tbl <- 'demographic'

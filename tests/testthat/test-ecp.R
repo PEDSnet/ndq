@@ -48,7 +48,7 @@ test_that('check_ecp', {
   config('retain_intermediates', FALSE)
   config('cache_enabled', FALSE)
   config('base_dir', getwd())
-  config('subdirs', list('spec_dir' = 'testspecs'))
+  config('subdirs', list('specs' = 'testspecs'))
 
   expect_no_error(check_ecp(ecp_tbl = ecp_test,
                             omop_or_pcornet = 'omop'))
@@ -75,7 +75,7 @@ test_that('process_ecp local', {
   config('retain_intermediates', FALSE)
   config('cache_enabled', FALSE)
   config('base_dir', getwd())
-  config('subdirs', list('spec_dir' = 'testspecs'))
+  config('subdirs', list('specs' = 'testspecs'))
 
   ecp_opt <- check_ecp(ecp_tbl = ecp_test,
                        omop_or_pcornet = 'omop')
@@ -103,7 +103,7 @@ test_that('process_ecp remote', {
   config('retain_intermediates', FALSE)
   config('cache_enabled', FALSE)
   config('base_dir', getwd())
-  config('subdirs', list('spec_dir' = 'testspecs'))
+  config('subdirs', list('specs' = 'testspecs'))
 
   ecp_opt <- check_ecp(ecp_tbl = ecp_test,
                        omop_or_pcornet = 'omop')
