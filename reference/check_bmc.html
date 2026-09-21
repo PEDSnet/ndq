@@ -106,12 +106,10 @@ in the fact table will be returned to the user.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>This function will return a list of two dataframes:</p><ul><li><p><code>bmc_counts</code>: A table with one row for each concept present in each user-defined field
-and the associated row and patient counts/proportions</p></li>
-<li><p><code>bmc_concepts</code>: A table with just the concepts from <code>bmc_counts</code>. This output is
-should be labelled with "best" (1) vs "not best" (0) indicators in a column
-called <code>include</code> for use in the processing step</p></li>
-</ul></div>
+    <p>This function will return a table with one row for each concept present
+in each user-defined field, the associated row and patient counts/proportions,
+and a label indicating whether the concept is considered "best" or "not best"</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -136,9 +134,36 @@ called <code>include</code> for use in the processing step</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ethnicity ethnicity         cdm    demograp… hispanic      concept_name       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: filter_logic &lt;lgl&gt;</span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Then, create a table that indicates specific concepts that you</span></span></span>
+<span class="r-in"><span><span class="co"># want to consider "best" or "not best," and indicate your preference</span></span></span>
+<span class="r-in"><span><span class="co"># for whether other concepts should default to one or the other.</span></span></span>
+<span class="r-in"><span><span class="fu">ndq</span><span class="fu">::</span><span class="va"><a href="bmc_best_notbest.html">bmc_best_notbest</a></span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 18 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    check_name concept             best_notbest default_to  ...5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> rxnorm_di  Quant Branded Drug             1 notbest       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> rxnorm_di  Branded Drug                   1 notbest        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> rxnorm_di  Branded Pack                   1 notbest        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> rxnorm_di  Clinical Drug                  1 notbest        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> rxnorm_di  Clinical Pack                  1 notbest        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> rxnorm_di  Quant Clinical Drug            1 notbest       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> rxnorm_di  Quant Branded Drug             1 notbest       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> rxnorm_di  Branded Drug                   1 notbest       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> rxnorm_di  Branded Pack                   1 notbest       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> rxnorm_di  Clinical Drug                  1 notbest       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> rxnorm_di  Clinical Pack                  1 notbest       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> rxnorm_di  Quant Clinical Drug            1 notbest       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> race       Refuse to answer               0 best          <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> race       No information                 0 best          <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> race       Unknown                        0 best          <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> ethnicity  Refuse to answer               0 best          <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> ethnicity  No information                 0 best          <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> ethnicity  Unknown                        0 best          <span style="color: #BB0000;">NA</span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Use this as your input to the BMC function</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">my_bmc_rslt</span> <span class="op">&lt;-</span> <span class="fu">check_bmc</span><span class="op">(</span>bmc_tbl <span class="op">=</span> <span class="fu">ndq</span><span class="fu">::</span><span class="va"><a href="bmc_input_omop.html">bmc_input_omop</a></span>,</span></span>
+<span class="r-in"><span>                         best_notbest_tbl <span class="op">=</span> <span class="fu">ndq</span><span class="fu">::</span><span class="va"><a href="bmc_best_notbest.html">bmc_best_notbest</a></span>,</span></span>
 <span class="r-in"><span>                         omop_or_pcornet <span class="op">=</span> <span class="st">'omop'</span>,</span></span>
 <span class="r-in"><span>                         concept_tbl <span class="op">=</span> <span class="fu">vocabulary_tbl</span><span class="op">(</span><span class="st">"concept"</span><span class="op">)</span>, <span class="co">## points to OHDSI concept table</span></span></span>
 <span class="r-in"><span>                         check_string <span class="op">=</span> <span class="st">'bmc'</span><span class="op">)</span></span></span>

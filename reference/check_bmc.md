@@ -72,15 +72,10 @@ check_bmc(
 
 ## Value
 
-This function will return a list of two dataframes:
-
-- `bmc_counts`: A table with one row for each concept present in each
-  user-defined field and the associated row and patient
-  counts/proportions
-
-- `bmc_concepts`: A table with just the concepts from `bmc_counts`. This
-  output is should be labelled with "best" (1) vs "not best" (0)
-  indicators in a column called `include` for use in the processing step
+This function will return a table with one row for each concept present
+in each user-defined field, the associated row and patient
+counts/proportions, and a label indicating whether the concept is
+considered "best" or "not best"
 
 ## Examples
 
@@ -106,9 +101,36 @@ ndq::bmc_input_pcornet
 #> 4 ethnicity ethnicity         cdm    demograp… hispanic      concept_name       
 #> # ℹ 1 more variable: filter_logic <lgl>
 
+# Then, create a table that indicates specific concepts that you
+# want to consider "best" or "not best," and indicate your preference
+# for whether other concepts should default to one or the other.
+ndq::bmc_best_notbest
+#> # A tibble: 18 × 5
+#>    check_name concept             best_notbest default_to  ...5
+#>    <chr>      <chr>                      <dbl> <chr>      <dbl>
+#>  1 rxnorm_di  Quant Branded Drug             1 notbest       NA
+#>  2 rxnorm_di  Branded Drug                   1 notbest        1
+#>  3 rxnorm_di  Branded Pack                   1 notbest        1
+#>  4 rxnorm_di  Clinical Drug                  1 notbest        1
+#>  5 rxnorm_di  Clinical Pack                  1 notbest        1
+#>  6 rxnorm_di  Quant Clinical Drug            1 notbest       NA
+#>  7 rxnorm_di  Quant Branded Drug             1 notbest       NA
+#>  8 rxnorm_di  Branded Drug                   1 notbest       NA
+#>  9 rxnorm_di  Branded Pack                   1 notbest       NA
+#> 10 rxnorm_di  Clinical Drug                  1 notbest       NA
+#> 11 rxnorm_di  Clinical Pack                  1 notbest       NA
+#> 12 rxnorm_di  Quant Clinical Drug            1 notbest       NA
+#> 13 race       Refuse to answer               0 best          NA
+#> 14 race       No information                 0 best          NA
+#> 15 race       Unknown                        0 best          NA
+#> 16 ethnicity  Refuse to answer               0 best          NA
+#> 17 ethnicity  No information                 0 best          NA
+#> 18 ethnicity  Unknown                        0 best          NA
+
 # Use this as your input to the BMC function
 if (FALSE) { # \dontrun{
 my_bmc_rslt <- check_bmc(bmc_tbl = ndq::bmc_input_omop,
+                         best_notbest_tbl = ndq::bmc_best_notbest,
                          omop_or_pcornet = 'omop',
                          concept_tbl = vocabulary_tbl("concept"), ## points to OHDSI concept table
                          check_string = 'bmc')
