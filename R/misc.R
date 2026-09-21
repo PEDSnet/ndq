@@ -30,6 +30,17 @@ pick_schema <- function(schema,
 }
 
 
+compute_skewness <- function(x) {
+  x <- x[!is.na(x)]
+  n <- length(x)
+  m <- mean(x)
+  s <- sd(x)
+
+  skewness <- (sum((x - m)^3) / n) / s^3
+
+  skewness
+}
+
 #' Additional processing for VS & VC checks
 #'
 #' @param tbl_list a list that contains all the vc or vs violations
@@ -69,9 +80,13 @@ create_vc_vs_output <- function(tbl_list,
 #' @param tbl_meta the table to add meta information to
 #' @param check_lib the name of the check
 #' @param version the version of the database; defaults to
-#' `config('current_version')`;
+#' config('current_version');
 #' @param site_nm the name of the site; defaults to
-#' `config('site')`
+#' config('site')
+#'
+#' @return
+#'   tbl_meta with additional columns containing the check name, current
+#'   database version, and site names
 #'
 #' @keywords internal
 #'

@@ -358,17 +358,13 @@ bmc_rollup <- function(bmc_output_pp){
 #' \dontrun{
 #' my_bmc_process <- process_bmc(bmc_results = my_bmc_rslts,
 #'                               rslt_source = 'local')
-#' }
 #'
 #' ## When results are kept in CSV files:
-#' \dontrun{
 #' my_bmc_process <- process_bmc(bmc_results = 'my_bmc_rslts',
 #'                               rslt_source = 'csv',
 #'                               csv_rslt_path = 'path/to/my/results')
-#' }
 #'
 #' ## When results are kept on a remote database:
-#' \dontrun{
 #' my_bmc_process <- process_bmc(bmc_results = 'my_bmc_rslts',
 #'                               rslt_source = 'remote')
 #' }

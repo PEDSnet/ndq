@@ -18,6 +18,7 @@ reference:
   - check_uc
   - check_vc
   - check_vs
+  - check_qvd
 - title: Data Quality Processing
   desc: >
     Post-processing functions to be applied to output after the primary
@@ -34,6 +35,7 @@ reference:
   - process_uc
   - process_vc
   - process_vs
+  - process_qvd
 - title: Helper Functions
   desc: >
     Miscellaneous helper functions to supplement the analyses
@@ -60,5 +62,6 @@ reference:
   - starts_with("uc_input")
   - starts_with("vc_input")
   - starts_with("vs_input")
+  - starts_with("qvd_input")
 
 

@@ -20,4 +20,5 @@ utils::globalVariables(c('.', 'accepted_value', 'application', 'best_rows', 'che
                        'mean_val', 'median_val', 'min_val', 'q1', 'q3', 'site_anon', 'sitenum',
                        'tot_viol_ct', 'row_cts', 'row_pts', 'row_visits', 'check_application',
                        'check_domain', 'full_description','dob_use', 'implausible_row', 'prop_implausible',
-                       'time_bw_events', 'implausible_type', 'best_notbest', 'default_to'))
+                       'time_bw_events', 'implausible_type', 'best_notbest', 'default_to',
+                       'q1_val', 'q3_val', 'low_lv', 'top_lv', 'value_col', 'value_freq', 'sd_val'))

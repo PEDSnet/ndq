@@ -17,10 +17,14 @@ add_meta(
 \item{check_lib}{the name of the check}
 
 \item{version}{the version of the database; defaults to
-\code{config('current_version')};}
+config('current_version');}
 
 \item{site_nm}{the name of the site; defaults to
-\code{config('site')}}
+config('site')}
+}
+\value{
+tbl_meta with additional columns containing the check name, current
+database version, and site names
 }
 \description{
 add check name, db version, and site name to a given table

@@ -594,3 +594,51 @@
 #' }
 #'
 "dp_input_pcornet"
+
+
+#' Quantitative Variable Distribution Input File (OMOP)
+#'
+#' A sample version of an OMOP compliant input file for
+#' the Quantitative Variable Distribution data quality module. This exact
+#' file is also included as a CSV in the package if the user wishes
+#' to use it, or the structure can be copied to produce a custom
+#' list of checks.
+#'
+#' @format ## `qvd_input_omop`
+#' A dataframe or CSV file with 6 columns
+#' \describe{
+#'   \item{check_id}{A short string "code" used to identify the specific check (ex: de, de_rx)}
+#'   \item{check_description}{A longer description of the check (ex: full drug_exposure table, prescribed drugs based on drug_type_concept_id)}
+#'   \item{schema}{The schema where the data is kept. Use `cdm` to use the pre-configured `cdm_schema`, `result` to use the preconfigured `results_schema`, or input the exact name of the schema.}
+#'   \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
+#'   \item{value_field}{The field in the table that contains the quantitative variable}
+#'   \item{concept_field}{The field with the concept codes that make up the valueset (ex: measurement_concept_id)}
+#'   \item{conceptset_name}{**OPTIONAL** The string name of the concept set that will identify the concepts of interest, as it appears in the predefined file_subdirectory}
+#'   \item{filter_logic}{**OPTIONAL** The logic that should be applied to the provided table in order to tailor the tables to the desired check assessment (ex: if you only want to assess prescription drugs)}
+#' }
+#'
+"qvd_input_omop"
+
+
+#' Quantitative Variable Distribution Input File (PCORnet)
+#'
+#' A sample version of an PCORnet compliant input file for
+#' the Quantitative Variable Distribution data quality module. This exact
+#' file is also included as a CSV in the package if the user wishes
+#' to use it, or the structure can be copied to produce a custom
+#' list of checks.
+#'
+#' @format ## `qvd_input_pcornet`
+#' \describe{
+#'   \item{check_id}{A short string "code" used to identify the specific check (ex: de, de_rx)}
+#'   \item{check_description}{A longer description of the check (ex: full drug_exposure table, prescribed drugs based on drug_type_concept_id)}
+#'   \item{schema}{The schema where the data is kept. Use `cdm` to use the pre-configured `cdm_schema`, `result` to use the preconfigured `results_schema`, or input the exact name of the schema.}
+#'   \item{table}{The name of the CDM or pre-computed results table where the relevant data is kept}
+#'   \item{value_field}{The field in the table that contains the quantitative variable}
+#'   \item{concept_field}{The field with the concept codes that make up the valueset (ex: lab_loinc)}
+#'   \item{vocabulary_field}{Typically only relevant for diagnoses and procedures, the field where the code vocabulary is kept (i.e. dx_type, px_type)}
+#'   \item{conceptset_name}{**OPTIONAL** The string name of the concept set that will identify the concepts of interest, as it appears in the predefined file_subdirectory}
+#'   \item{filter_logic}{**OPTIONAL** The logic that should be applied to the provided table in order to tailor the tables to the desired check assessment (ex: if you only want to assess prescription drugs)}
+#' }
+#'
+"qvd_input_pcornet"

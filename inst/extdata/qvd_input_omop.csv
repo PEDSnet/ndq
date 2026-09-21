@@ -1,0 +1,3 @@
+﻿check_id,check_description,table,schema,value_field,concept_field,conceptset_name,filter_logic
+ht,Height,measurement,cdm,value_as_number,,,measurement_concept_id == 3036277
+hgb,Hemoglobin,measurement,cdm,value_as_number,measurement_concept_id,hemoglobin,

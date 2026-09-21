@@ -1,0 +1,3 @@
+﻿check_id,check_description,table,schema,value_field,concept_field,vocabulary_field,conceptset_name,filter_logic
+ht,Height,vital,cdm,ht,,,,
+hgb,Hemoglobin,lab_result_cm,cdm,result_num,lab_loinc,,hemoglobin,

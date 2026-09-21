@@ -18,7 +18,7 @@ remotes::install_github('PEDSnet/ndq')
 
 ## Current Functionality
 
-The package currently (as of 09/2025) contains 10 distinct analysis types that can be configured to run innumerable data quality checks. See the table below for a list of the current offerings.
+The package currently (as of 09/2026) contains 11 distinct analysis types that can be configured to run innumerable data quality checks. See the table below for a list of the current offerings.
 
 | Analysis Type | Description | Functions |
 |:----------------|:---------------------|:--------------------------------|
@@ -33,6 +33,7 @@ The package currently (as of 09/2025) contains 10 distinct analysis types that c
 | Valueset Conformance | Intakes a limited valueset that is expected to make up the entire contents of a field (minus the specified `null_values`) and identifies if any non-permitted values exist in the field (and how often). | [check_vs](https://pedsnet.github.io/ndq/reference/check_vs.html) <br> [process_vs](https://pedsnet.github.io/ndq/reference/process_vs.html) |
 | Vocabulary Conformance | Use a provided vocabulary definition table to identify the vocabulary of each concept and determine how many rows comply with the standard vocabularies expected for that field. | [check_vc](https://pedsnet.github.io/ndq/reference/check_vc.html) <br> [process_vc](https://pedsnet.github.io/ndq/reference/process_vc.html) |
 | Facts Over Time | Computes the number of rows, patients, and (optionally) visits associated with the fact of interest within a specified time period. | [check_fot](https://pedsnet.github.io/ndq/reference/check_fot.html) <br> [process_fot](https://pedsnet.github.io/ndq/reference/process_fot.html) |
+| Quantitative Variable Distribution | Computes summary statistics and skew metrics to evaluate the distribution of a quantitative variable. | [check_qvd](https://pedsnet.github.io/ndq/reference/check_qvd.html) <br> [process_qvd](https://pedsnet.github.io/ndq/reference/process_qvd.html) |
 
 ## Example Usage
 
