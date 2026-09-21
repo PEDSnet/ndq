@@ -173,7 +173,7 @@ check_qvd <- function(qvd_tbl,
       left_join(low_whisk) %>%
       left_join(upper_whisk) %>%
       mutate(check_description = qvd_list[[i]]$check_description,
-             check_id = paste0(check_string, '_', qvd_list[[i]]$check_id))
+             check_name = paste0(check_string, '_', qvd_list[[i]]$check_id))
 
     rm(tbl_use)
   }
