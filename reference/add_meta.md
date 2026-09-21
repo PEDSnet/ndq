@@ -25,8 +25,13 @@ add_meta(
 
 - version:
 
-  the version of the database; defaults to `config('current_version')`;
+  the version of the database; defaults to config('current_version');
 
 - site_nm:
 
-  the name of the site; defaults to `config('site')`
+  the name of the site; defaults to config('site')
+
+## Value
+
+tbl_meta with additional columns containing the check name, current
+database version, and site names

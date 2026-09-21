@@ -59,17 +59,13 @@ given check, indicated by the user designation provided in the
 if (FALSE) { # \dontrun{
 my_bmc_process <- process_bmc(bmc_results = my_bmc_rslts,
                               rslt_source = 'local')
-} # }
 
 ## When results are kept in CSV files:
-if (FALSE) { # \dontrun{
 my_bmc_process <- process_bmc(bmc_results = 'my_bmc_rslts',
                               rslt_source = 'csv',
                               csv_rslt_path = 'path/to/my/results')
-} # }
 
 ## When results are kept on a remote database:
-if (FALSE) { # \dontrun{
 my_bmc_process <- process_bmc(bmc_results = 'my_bmc_rslts',
                               rslt_source = 'remote')
 } # }

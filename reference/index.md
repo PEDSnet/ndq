@@ -26,6 +26,8 @@ The primary functions used to execute each data quality analysis
   Vocabulary Conformance
 - [`check_vs()`](https://pedsnet.github.io/ndq/reference/check_vs.md) :
   Valueset Conformance
+- [`check_qvd()`](https://pedsnet.github.io/ndq/reference/check_qvd.md)
+  : Quantitative Variable Distribution
 
 ## Data Quality Processing
 
@@ -54,6 +56,8 @@ analyses have been executed on all network institutions.
   : Vocabulary Conformance – Processing
 - [`process_vs()`](https://pedsnet.github.io/ndq/reference/process_vs.md)
   : Valueset Conformance – Processing
+- [`process_qvd()`](https://pedsnet.github.io/ndq/reference/process_qvd.md)
+  : Quantitative Variable Distribution – Processing
 
 ## Helper Functions
 
@@ -122,3 +126,7 @@ PCORnet configurations.
   : Valueset Conformance Input File (OMOP)
 - [`vs_input_pcornet`](https://pedsnet.github.io/ndq/reference/vs_input_pcornet.md)
   : Valueset Conformance Input File (PCORnet)
+- [`qvd_input_omop`](https://pedsnet.github.io/ndq/reference/qvd_input_omop.md)
+  : Quantitative Variable Distribution Input File (OMOP)
+- [`qvd_input_pcornet`](https://pedsnet.github.io/ndq/reference/qvd_input_pcornet.md)
+  : Quantitative Variable Distribution Input File (PCORnet)

@@ -18,7 +18,7 @@ remotes::install_github('PEDSnet/ndq')
 
 ## Current Functionality
 
-The package currently (as of 09/2025) contains 10 distinct analysis
+The package currently (as of 09/2026) contains 11 distinct analysis
 types that can be configured to run innumerable data quality checks. See
 the table below for a list of the current offerings.
 
