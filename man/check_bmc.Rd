@@ -47,14 +47,9 @@ in the fact table will be returned to the user.}
 An abbreviated identifier that will be used to label all output from this module}
 }
 \value{
-This function will return a list of two dataframes:
-\itemize{
-\item \code{bmc_counts}: A table with one row for each concept present in each user-defined field
-and the associated row and patient counts/proportions
-\item \code{bmc_concepts}: A table with just the concepts from \code{bmc_counts}. This output is
-should be labelled with "best" (1) vs "not best" (0) indicators in a column
-called \code{include} for use in the processing step
-}
+This function will return a table with one row for each concept present
+in each user-defined field, the associated row and patient counts/proportions,
+and a label indicating whether the concept is considered "best" or "not best"
 }
 \description{
 This function will identify the existing concepts within the specified field
@@ -67,9 +62,15 @@ not be used in that field ("not best")
 ndq::bmc_input_omop
 ndq::bmc_input_pcornet
 
+# Then, create a table that indicates specific concepts that you
+# want to consider "best" or "not best," and indicate your preference
+# for whether other concepts should default to one or the other.
+ndq::bmc_best_notbest
+
 # Use this as your input to the BMC function
 \dontrun{
 my_bmc_rslt <- check_bmc(bmc_tbl = ndq::bmc_input_omop,
+                         best_notbest_tbl = ndq::bmc_best_notbest,
                          omop_or_pcornet = 'omop',
                          concept_tbl = vocabulary_tbl("concept"), ## points to OHDSI concept table
                          check_string = 'bmc')
